@@ -60,4 +60,4 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 
 ## Lisans ve medya
 
-Bu depo özel proje kullanımı içindir. `public/site/audio` içindeki müziklerin yayın ve ticari kullanım hakları depo lisansına dahil değildir; site sahibi gerekli hakları ayrıca sağlamalıdır.
+Bu depo özel proje kullanımı içindir. Lisanslı MP3 dosyaları GitHub üzerinden dağıtılmaz. Müziği admin medya yükleyicisinden ekleyin veya kullanım hakkı bulunan dosyaları yerelde `public/site/audio` altına koyun.

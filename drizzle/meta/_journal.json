@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789422776386,
+      "tag": "0000_faithful_swordsman",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789423534208,
+      "tag": "0001_elite_carmella_unuscione",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789491581769,
+      "tag": "0002_dashing_spitfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789510173080,
+      "tag": "0003_confused_sister_grimm",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1789510207002,
+      "tag": "0004_famous_gamora",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1789578294859,
+      "tag": "0005_dashing_wolverine",
+      "breakpoints": true
+    }
+  ]
+}
