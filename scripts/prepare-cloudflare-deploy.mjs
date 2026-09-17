@@ -16,6 +16,7 @@ if (missing.length > 0) {
 
 const config = JSON.parse(await readFile(configPath, "utf8"));
 config.name = process.env.CF_WORKER_NAME?.trim() || "elturko-smm";
+config.migrations_dir = "../../drizzle";
 
 const d1 = config.d1_databases?.find((item) => item.binding === "DB");
 if (!d1) throw new Error("Build output is missing the DB binding.");
