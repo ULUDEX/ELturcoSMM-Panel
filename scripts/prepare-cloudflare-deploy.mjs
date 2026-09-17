@@ -16,12 +16,12 @@ if (missing.length > 0) {
 
 const config = JSON.parse(await readFile(configPath, "utf8"));
 config.name = process.env.CF_WORKER_NAME?.trim() || "elturko-smm";
-config.migrations_dir = "../../drizzle";
 
 const d1 = config.d1_databases?.find((item) => item.binding === "DB");
 if (!d1) throw new Error("Build output is missing the DB binding.");
 d1.database_id = process.env.CF_D1_DATABASE_ID.trim();
 d1.database_name = process.env.CF_D1_DATABASE_NAME.trim();
+d1.migrations_dir = "../../drizzle";
 
 const r2 = config.r2_buckets?.find((item) => item.binding === "MEDIA");
 if (!r2) throw new Error("Build output is missing the MEDIA binding.");
