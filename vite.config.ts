@@ -4,8 +4,17 @@ import hostingConfig from "./.openai/hosting.json";
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { sites } from "./build/sites-vite-plugin";
 
+// Production Cloudflare resources for the elturko-smm Worker.
+// The database ID is supplied by Cloudflare Builds so local development can
+// continue to use an isolated placeholder without committing account IDs.
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
+  process.env.CLOUDFLARE_D1_DATABASE_ID ??
   "00000000-0000-4000-8000-000000000000";
+
+const CLOUDFLARE_D1_DATABASE_NAME =
+  process.env.CLOUDFLARE_D1_DATABASE_NAME ?? "site-creator-d1";
+const CLOUDFLARE_R2_BUCKET_NAME =
+  process.env.CLOUDFLARE_R2_BUCKET_NAME ?? "site-creator-r2";
 
 const { d1, r2 } = hostingConfig;
 
@@ -20,7 +29,7 @@ const localBindingConfig = {
     ? [
         {
           binding: d1,
-          database_name: "site-creator-d1",
+          database_name: CLOUDFLARE_D1_DATABASE_NAME,
           database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
         },
       ]
@@ -29,7 +38,7 @@ const localBindingConfig = {
     ? [
         {
           binding: r2,
-          bucket_name: "site-creator-r2",
+          bucket_name: CLOUDFLARE_R2_BUCKET_NAME,
         },
       ]
     : [],
