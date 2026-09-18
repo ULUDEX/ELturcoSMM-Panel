@@ -5,11 +5,10 @@ import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { sites } from "./build/sites-vite-plugin";
 
 // Production Cloudflare resources for the elturko-smm Worker.
-// The database ID is supplied by Cloudflare Builds so local development can
-// continue to use an isolated placeholder without committing account IDs.
-const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
+// Cloudflare Builds may override this value through an environment variable.
+const CLOUDFLARE_D1_DATABASE_ID =
   process.env.CLOUDFLARE_D1_DATABASE_ID ??
-  "00000000-0000-4000-8000-000000000000";
+  "bb2e53d1-1dda-4dac-bfd3-6b3724117e44";
 
 const CLOUDFLARE_D1_DATABASE_NAME =
   process.env.CLOUDFLARE_D1_DATABASE_NAME ?? "site-creator-d1";
@@ -30,7 +29,7 @@ const localBindingConfig = {
         {
           binding: d1,
           database_name: CLOUDFLARE_D1_DATABASE_NAME,
-          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          database_id: CLOUDFLARE_D1_DATABASE_ID,
         },
       ]
     : [],
