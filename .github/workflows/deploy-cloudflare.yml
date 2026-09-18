@@ -72,5 +72,4 @@ jobs:
             cat /tmp/services.json
             exit 1
           fi
-          response="$(cat /tmp/services.json)"
-          node -e 'const rows=JSON.parse(process.argv[1]); if(!Array.isArray(rows)||rows.length===0) throw new Error("PanelFollows katalogu boş döndü"); console.log(`${rows.length} hizmet satışa hazır.`)' "$response"
+          node -e 'const rows=JSON.parse(require("node:fs").readFileSync("/tmp/services.json","utf8")); if(!Array.isArray(rows)||rows.length===0) throw new Error("PanelFollows katalogu boş döndü"); console.log(`${rows.length} hizmet satışa hazır.`)'
