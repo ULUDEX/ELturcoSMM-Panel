@@ -1,6 +1,6 @@
-# ELTURKO SMM Panel
+# ElTurco SMM Panel
 
-ELTURKO SMM'nin bağımsız kaynak kod deposudur. Site vitrini, sipariş formu, hizmet yönetimi, ödeme talepleri, destek konuşmaları, müzik/radyo ve yönetim paneli bu depoda birlikte bulunur.
+ElTurco SMM'nin bağımsız kaynak kod deposudur. Site vitrini, sipariş formu, hizmet yönetimi, ödeme talepleri, destek konuşmaları, müzik/radyo ve yönetim paneli bu depoda birlikte bulunur.
 
 ## Teknoloji
 
@@ -16,8 +16,8 @@ ELTURKO SMM'nin bağımsız kaynak kod deposudur. Site vitrini, sipariş formu, 
 Gereksinimler: Node.js 22.13 veya üzeri, Git ve npm/pnpm.
 
 ```bash
-git clone https://github.com/ULUDEX/kivildigital-smm.git
-cd kivildigital-smm
+git clone https://github.com/ULUDEX/ELturcoSMM-Panel.git
+cd ELturcoSMM-Panel
 corepack enable
 pnpm install --frozen-lockfile
 cp .env.example .env.local
@@ -36,6 +36,7 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 | `ADMIN_SESSION_SECRET` | Evet | Admin oturum imzası; uzun ve rastgele olmalı |
 | `SMM_PROVIDER_API_URL` | Otomatik teslimat için | SMM sağlayıcı API adresi |
 | `SMM_PROVIDER_API_KEY` | Otomatik teslimat için | Sağlayıcı API anahtarı |
+| `SMM_PROVIDER_USD_TRY_RATE` | İsteğe bağlı | Sabit USD/TRY kuru; boşsa TCMB kuru kullanılır |
 | `KIVIL_API_KEY` | Harici API için | `/api/v1` erişim anahtarı |
 | `SHOPIER_ACCESS_TOKEN` | Shopier için | Shopier erişim anahtarı |
 | `SHOPIER_WEBHOOK_SECRET` | Shopier için | Webhook doğrulama sırrı |

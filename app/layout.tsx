@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ELTURKO SMM Yönetim",
-  description: "ELTURKO SMM hizmet ve fiyat yönetim paneli.",
+  title: "ElTurco SMM Yönetim",
+  description: "ElTurco SMM hizmet ve fiyat yönetim paneli.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
