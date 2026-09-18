@@ -58,6 +58,7 @@ jobs:
         env:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           ADMIN_SESSION_SECRET: ${{ secrets.ADMIN_SESSION_SECRET }}
+          SMM_PROVIDER_API_KEY: ${{ secrets.SMM_PROVIDER_API_KEY }}
         run: |
           trap 'rm -f .cloudflare-secrets.json' EXIT
           node scripts/write-cloudflare-secrets.mjs
