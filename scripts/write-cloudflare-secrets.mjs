@@ -11,6 +11,9 @@ if (missing.length > 0) {
 const secrets = Object.fromEntries(
   names.map((name) => [name, process.env[name]]),
 );
+if (process.env.SMM_PROVIDER_API_KEY?.trim()) {
+  secrets.SMM_PROVIDER_API_KEY = process.env.SMM_PROVIDER_API_KEY.trim();
+}
 
 await writeFile(
   ".cloudflare-secrets.json",
