@@ -1,109 +1,15 @@
 import { env } from "cloudflare:workers";
 
-type ProviderService = {
-  id: number | string;
-  name?: string;
-  description?: string;
-  platform?: string;
-  category?: { name?: string; slug?: string } | string;
-  pricing?: { rate?: string | number; currency?: string };
-  rate?: string | number;
-  min?: number;
-  max?: number;
-  limits?: { min?: number; max?: number };
-  is_active?: boolean;
-};
+type ProviderService = { service:number|string; name?:string; description?:string; platform?:string; category?:string; rate?:string|number; min?:number|string; max?:number|string };
+const MARKUP=1.5;
 
-const PAGE_SIZE = 100;
-const MARKUP = 1.5;
+function apiUrl(){const configured=String((env as any).SMM_PROVIDER_API_URL||"https://panelfollows.com/api/v2");return configured.replace(/\/api\/v3\/?$/i,"/api/v2").replace(/\/$/,"")}
+async function providerRequest(action:string){const key=String((env as any).SMM_PROVIDER_API_KEY||"");if(!key)throw new Error("PanelFollows API anahtarı hosting ortamında tanımlı değil.");const response=await fetch(apiUrl(),{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded",accept:"application/json"},body:new URLSearchParams({key,action}).toString()});const payload:any=await response.json().catch(()=>({}));if(!response.ok||payload.error)throw new Error(String(payload.error||payload.message||`PanelFollows HTTP ${response.status}`).slice(0,300));return payload}
+function titleCase(value:string){return value.replace(/[-_]+/g," ").replace(/\b\w/g,letter=>letter.toLocaleUpperCase("tr-TR")).trim()}
+function inferPlatform(service:ProviderService){const haystack=`${service.platform||""} ${service.category||""} ${service.name||""}`.toLocaleLowerCase("tr-TR");const platforms:Array<[RegExp,string]>=[[/instagram/,"Instagram"],[/tiktok/,"TikTok"],[/youtube/,"YouTube"],[/telegram/,"Telegram"],[/facebook/,"Facebook"],[/(twitter|\bx\b)/,"X / Twitter"],[/whatsapp/,"WhatsApp"],[/twitch/,"Twitch"],[/spotify/,"Spotify"],[/kick/,"Kick"],[/discord/,"Discord"],[/linkedin/,"LinkedIn"],[/threads/,"Threads"],[/soundcloud/,"SoundCloud"],[/pinterest/,"Pinterest"],[/snapchat/,"Snapchat"],[/reddit/,"Reddit"],[/google/,"Google"]];return platforms.find(([pattern])=>pattern.test(haystack))?.[1]||titleCase(service.platform||"Diğer")}
+function inferCategory(service:ProviderService,platform:string){if(service.category?.trim())return titleCase(service.category);const name=(service.name||"").toLocaleLowerCase("tr-TR");const kinds:Array<[RegExp,string]>=[[/takipçi|followers?/,"Takipçi"],[/beğeni|likes?/,"Beğeni"],[/izlenme|görüntülenme|views?|plays?/,"İzlenme"],[/abone|subscribers?/,"Abone"],[/yorum|comments?/,"Yorum"],[/üye|members?/,"Üye"],[/paylaşım|shares?|repost/,"Paylaşım"],[/kaydetme|saves?/,"Kaydetme"],[/reaksiyon|reactions?/,"Reaksiyon"],[/canlı|live/,"Canlı Yayın"],[/hikaye|story/,"Hikâye"],[/trafik|traffic/,"Trafik"]];return kinds.find(([pattern])=>pattern.test(name))?.[1]||`${platform} Diğer Hizmetler`}
+async function usdTryRate(){const override=Number((env as any).SMM_PROVIDER_USD_TRY_RATE||0);if(override>0)return override;try{const xml=await fetch("https://www.tcmb.gov.tr/kurlar/today.xml",{cf:{cacheTtl:3600}} as any).then(response=>response.text());const block=xml.match(/<Currency[^>]+CurrencyCode="USD"[\s\S]*?<\/Currency>/i)?.[0]||"";return Number(block.match(/<ForexSelling>([\d.]+)<\/ForexSelling>/i)?.[1])||1}catch{return 1}}
 
-function apiBase() {
-  const configured = String((env as any).SMM_PROVIDER_API_URL || "https://panelfollows.com/api/v3");
-  return configured.replace(/\/api\/v2\/?$/i, "/api/v3").replace(/\/$/, "");
-}
-
-function titleCase(value: string) {
-  return value
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toLocaleUpperCase("tr-TR"))
-    .trim();
-}
-
-function inferPlatform(service: ProviderService) {
-  const haystack = `${service.platform || ""} ${service.name || ""}`.toLowerCase();
-  const platforms: Array<[RegExp, string]> = [
-    [/instagram/, "Instagram"], [/tiktok/, "TikTok"], [/youtube/, "YouTube"],
-    [/telegram/, "Telegram"], [/facebook/, "Facebook"], [/(twitter|\bx\b)/, "X / Twitter"],
-    [/whatsapp/, "WhatsApp"], [/twitch/, "Twitch"], [/spotify/, "Spotify"],
-    [/kick/, "Kick"], [/discord/, "Discord"], [/linkedin/, "LinkedIn"],
-    [/threads/, "Threads"], [/soundcloud/, "SoundCloud"], [/pinterest/, "Pinterest"],
-  ];
-  return platforms.find(([pattern]) => pattern.test(haystack))?.[1] || titleCase(service.platform || "Diğer");
-}
-
-function inferCategory(service: ProviderService, platform: string) {
-  const supplied = typeof service.category === "string" ? service.category : service.category?.name || service.category?.slug;
-  if (supplied?.trim()) return titleCase(supplied);
-  const name = (service.name || "").toLocaleLowerCase("tr-TR");
-  const kinds: Array<[RegExp, string]> = [
-    [/(takipçi|followers?)/, "Takipçi"], [/(beğeni|likes?)/, "Beğeni"],
-    [/(izlenme|görüntülenme|views?|plays?)/, "İzlenme"], [/(abone|subscribers?)/, "Abone"],
-    [/(yorum|comments?)/, "Yorum"], [/(üye|members?)/, "Üye"],
-    [/(paylaşım|shares?|repost)/, "Paylaşım"], [/(kaydetme|saves?)/, "Kaydetme"],
-    [/(reaksiyon|reactions?)/, "Reaksiyon"], [/(canlı|live)/, "Canlı Yayın"],
-    [/(hikaye|story)/, "Hikâye"], [/(trafik|traffic)/, "Trafik"],
-  ];
-  const kind = kinds.find(([pattern]) => pattern.test(name))?.[1] || "Diğer Hizmetler";
-  return `${platform} ${kind}`;
-}
-
-async function usdTryRate() {
-  const override = Number((env as any).SMM_PROVIDER_USD_TRY_RATE || 0);
-  if (override > 0) return override;
-  try {
-    const xml = await fetch("https://www.tcmb.gov.tr/kurlar/today.xml", { cf: { cacheTtl: 3600 } as any }).then((response) => response.text());
-    const block = xml.match(/<Currency[^>]+CurrencyCode="USD"[\s\S]*?<\/Currency>/i)?.[0] || "";
-    const value = block.match(/<ForexSelling>([\d.]+)<\/ForexSelling>/i)?.[1];
-    return Number(value) || 1;
-  } catch { return 1; }
-}
-
-export async function fetchProviderCatalog() {
-  const key = String((env as any).SMM_PROVIDER_API_KEY || "");
-  if (!key) throw new Error("PanelFollows API anahtarı tanımlı değil.");
-  const collected: ProviderService[] = [];
-  let cursor = "";
-  for (let page = 0; page < 100; page += 1) {
-    const url = new URL(`${apiBase()}/services`);
-    url.searchParams.set("limit", String(PAGE_SIZE));
-    url.searchParams.set("lang", "tr");
-    if (cursor) url.searchParams.set("starting_after", cursor);
-    const response = await fetch(url, { headers: { Authorization: `Bearer ${key}`, "Accept-Language": "tr" } });
-    if (!response.ok) throw new Error(`PanelFollows katalog hatası (${response.status}).`);
-    const payload: any = await response.json();
-    const data: ProviderService[] = Array.isArray(payload) ? payload : payload.data || [];
-    collected.push(...data);
-    const next = payload.next_cursor || payload.next || payload.cursor;
-    if (!data.length || (!payload.has_more && data.length < PAGE_SIZE)) break;
-    cursor = String(next || data[data.length - 1]?.id || "");
-    if (!cursor) break;
-  }
-  const fx = await usdTryRate();
-  return collected.filter((item) => item.is_active !== false).map((item) => {
-    const platform = inferPlatform(item);
-    const category = inferCategory(item, platform);
-    const rawRate = Number(item.pricing?.rate ?? item.rate ?? 0);
-    const currency = String(item.pricing?.currency || "USD").toUpperCase();
-    const costTry = currency === "TRY" ? rawRate : rawRate * fx;
-    return {
-      providerServiceId: String(item.id), platform, category,
-      name: item.name?.trim() || `${platform} ${category}`,
-      description: item.description?.trim() || `${platform} için otomatik teslimat hizmeti.`,
-      minOrder: Number(item.limits?.min ?? item.min ?? 10) || 10,
-      maxOrder: Number(item.limits?.max ?? item.max ?? 10000) || 10000,
-      costPrice: Math.max(0, Math.round(costTry * 100)),
-      salePrice: Math.max(0, Math.round(costTry * MARKUP * 100)),
-    };
-  });
-}
-
+export async function fetchProviderCatalog(){const payload=await providerRequest("services");const services:ProviderService[]=Array.isArray(payload)?payload:payload.services||payload.data||[];if(!services.length)throw new Error("PanelFollows hizmet listesi boş döndü.");const fx=await usdTryRate();return services.map(item=>{const platform=inferPlatform(item),category=inferCategory(item,platform),costTry=Number(item.rate||0)*fx;return{providerServiceId:String(item.service),platform,category,name:item.name?.trim()||`${platform} ${category}`,description:item.description?.trim()||`${platform} için otomatik teslimat hizmeti.`,minOrder:Number(item.min||10)||10,maxOrder:Number(item.max||10000)||10000,costPrice:Math.max(0,Math.round(costTry*100)),salePrice:Math.max(0,Math.round(costTry*MARKUP*100))}})}
+export async function fetchProviderBalance(){const payload=await providerRequest("balance");return{balance:Number(payload.balance||0),currency:String(payload.currency||"USD")}}
+export async function syncProviderCatalog(){const services=await fetchProviderCatalog(),existing=await env.DB.prepare("SELECT id,provider_service_id FROM services WHERE provider_service_id<>''").all(),byProviderId=new Map((existing.results as any[]).map(row=>[String(row.provider_service_id),Number(row.id)]));let added=0,updated=0;const statements=services.map(service=>{const currentId=byProviderId.get(service.providerServiceId);if(currentId){updated++;return env.DB.prepare("UPDATE services SET platform=?,category=?,name=?,min_order=?,max_order=?,cost_price=?,sale_price=?,description=?,active=1 WHERE id=?").bind(service.platform,service.category,service.name,service.minOrder,service.maxOrder,service.costPrice,service.salePrice,service.description,currentId)}added++;return env.DB.prepare("INSERT INTO services(platform,category,name,provider_service_id,min_order,max_order,cost_price,sale_price,description,active,created_at) VALUES(?,?,?,?,?,?,?,?,?,1,?)").bind(service.platform,service.category,service.name,service.providerServiceId,service.minOrder,service.maxOrder,service.costPrice,service.salePrice,service.description,Math.floor(Date.now()/1000))});for(let index=0;index<statements.length;index+=100)await env.DB.batch(statements.slice(index,index+100));return{total:services.length,added,updated}}
