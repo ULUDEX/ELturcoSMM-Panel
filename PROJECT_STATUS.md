@@ -4,7 +4,7 @@ Son güncelleme: 16 Eylül 2026
 
 ## Çalışan bölümler
 
-- Mobil uyumlu ELTURKO SMM müşteri arayüzü
+- Mobil uyumlu ElTurco SMM müşteri arayüzü
 - Kategoriye göre hizmet seçme ve tutar hesaplama
 - Sipariş oluşturma, kaydetme ve sağlayıcıya iletmeyi deneme
 - Admin oturumu ve 15 dakikalık başarısız giriş sınırlaması
