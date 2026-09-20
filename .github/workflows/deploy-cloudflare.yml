@@ -67,6 +67,17 @@ jobs:
           node scripts/write-cloudflare-secrets.mjs
           pnpm exec wrangler secret bulk .cloudflare-secrets.json --config dist/server/wrangler.json
 
+      - name: Verify customer registration
+        run: |
+          email="deploy-smoke-${GITHUB_RUN_ID}@example.invalid"
+          cleanup() {
+            pnpm exec wrangler d1 execute DB --remote --config dist/server/wrangler.json --command "DELETE FROM customer_sessions WHERE user_id IN (SELECT id FROM customer_users WHERE email='$email'); DELETE FROM customer_balances WHERE email='$email'; DELETE FROM customer_users WHERE email='$email';" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --output /tmp/register.json --write-out '%{http_code}' https://elturcosmm.com/api/account/register --header 'content-type: application/json' --data "{\"name\":\"Deploy Test\",\"email\":\"$email\",\"password\":\"DeployTest-9284\"}")"
+          cat /tmp/register.json
+          test "$status" = "200"
+
       - name: Sync PanelFollows catalog
         run: |
           status="$(curl --silent --show-error --retry 2 --retry-delay 5 --max-time 120 --output /tmp/services.json --write-out '%{http_code}' https://elturcosmm.com/api/services)"
