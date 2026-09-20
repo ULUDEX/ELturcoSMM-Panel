@@ -14,6 +14,9 @@ const secrets = Object.fromEntries(
 if (process.env.SMM_PROVIDER_API_KEY?.trim()) {
   secrets.SMM_PROVIDER_API_KEY = process.env.SMM_PROVIDER_API_KEY.trim();
 }
+for (const name of ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REDIRECT_URI"]) {
+  if (process.env[name]?.trim()) secrets[name] = process.env[name].trim();
+}
 
 await writeFile(
   ".cloudflare-secrets.json",
