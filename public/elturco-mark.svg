@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">ElTurco</title>
+  <defs><linearGradient id="g" x1="9" y1="8" x2="56" y2="57" gradientUnits="userSpaceOnUse"><stop stop-color="#ffad32"/><stop offset="1" stop-color="#ff5a18"/></linearGradient></defs>
+  <rect width="64" height="64" rx="18" fill="#07111f"/>
+  <path d="M10 16.5 53 9 41.5 54 30 38.5 18 47l3.5-16.5L10 16.5Z" fill="url(#g)"/>
+  <path d="m21.5 30.5 24-15-17 19.5 1.5 10-5.5-11-3-3.5Z" fill="#fff" fill-opacity=".96"/>
+</svg>
