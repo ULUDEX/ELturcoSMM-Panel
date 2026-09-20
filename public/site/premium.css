@@ -231,3 +231,13 @@ body.light-premium .ops-close{color:#172033}
 @media(max-width:390px){
   .topbar{grid-template-columns:40px minmax(0,1fr)}.topbar h1{font-size:16px}.locale-tools{grid-template-columns:minmax(0,1fr) 72px 36px}.locale-tools select{font-size:11px}.launch-copy h2{font-size:29px}.two-col{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.footer-brand{grid-column:auto}.growth-metrics strong{font-size:18px}
 }
+
+/* Keep mobile account utilities as separate, non-overlapping controls. */
+@media(max-width:760px){
+  .top-actions{display:flex!important;align-items:center;gap:7px!important;width:100%}
+  .locale-tools{display:grid!important;grid-template-columns:minmax(92px,1.35fr) minmax(64px,.8fr) 38px;flex:1 1 auto;gap:5px;padding:5px;border:1px solid #ffffff10;border-radius:13px;background:#06111d;overflow:hidden}
+  .locale-tools select,.locale-tools #currency-select{max-width:none!important;height:36px;min-height:36px;margin:0;padding-left:9px;padding-right:21px;border-radius:9px}
+  .locale-tools button{width:36px;height:36px}
+  .topbar .account-button{flex:0 0 42px;width:42px;height:46px;min-height:46px;margin:0}
+  .topbar .balance{display:none!important}
+}
