@@ -150,3 +150,35 @@ radial-gradient(circle at 18% 0,#ff8a000e,transparent 24%),
   .welcome h2{font-size:22px}.trust{display:grid;grid-template-columns:repeat(3,max-content);max-width:100%;padding-bottom:4px}.growth-metrics strong{font-size:18px}
   .music-player.mini{left:10px;right:10px;bottom:10px;width:auto;transform:none}.music-player.mini.open{width:auto}.music-player.mini .music-list{grid-template-columns:1fr}
 }
+
+/* 2026-09 account, locale and theme reliability pass */
+.brand-mark{overflow:hidden;padding:0;background:transparent;box-shadow:0 12px 30px #ff741f2d}
+.brand-mark img,.album-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
+.topbar{position:relative;top:auto;z-index:20}
+.locale-tools{align-items:center;gap:5px}
+.locale-tools select{width:auto;max-width:112px;min-height:34px;padding:7px 24px 7px 8px;border-radius:9px;font-size:8px}
+.locale-tools #currency-select{max-width:76px}
+.locale-tools button{width:34px;height:34px;padding:0;border-radius:9px}
+.review-form.login-required{border-color:#ff8a0045}
+.review-form.login-required button{background:linear-gradient(110deg,#ff7a00,#ff9d24)}
+
+body.light-premium{background:radial-gradient(circle at 70% 5%,#ff8a0014,transparent 25%),#f3f6fa;color:#172033}
+body.light-premium .ambient{background-image:linear-gradient(#11213a08 1px,transparent 1px),linear-gradient(90deg,#11213a08 1px,transparent 1px)}
+body.light-premium .sidebar,body.light-premium .topbar{background:#ffffffed;border-color:#dce4ee;color:#172033}
+body.light-premium .brand,body.light-premium .nav-item:hover,body.light-premium .nav-item.active{color:#172033}
+body.light-premium .nav-item,body.light-premium .side-platforms a{color:#667085}
+body.light-premium .nav-item.active{background:#ff8a0012;border-color:#ff8a0038}
+body.light-premium .side-card,body.light-premium .panel,body.light-premium .popular,body.light-premium .help-card,body.light-premium .catalog-tools{background:#fff;color:#172033;border-color:#dce4ee;box-shadow:0 18px 45px #1720330c}
+body.light-premium .launch-banner{background:linear-gradient(128deg,#fff,#fff8ed 72%,#fff1dc);border-color:#ff9b2f42;box-shadow:0 24px 60px #d96f0016}
+body.light-premium .launch-copy h2,body.light-premium .launch-copy p,body.light-premium .visual-stats b,body.light-premium .section-mini-head h3,body.light-premium .faq-section h3{color:#172033}
+body.light-premium .launch-visual,body.light-premium .visual-stats article,body.light-premium .visual-chart{background:#f8fafc;border-color:#dce4ee;color:#172033}
+body.light-premium .trust span,body.light-premium .pill,body.light-premium .growth-metrics,body.light-premium .category-card,body.light-premium .faq-list details,body.light-premium .service-chip{background:#fff;color:#354052;border-color:#dce4ee}
+body.light-premium input,body.light-premium select,body.light-premium textarea,body.light-premium .search,body.light-premium .amount-box,body.light-premium .service-info,body.light-premium .chat-inline,body.light-premium .account-button,body.light-premium .balance,body.light-premium .locale-tools select,body.light-premium .locale-tools button{background:#f8fafc;color:#172033;border-color:#cfd9e6}
+body.light-premium .table-row,body.light-premium .review-card p,body.light-premium .footer-grid a,body.light-premium .footer-grid button{color:#566278}
+body.light-premium .table-row b,body.light-premium .service-chip,body.light-premium .category-card span,body.light-premium .review-card h3{color:#172033}
+body.light-premium .site-footer{background:#eaf0f6;color:#172033;border-color:#d5deea}
+body.light-premium .music-player{background:#fff;color:#172033;border-color:#d5deea;box-shadow:0 18px 45px #17203320}
+body.light-premium .ops-card{background:#fff;color:#172033;border-color:#d5deea}
+body.light-premium .ops-close{color:#172033}
+
+@media(max-width:760px){.topbar{position:relative;top:auto}.locale-tools select{max-width:105px;flex:0 1 auto}.locale-tools #currency-select{max-width:72px}.top-actions{justify-content:flex-start}.account-button{margin-left:auto}}
