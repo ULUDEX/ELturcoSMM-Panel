@@ -3,10 +3,10 @@
 Aşağıdaki metni kopyalayıp proje bağlantısıyla birlikte gönderin:
 
 ```text
-Bu GitHub deposu ELTURKO SMM Panel projesidir:
-https://github.com/ULUDEX/kivildigital-smm
+Bu GitHub deposu ELTURCO SMM Panel projesidir:
+https://github.com/ULUDEX/ELturcoSMM-Panel
 
-Önce README.md, PROJECT_STATUS.md, AGENTS.md ve docs/DEPLOYMENT.md dosyalarını tamamen oku. Mevcut tasarımı ve çalışan özellikleri koru. Değişiklik yapmadan önce git status ve mevcut branch'i kontrol et. Şifre, token veya API anahtarını koda yazma; .env.example yalnızca anahtar adlarını içersin.
+Önce README.md, PROJECT_STATUS.md, AGENTS.md ve docs/DEPLOYMENT.md dosyalarını tamamen oku. Mevcut ELTURCO tasarımını ve çalışan özellikleri koru. KıvılDigital markası, eski bağlantıları veya eski proje adlarıyla ilgili değişiklik yapma; proje yalnızca ELTURCO SMM olarak çalışmalıdır. Değişiklik yapmadan önce git status ve mevcut branch'i kontrol et. Şifre, token veya API anahtarını koda yazma; .env.example yalnızca anahtar adlarını içersin.
 
 İstediğim değişiklik: [BURAYA İSTEĞİNİ YAZ]
 
