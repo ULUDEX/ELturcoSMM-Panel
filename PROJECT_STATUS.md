@@ -1,34 +1,35 @@
 # Proje Durumu
 
-Son güncelleme: 16 Eylül 2026
+Son güncelleme: 22 Eylül 2026
 
 ## Çalışan bölümler
 
-- Mobil uyumlu ElTurco SMM müşteri arayüzü
+- Mobil uyumlu ELTURCO SMM müşteri arayüzü
 - Kategoriye göre hizmet seçme ve tutar hesaplama
 - Sipariş oluşturma, kaydetme ve sağlayıcıya iletmeyi deneme
 - Admin oturumu ve 15 dakikalık başarısız giriş sınırlaması
 - Hizmet ekleme, düzenleme, aktif/pasif yapma ve silme
 - Sipariş, ödeme talebi, gelir-gider ve destek yönetimi
 - Site metinleri ve görünürlük ayarları
-- Müzik listesi ve R2 medya yükleme altyapısı (lisanslı MP3 dosyaları GitHub'da dağıtılmaz)
+- Müzik listesi ve R2 medya yükleme altyapısı
 - D1 veritabanı şeması ve migration geçmişi
 - Shopier webhook ve mükerrer ödeme koruması için altyapı
 - SMM sağlayıcı API ve reseller API uçları
 
 ## Canlı ortam bilgisi
 
-- Mevcut Sites yayını: `https://kivildigital-smm.ahmetcankorkmaz1613.chatgpt.site`
-- Özel alan adı hedefi: `elturkosmm.com`
+- Cloud/Sites yayını: ELTURCO SMM Panel
+- Özel alan adı hedefi: `elturcosmm.com`
 - Sites proje kimliği: `.openai/hosting.json` içinde kayıtlıdır.
+- Eski KıvılDigital adı ve bağlantıları bu projeden kaldırılmalıdır; ELTURCO SMM tek marka olarak kullanılmalıdır.
 
 ## Canlıya almadan önce tamamlanacaklar
 
 1. Hosting ortamına yeni `ADMIN_PASSWORD` ve rastgele `ADMIN_SESSION_SECRET` girin.
-2. Kullanılacak SMM sağlayıcısının URL ve API anahtarını ekleyin; küçük bir test siparişi yapın.
+2. PanelFollows sağlayıcısının URL ve API anahtarını ekleyin; küçük bir test siparişi yapın.
 3. Shopier hesabı hazırsa gerçek checkout URL, access token ve webhook secret girin.
 4. Shopier webhook adresini panelde `/api/shopier/webhook` olarak tanımlayın ve imza doğrulamasını test edin.
-5. `elturkosmm.com` DNS kayıtlarını seçilen hosting sağlayıcısına bağlayın.
+5. `elturcosmm.com` DNS kayıtlarını seçilen hosting sağlayıcısına bağlayın.
 6. `public/site/audio` içindeki tüm ses dosyalarının ticari yayın hakkını kontrol edin.
 
 ## Bilinen ürün eksikleri
@@ -49,4 +50,4 @@ Son güncelleme: 16 Eylül 2026
 - `drizzle/`: Sıralı SQL migration dosyaları
 - `lib/provider.ts`: SMM sağlayıcı bağlantısı
 - `lib/admin-auth.ts`: Admin oturum doğrulaması
-- `.openai/hosting.json`: Mevcut ChatGPT Sites bağlantısı
+- `.openai/hosting.json`: Mevcut Cloud/Sites bağlantısı
