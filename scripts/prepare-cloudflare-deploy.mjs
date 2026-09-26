@@ -15,6 +15,9 @@ if (missing.length > 0) {
 }
 
 const config = JSON.parse(await readFile(configPath, "utf8"));
+const apiVersion = process.env.SMM_PROVIDER_API_VERSION?.trim() || "3";
+if (!["2", "3"].includes(apiVersion)) throw new Error("SMM_PROVIDER_API_VERSION must be 2 or 3.");
+config.vars = { ...config.vars, SMM_PROVIDER_API_VERSION: apiVersion };
 config.name = process.env.CF_WORKER_NAME?.trim() || "elturko-smm";
 // The production custom domains are already attached to this Worker. The
 // deployment token only needs account-level Worker access, so leave zone route
