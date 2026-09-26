@@ -74,12 +74,18 @@ jobs:
             pnpm exec wrangler d1 execute DB --remote --config dist/server/wrangler.json --command "DELETE FROM customer_sessions WHERE user_id IN (SELECT id FROM customer_users WHERE email='$email'); DELETE FROM customer_balances WHERE email='$email'; DELETE FROM customer_users WHERE email='$email';" >/dev/null 2>&1 || true
           }
           trap cleanup EXIT
-          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --cookie-jar /tmp/register.cookies --output /tmp/register.json --write-out '%{http_code}' https://elturcosmm.com/api/account/register --header 'content-type: application/json' --data "{\"name\":\"Deploy Test\",\"email\":\"$email\",\"password\":\"DeployTest-9284\"}")"
+          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --output /tmp/challenge.json --write-out '%{http_code}' -X POST https://elturcosmm.com/api/account/challenge --header 'content-type: application/json' --data '{}')"
+          test "$status" = "200"
+          challenge_id="$(node -e 'const d=JSON.parse(require("node:fs").readFileSync("/tmp/challenge.json","utf8")); console.log(d.id)')"
+          challenge_answer="$(node -e 'const d=JSON.parse(require("node:fs").readFileSync("/tmp/challenge.json","utf8")); const n=d.question.match(/\d+/g).map(Number); if(n.length!==2) throw new Error("Doğrulama sorusu okunamadı"); console.log(n[0]+n[1])')"
+          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --cookie-jar /tmp/register.cookies --output /tmp/register.json --write-out '%{http_code}' https://elturcosmm.com/api/account/register --header 'content-type: application/json' --data "{\"name\":\"Deploy Test\",\"email\":\"$email\",\"password\":\"DeployTest-9284\",\"challengeId\":\"$challenge_id\",\"challengeAnswer\":\"$challenge_answer\"}")"
           cat /tmp/register.json
+          test "$status" = "200"
+          status="$(curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/avatar.json --write-out '%{http_code}' https://elturcosmm.com/api/account/profile --request POST --header 'content-type: application/json' --data '{"avatar":"orbit"}')"
           test "$status" = "200"
           curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/account.json https://elturcosmm.com/api/account
           cat /tmp/account.json
-          node -e 'const account=JSON.parse(require("node:fs").readFileSync("/tmp/account.json","utf8")); if(!account.loggedIn||account.user.balance!==0) throw new Error("Oturum veya bakiye doğrulanamadı");'
+          node -e 'const account=JSON.parse(require("node:fs").readFileSync("/tmp/account.json","utf8")); if(!account.loggedIn||account.user.balance!==0||account.user.avatar!=="orbit") throw new Error("Oturum, avatar veya bakiye doğrulanamadı");'
 
       - name: Sync PanelFollows catalog
         run: |

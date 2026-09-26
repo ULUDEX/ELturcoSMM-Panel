@@ -1,8 +1,10 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { CUSTOMER_COOKIE,createCustomerSession,customerCookieOptions,passwordHash,randomHex } from "@/lib/customer-auth";
+import { consumeAccountChallenge } from "@/lib/account-challenge";
 export async function POST(request:Request){
  let stage="request";try{const body=await request.json() as any,name=String(body.name||"").trim(),email=String(body.email||"").trim().toLowerCase(),password=String(body.password||"");
+ if(!await consumeAccountChallenge(body.challengeId,body.challengeAnswer))return NextResponse.json({error:"Doğrulama geçersiz veya süresi dolmuş. Yeni soruyu çöz."},{status:400});
  if(name.length<2||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8)return NextResponse.json({error:"Ad, geçerli e-posta ve en az 8 karakterli şifre gerekli."},{status:400});
  stage="lookup";
  if(await env.DB.prepare("SELECT id FROM customer_users WHERE email=?").bind(email).first())return NextResponse.json({error:"Bu e-posta zaten kayıtlı."},{status:409});
