@@ -277,3 +277,21 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 #view-new-order>.platform-categories{grid-row:7}
 #view-new-order>.faq-section{grid-row:8}
 #view-new-order>.trust-section{grid-row:9}
+
+/* Keep only the order summary in view while the longer right rail scrolls. */
+#view-new-order .right-column{position:static}
+#view-new-order .right-column .order-summary{position:sticky;top:93px;align-self:start;z-index:10}
+@media(max-width:760px){
+  #view-new-order.view.active{grid-template-columns:minmax(0,1fr);column-gap:0}
+  #view-new-order>.new-services-showcase,
+  #view-new-order>.launch-banner,
+  #view-new-order>.welcome,
+  #view-new-order>.home-service-showcase,
+  #view-new-order>.growth-metrics,
+  #view-new-order>.platform-categories,
+  #view-new-order>.faq-section,
+  #view-new-order>.trust-section{grid-column:1;grid-row:auto}
+  #view-new-order .order-panel{grid-column:1;grid-row:auto}
+  #view-new-order .right-column{grid-column:1;grid-row:auto;position:static}
+  #view-new-order .right-column .order-summary{position:static}
+}
