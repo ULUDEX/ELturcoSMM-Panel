@@ -23,15 +23,16 @@ export async function GET() {
   const q = await env.DB.prepare(
     "SELECT id,name,type,instructions FROM payment_methods WHERE active=1 ORDER BY id DESC",
   ).all();
-  const methods = q.results.length
-    ? q.results
-    : [{
-        id: 0,
-        name: "Telegram ile ödeme",
-        type: "Manuel ödeme",
-        instructions:
-          "Ödeme bilgilerini almak için Telegram destek düğmesinden @taycanqs hesabına yaz. Ödeme yaptıktan sonra bu formdan bildirim oluştur.",
-      }];
+  const methods = [...q.results];
+  if (!methods.some((method: any) => /telegram/i.test(String(method.name || "")))) {
+    methods.push({
+      id: 0,
+      name: "Telegram ile ödeme",
+      type: "Manuel ödeme",
+      instructions:
+        "Ödeme bilgilerini Telegram'dan @taycanqs hesabına yazarak al. Ödeme yaptıktan sonra tutarı girip bu formdan talep oluştur; dekont veya referansını açıklamaya ekle. Bakiye, ödeme kontrolünden sonra hesabına eklenir.",
+    });
+  }
   return NextResponse.json({ methods, shopier: shopierProducts });
 }
 
