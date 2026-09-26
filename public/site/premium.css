@@ -261,3 +261,4 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 .order-select-wrap .order-service-option>span{grid-area:name;min-height:0!important;-webkit-line-clamp:3!important;align-self:center}
 .order-select-wrap .order-service-option>strong{grid-area:price;align-self:center}
 .order-select-wrap .order-service-option>.order-new-badge{grid-area:badge}
+.new-services-showcase{margin-top:18px}.new-services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.new-services-grid .service-chip{margin-top:8px}.new-service-badge{color:#ffbf5f;font-style:normal;font-weight:800;font-size:9px;letter-spacing:.06em}.new-services-empty{grid-column:1/-1;margin:8px 0 2px;padding:16px;border:1px dashed #29394b;border-radius:11px;color:#99a9b7;font-size:12px}.light-premium .new-services-empty{border-color:#d2dfe4;color:#697983}@media(max-width:720px){.new-services-grid{grid-template-columns:1fr}.new-services-showcase{margin-top:12px}}
