@@ -176,3 +176,37 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 /* Customer profile avatars and a persistent order summary while scrolling. */
 .account-button .profile-avatar{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid #ff914d55;border-radius:50%;background:linear-gradient(145deg,#ff914d30,#ff6b2c12);color:#ffd09b;font-size:16px}.profile-avatar-large{display:grid!important;place-items:center;width:58px!important;height:58px!important;margin:0 auto 12px!important;border:1px solid #ff914d70!important;border-radius:50%!important;background:radial-gradient(circle at 35% 30%,#ff914d55,#ff6b2c14 72%)!important;color:#ffd09b!important;font-size:23px!important;box-shadow:0 0 28px #ff6b2c18}.avatar-picker{display:flex;justify-content:center;gap:9px;margin:16px 0 7px}.avatar-picker button{display:grid;place-items:center;width:42px;height:42px;border:1px solid #253247;border-radius:50%;background:#09101b;color:#cbd5e1;font-size:17px;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}.avatar-picker button:hover{transform:translateY(-2px);border-color:#ff914d88}.avatar-picker button.active{border-color:var(--orange2);background:#ff6b2c21;color:#ffd09b;box-shadow:0 0 0 3px #ff6b2c12}.avatar-picker button:disabled{opacity:.55;cursor:wait}.account-summary #avatar-status{display:block;margin:0 0 15px;color:var(--muted);font-size:11px}.account-challenge{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:12px 14px;border:1px solid #253247;border-radius:12px;background:#09101b}.account-challenge small,.account-challenge strong{display:block}.account-challenge small{margin-bottom:5px;color:var(--muted);font-size:10px;letter-spacing:1px}.account-challenge strong{color:#ffd09b;font-size:16px;letter-spacing:.4px}.account-challenge button{width:38px;height:38px;border:1px solid #ff914d55;border-radius:10px;background:#ff6b2c14;color:#ffd09b;font-size:21px;cursor:pointer}.order-layout .right-column .order-summary{position:sticky;top:18px;align-self:start;z-index:5}
 @media(max-width:760px){.order-layout .right-column .order-summary{top:8px;z-index:8}.account-button .profile-avatar{width:34px;height:34px}}
+
+/* Recognizable platform marks used by the category cards and catalog filters. */
+.platform-logo{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:11px;color:#fff;background:#334155;box-shadow:0 5px 14px #0003;vertical-align:middle}
+.platform-logo svg{display:block;width:19px;height:19px;fill:currentColor}
+.platform-logo.logo-instagram{background:radial-gradient(circle at 30% 105%,#ffdc80 0 12%,#fcaf45 27%,#f77737 42%,#e1306c 62%,#c13584 78%,#833ab4 100%)}
+.platform-logo.logo-instagram svg{fill:none;stroke:#fff;stroke-width:1.9}
+.platform-logo.logo-instagram .logo-dot{fill:#fff;stroke:none}
+.platform-logo.logo-tiktok{background:#08090c}
+.platform-logo.logo-tiktok svg{filter:drop-shadow(-1px 0 #25f4ee) drop-shadow(1px 0 #fe2c55)}
+.platform-logo.logo-youtube{background:#ff0033;border-radius:10px}
+.platform-logo.logo-youtube svg{width:21px;height:21px}
+.platform-logo.logo-telegram{background:#229ed9;border-radius:50%}
+.platform-logo.logo-telegram .logo-cutout{fill:#fff}
+.platform-logo.logo-facebook{background:#0866ff;border-radius:50%}
+.platform-logo.logo-twitter{background:#08090c;border-radius:50%}
+.platform-logo.logo-whatsapp{background:#25d366;border-radius:50%}
+.platform-logo.logo-twitch{background:#9146ff;border-radius:9px}
+.platform-logo.logo-spotify{background:#1ed760;border-radius:50%}
+.platform-logo.logo-spotify .logo-cutout{fill:none;stroke:#101318;stroke-width:1.6;stroke-linecap:round}
+.platform-logo.logo-kick{background:#53fc18;color:#07120a;border-radius:9px}
+.platform-logo.logo-other{background:#ff6b2c}
+.category-card>b .platform-logo{width:42px;height:42px;border-radius:13px}
+.category-card>b .platform-logo svg{width:23px;height:23px}
+.catalog-platforms button strong{display:flex;align-items:center;justify-content:center;width:27px;height:27px;font-size:0}
+.catalog-platforms button .platform-logo{width:25px;height:25px;border-radius:8px;box-shadow:none}
+.catalog-platforms button .platform-logo svg{width:15px;height:15px}
+.catalog-platforms button .platform-logo.logo-telegram,.catalog-platforms button .platform-logo.logo-facebook,.catalog-platforms button .platform-logo.logo-twitter,.catalog-platforms button .platform-logo.logo-whatsapp,.catalog-platforms button .platform-logo.logo-spotify{border-radius:50%}
+.side-platforms a{display:flex;align-items:center;gap:9px}
+.side-platforms a .platform-logo{width:22px;height:22px;border-radius:7px;box-shadow:none}
+.side-platforms a .platform-logo svg{width:13px;height:13px}
+.service-chip>span{display:grid;place-items:center;width:38px;height:38px;background:transparent!important}
+.service-chip>span .platform-logo{width:32px;height:32px;border-radius:10px}
+.service-chip>span .platform-logo svg{width:18px;height:18px}
+
