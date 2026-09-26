@@ -13,6 +13,8 @@ Proje `.openai/hosting.json` ile mevcut Sites projesine bağlıdır. Sites üzer
 5. Yeni sürümü yayınlayın.
 6. `/`, `/admin`, hizmet listesi, destek ve test siparişi akışını kontrol edin.
 
+Shopier kartlı ödeme için hosting ortamına `SHOPIER_API_KEY`, `SHOPIER_API_SECRET`, `SHOPIER_ACCESS_TOKEN` ve `SHOPIER_CALLBACK_URL=https://elturcosmm.com/api/shopier/webhook` değerlerini ekleyin. Anahtarları Git'e koymayın. Dönüş imzası kontrol edildikten sonra Shopier REST API'den siparişin `paid` durumu, TRY para birimi ve tutarı ayrıca doğrulanır; D1'deki ödeme kaydıyla müşteri eşleşmeden bakiye yazılmaz. Canlıya geçmeden önce başarılı ve başarısız bir ödeme dönüşünü küçük tutarla deneyin.
+
 ## 2. Yerel D1 kurulumu
 
 Önce build alın:

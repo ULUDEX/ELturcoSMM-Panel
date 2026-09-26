@@ -13,7 +13,7 @@ Son güncelleme: 22 Eylül 2026
 - Site metinleri ve görünürlük ayarları
 - Müzik listesi ve R2 medya yükleme altyapısı
 - D1 veritabanı şeması ve migration geçmişi
-- Shopier webhook ve mükerrer ödeme koruması için altyapı
+- Shopier imzalı checkout ve idempotent bakiye yazımı (anahtarlar eklenince etkinleşir)
 - SMM sağlayıcı API ve reseller API uçları
 
 ## Canlı ortam bilgisi
@@ -27,8 +27,8 @@ Son güncelleme: 22 Eylül 2026
 
 1. Hosting ortamına yeni `ADMIN_PASSWORD` ve rastgele `ADMIN_SESSION_SECRET` girin.
 2. PanelFollows sağlayıcısının URL ve API anahtarını ekleyin; küçük bir test siparişi yapın.
-3. Shopier hesabı hazırsa gerçek checkout URL, access token ve webhook secret girin.
-4. Shopier webhook adresini panelde `/api/shopier/webhook` olarak tanımlayın ve imza doğrulamasını test edin.
+3. Shopier API anahtarı, secret ve kişisel erişim anahtarını hosting ortamında `SHOPIER_API_KEY`, `SHOPIER_API_SECRET`, `SHOPIER_ACCESS_TOKEN` olarak tanımlayın.
+4. `SHOPIER_CALLBACK_URL=https://elturcosmm.com/api/shopier/webhook` ayarlayıp başarılı ve başarısız ödeme dönüşlerini test edin.
 5. `elturcosmm.com` DNS kayıtlarını seçilen hosting sağlayıcısına bağlayın.
 6. `public/site/audio` içindeki tüm ses dosyalarının ticari yayın hakkını kontrol edin.
 
@@ -36,7 +36,7 @@ Son güncelleme: 22 Eylül 2026
 
 - Müşteri üyeliği ve müşteriye özel kalıcı bakiye ekranı tam ürün akışı olarak bitmiş değil.
 - Sipariş takibi müşteri hesabına bağlı değil.
-- Shopier gerçek hesap bilgileri olmadan ödeme otomatik çalışmaz.
+- Shopier API anahtarı, secret ve kişisel erişim anahtarı olmadan ödeme başlatılamaz/doğrulanamaz; bu bilgiler Git'e eklenmemelidir.
 - Sağlayıcı API bilgileri olmadan siparişler otomatik teslim edilmez; admin panelinde beklemede kalır.
 - Üretim öncesi uçtan uca ödeme, webhook ve sağlayıcı hata senaryosu testi gerekir.
 
