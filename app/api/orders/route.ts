@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { currentCustomer } from "@/lib/customer-auth";
+import { awardCompletedOrder } from "@/lib/rewards";
 import { forwardOrder, getProviderRefillStatus, getProviderStatuses, previewProviderOrder, providerConfigured, requestProviderOrderAction } from "@/lib/provider";
 
 const now=()=>Math.floor(Date.now()/1000);
@@ -11,6 +12,7 @@ async function customerOrders(email:string){
  const result:any=await env.DB.prepare("SELECT o.id,o.service_name service,o.link,o.quantity,o.amount,o.status,o.provider_order_id providerOrderId,o.provider_service_id providerServiceId,o.provider_refill_id providerRefillId,o.provider_action providerAction,o.provider_synced_at providerSyncedAt,o.created_at createdAt,s.provider_features providerFeatures,s.price_unit priceUnit FROM orders o LEFT JOIN services s ON s.id=o.service_id WHERE o.customer_email=? ORDER BY o.id DESC LIMIT 50").bind(email).all();
  const rows=result.results as any[],at=now(),statusIds=rows.filter(row=>row.providerOrderId&&at-Number(row.providerSyncedAt||0)>30&&!["completed","canceled","failed"].includes(mapStatus(row.status))).map(row=>String(row.providerOrderId));
  if(statusIds.length){const statuses=await getProviderStatuses(statusIds),updates=[] as any[];for(const row of rows){const external=(statuses as any)[String(row.providerOrderId)];if(!external)continue;const next=mapStatus(external.status??external);if(next!==mapStatus(row.status)||at-Number(row.providerSyncedAt||0)>30)updates.push(env.DB.prepare("UPDATE orders SET status=?,provider_synced_at=?,provider_error=? WHERE id=? AND customer_email=?").bind(next,at,"",row.id,email));row.status=next;row.providerSyncedAt=at}if(updates.length)await env.DB.batch(updates)}
+ for(const row of [...rows].sort((a,b)=>Number(a.id)-Number(b.id)))if(mapStatus(row.status)==="completed")await awardCompletedOrder(email,Number(row.id));
  for(const row of rows){if(row.providerRefillId&&row.providerAction==="refill_requested"){const refill=await getProviderRefillStatus(String(row.providerRefillId));if(refill.ok){row.refillStatus=refill.status;const normalized=String(refill.status).toLowerCase();if(/complete|success|done/.test(normalized))row.providerAction="refill_completed";if(/fail|reject|error/.test(normalized))row.providerAction="refill_failed";if(row.providerAction!=="refill_requested")await env.DB.prepare("UPDATE orders SET provider_action=? WHERE id=? AND customer_email=?").bind(row.providerAction,row.id,email).run()}}
   row.features=features({provider_features:row.providerFeatures});delete row.providerFeatures;
   row.canRefill=Boolean(row.features.refill)&&mapStatus(row.status)==="completed"&&!["refill_requested"].includes(row.providerAction);
