@@ -556,3 +556,24 @@ input:focus,select:focus{border-color:#dfb447!important;box-shadow:0 0 0 3px #f5
 .ad-slide,.ad-slide.active{min-height:250px;padding-top:29px;padding-bottom:47px}
 .ad-slide .ad-art{min-height:180px}
 @media(max-width:760px){.ad-carousel{min-height:0}.ad-slide,.ad-slide.active{min-height:0;padding:21px 20px 68px}.ad-slide .ad-art{min-height:125px}}
+
+
+/* Match the reference capture at its actual compact desktop viewport. */
+@media(min-width:1051px) and (max-width:1200px){
+ :root{--sidebar:245px}
+ .topbar{height:68px}
+ .view{padding-top:12px}
+ .launch-banner{margin-bottom:15px}
+ .ad-carousel{min-height:198px}
+ .ad-slide,.ad-slide.active{min-height:198px;padding:12px 38px 36px}
+ .ad-slide .ad-art{min-height:145px}
+ .ad-controls{left:38px;bottom:8px}
+ .welcome{margin:0 0 8px}
+ .welcome h2{margin:5px 0;font-size:46px;line-height:1.05}
+ .order-layout{grid-template-columns:minmax(0,1.5fr) minmax(280px,.82fr);gap:15px}
+ .order-panel{padding:18px 19px}
+ .order-steps{margin:11px 0 9px}
+ .platform-picks{gap:7px}
+ .order-summary{padding:14px}
+ .music-player.mini{width:min(330px,calc(100vw - 28px))}
+}
