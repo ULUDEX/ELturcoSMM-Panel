@@ -549,3 +549,10 @@ input:focus,select:focus{border-color:#dfb447!important;box-shadow:0 0 0 3px #f5
  .order-layout{grid-template-columns:minmax(0,1.5fr) minmax(280px,.82fr);gap:15px}
  .global-search{max-width:420px}
 }
+
+
+/* Keep the campaign copy fully visible in the desktop customer reference. */
+.ad-carousel{min-height:250px}
+.ad-slide,.ad-slide.active{min-height:250px;padding-top:29px;padding-bottom:47px}
+.ad-slide .ad-art{min-height:180px}
+@media(max-width:760px){.ad-carousel{min-height:0}.ad-slide,.ad-slide.active{min-height:0;padding:21px 20px 68px}.ad-slide .ad-art{min-height:125px}}
