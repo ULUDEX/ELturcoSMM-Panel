@@ -197,6 +197,37 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 .platform-logo.logo-spotify .logo-cutout{fill:none;stroke:#101318;stroke-width:1.6;stroke-linecap:round}
 .platform-logo.logo-kick{background:#53fc18;color:#07120a;border-radius:9px}
 .platform-logo.logo-other{background:#ff6b2c}
+.platform-logo.logo-discord{background:#5865f2}
+.platform-logo.logo-snapchat{background:#fffc00;color:#171717}
+.platform-logo.logo-threads{background:#08090c}
+.platform-logo.logo-truthsocial{background:#24466f}
+.platform-logo.logo-bluesky{background:#0285ff}
+.platform-logo.logo-linkedin{background:#0a66c2}
+.platform-logo.logo-pinterest{background:#e60023}
+.platform-logo.logo-reddit{background:#ff4500}
+.platform-logo.logo-soundcloud{background:#ff5500}
+.platform-logo.logo-vk{background:#0077ff}
+.platform-logo.logo-okru{background:#ee8208}
+.platform-logo.logo-rutube{background:#27243c}
+.platform-logo.logo-kwai{background:#ff5000}
+.platform-logo.logo-rumble{background:#85c742;color:#10250b}
+.platform-logo.logo-shopee{background:#ee4d2d}
+.platform-logo.logo-audiomack{background:#ffc700;color:#161616}
+.platform-logo.logo-github{background:#24292f}
+.platform-logo.logo-quora{background:#b92b27}
+.platform-logo.logo-crypto{background:#f7931a}
+.platform-logo.logo-applemusic{background:linear-gradient(145deg,#fa233b,#fb5c74)}
+.platform-logo.logo-yandexmusic{background:#ff4438}
+.platform-logo.logo-dzen{background:#151515}
+.platform-logo.logo-medium{background:#121212;color:#fff}
+.platform-logo.logo-likee{background:linear-gradient(145deg,#ff8c00,#ff2d55,#9b32ff)}
+.platform-logo.logo-wibes{background:#ffc800;color:#171717}
+.platform-logo.logo-tumblr{background:#36465d}
+.platform-logo.logo-traffic{background:#4253a4}
+.platform-logo.logo-google{background:#fff;color:#4285f4}
+.platform-logo.logo-other{background:#526071}
+.catalog-platforms button .platform-logo.logo-snapchat,.catalog-platforms button .platform-logo.logo-google{border-radius:8px}
+
 .category-card>b .platform-logo{width:42px;height:42px;border-radius:13px}
 .category-card>b .platform-logo svg{width:23px;height:23px}
 .catalog-platforms button strong{display:flex;align-items:center;justify-content:center;width:27px;height:27px;font-size:0}
@@ -210,3 +241,5 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 .service-chip>span .platform-logo{width:32px;height:32px;border-radius:10px}
 .service-chip>span .platform-logo svg{width:18px;height:18px}
 
+
+.platform-picks button{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11px}.platform-picks button>span:not(.platform-logo){margin:0;font-size:11px}.platform-picks button .platform-logo{width:25px;height:25px;margin:0;border-radius:8px;box-shadow:none}.platform-picks button .platform-logo svg{width:15px;height:15px}
