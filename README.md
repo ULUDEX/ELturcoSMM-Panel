@@ -38,9 +38,10 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 | `SMM_PROVIDER_API_KEY` | Otomatik teslimat için | Sağlayıcı API anahtarı |
 | `SMM_PROVIDER_USD_TRY_RATE` | İsteğe bağlı | Sabit USD/TRY kuru; boşsa TCMB kuru kullanılır |
 | `KIVIL_API_KEY` | Harici API için | `/api/v1` erişim anahtarı |
-| `SHOPIER_ACCESS_TOKEN` | Shopier için | Shopier erişim anahtarı |
-| `SHOPIER_WEBHOOK_SECRET` | Shopier için | Webhook doğrulama sırrı |
-| `SHOPIER_CHECKOUT_URL` | Shopier için | Ödeme sayfası adresi |
+| `SHOPIER_API_KEY` | Shopier kartlı ödeme için | Shopier internet sitesi API anahtarı |
+| `SHOPIER_API_SECRET` | Shopier kartlı ödeme için | Ödeme formu ve dönüş imzası sırrı |
+| `SHOPIER_ACCESS_TOKEN` | Shopier kartlı ödeme için | Ödenmiş siparişi Shopier REST API'den ayrıca doğrulamak için kişisel erişim anahtarı |
+| `SHOPIER_CALLBACK_URL` | Shopier kartlı ödeme için | HTTPS ödeme dönüş adresi; `https://elturcosmm.com/api/shopier/webhook` |
 
 ## Önemli adresler
 
@@ -48,6 +49,7 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 - Yönetim: `/admin`
 - Genel API: `/api/v1`
 - Shopier webhook: `/api/shopier/webhook`
+- Shopier ödeme başlatma: `/api/shopier/checkout`
 
 ## Projeyi devralacak kişi için
 
