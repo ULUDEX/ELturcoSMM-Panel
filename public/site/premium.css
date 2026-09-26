@@ -243,3 +243,5 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 
 
 .platform-picks button{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11px}.platform-picks button>span:not(.platform-logo){margin:0;font-size:11px}.platform-picks button .platform-logo{width:25px;height:25px;margin:0;border-radius:8px;box-shadow:none}.platform-picks button .platform-logo svg{width:15px;height:15px}
+
+.category-grid>.platform-more{grid-column:1/-1;width:max-content;justify-self:center;min-height:42px;padding:0 20px;border:1px solid rgba(235,239,246,.16);border-radius:999px;background:rgba(255,255,255,.035);color:#d8dde7;font:600 13px/1.2 inherit;cursor:pointer;transition:background .18s,border-color .18s,color .18s}.category-grid>.platform-more:hover{background:rgba(255,255,255,.08);border-color:rgba(235,239,246,.3);color:#fff}
