@@ -313,3 +313,16 @@ body.light-premium #view-new-order .status-item b{color:#263942}
 body.light-premium #view-new-order .status-item small{color:#647982}
 body.light-premium #view-new-order .status-item>i{border-color:#d4c47d;background:#fff8df;color:#715b11}
 @media(max-width:520px){#view-new-order .panel-head>button{min-height:34px;padding:0 9px;font-size:10px}#view-new-order .status-timeline{gap:8px;padding:12px}}
+
+/* Keep only the order summary pinned below the sticky top bar while scrolling. */
+#view-new-order>.order-layout .right-column{position:static;align-self:start}
+#view-new-order>.right-column{position:static}
+#view-new-order .right-column .order-summary{position:sticky;top:92px;align-self:start;z-index:25;grid-row:auto}
+@media(max-width:1050px){
+  #view-new-order .right-column{position:static;display:grid;grid-template-columns:minmax(0,1fr);align-content:start;gap:12px}
+  #view-new-order .right-column .order-summary{position:sticky;top:88px;grid-row:auto}
+}
+@media(max-width:760px){
+  #view-new-order .right-column{position:static;grid-template-columns:minmax(0,1fr);gap:10px}
+  #view-new-order .right-column .order-summary{top:86px;z-index:35}
+}
