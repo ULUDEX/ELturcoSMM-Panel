@@ -520,3 +520,22 @@ input:focus,select:focus{border-color:#dfb447!important;box-shadow:0 0 0 3px #f5
  .ad-slide,.ad-slide.active{min-height:0;padding:21px 20px 68px}
  .ad-slide .ad-art{min-height:125px}
 }
+
+/* Compact announcement and non-obstructive radio dock */
+.ad-slide,.ad-slide.active{padding:13px 60px 39px}
+.ad-slide .launch-copy h2{font-size:clamp(27px,2vw,32px);line-height:1.08;margin:8px 0}
+.ad-slide .launch-copy p{font-size:12px;line-height:1.45;margin:0 0 8px;max-width:530px}
+.ad-slide .launch-actions{gap:8px;margin-top:8px}
+.ad-slide .launch-actions button{min-height:40px;padding:10px 15px}
+.ad-controls{bottom:8px}
+.music-player.mini{left:auto;right:18px;bottom:14px;width:min(360px,calc(100vw - 28px));transform:none}
+.music-player.mini .music-mini{grid-template-columns:34px minmax(0,1fr) 28px 36px 28px 26px}
+.music-player.mini .album-mark{width:34px!important;height:34px!important}
+.music-player.mini .play-main{width:36px;height:36px}
+.music-player.mini .music-copy em,.music-player.mini .music-copy>b{display:none}
+@media(max-width:760px){
+ .ad-slide,.ad-slide.active{padding:21px 20px 68px}
+ .ad-slide .launch-copy h2{font-size:clamp(27px,8vw,34px)}
+ .music-player.mini{left:auto;right:10px;bottom:10px;width:min(340px,calc(100vw - 20px));transform:none}
+ .music-player.mini .music-mini{grid-template-columns:30px minmax(0,1fr) 25px 34px 25px 24px}
+}
