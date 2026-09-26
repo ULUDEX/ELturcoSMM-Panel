@@ -254,3 +254,10 @@ body.light-premium .launch-copy h2{color:#17232c}body.light-premium .launch-copy
 
 .order-select-service .order-select-menu{left:0;right:auto;width:min(660px,calc(100vw - 56px));max-width:calc(100vw - 56px)}
 @media(max-width:520px){.order-select-service .order-select-menu{width:calc(100vw - 40px);max-width:calc(100vw - 40px)}}
+
+.order-select-wrap .order-service-option{grid-template-columns:20px minmax(0,1fr) max-content!important;grid-template-areas:'logo name price' 'id name price' 'badge badge badge'!important;grid-template-rows:20px 15px auto;column-gap:9px!important;row-gap:2px!important;align-items:center!important}
+.order-select-wrap .order-service-option>.platform-logo{grid-area:logo;justify-self:center}
+.order-select-wrap .order-service-option>.order-service-id{grid-area:id;justify-self:center;align-self:start}
+.order-select-wrap .order-service-option>span{grid-area:name;min-height:0!important;-webkit-line-clamp:3!important;align-self:center}
+.order-select-wrap .order-service-option>strong{grid-area:price;align-self:center}
+.order-select-wrap .order-service-option>.order-new-badge{grid-area:badge}
