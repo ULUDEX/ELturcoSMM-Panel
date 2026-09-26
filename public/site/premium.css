@@ -539,3 +539,13 @@ input:focus,select:focus{border-color:#dfb447!important;box-shadow:0 0 0 3px #f5
  .music-player.mini{left:auto;right:10px;bottom:10px;width:min(340px,calc(100vw - 20px));transform:none}
  .music-player.mini .music-mini{grid-template-columns:30px minmax(0,1fr) 25px 34px 25px 24px}
 }
+
+/* Match the compact desktop proportions in the supplied screenshot */
+@media(min-width:1051px) and (max-width:1200px){
+ :root{--sidebar:245px}
+ .sidebar{width:var(--sidebar)}
+ .app-shell{margin-left:var(--sidebar)}
+ .site-footer{margin-left:var(--sidebar)}
+ .order-layout{grid-template-columns:minmax(0,1.5fr) minmax(280px,.82fr);gap:15px}
+ .global-search{max-width:420px}
+}
