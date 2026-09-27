@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const token = randomHex(32), tokenHash = await digest(token), expiresAt = now + 30 * 60;
     await env.DB.prepare("UPDATE customer_password_resets SET used_at=? WHERE user_id=? AND used_at IS NULL").bind(now, user.id).run();
     await env.DB.prepare("INSERT INTO customer_password_resets(user_id,token_hash,expires_at,created_at) VALUES(?,?,?,?)").bind(user.id, tokenHash, expiresAt, now).run();
-    const resetUrl = `${siteBaseUrl()}/site/?password-reset=${encodeURIComponent(token)}`;
+    const resetUrl = `${siteBaseUrl()}/site/#password-reset=${encodeURIComponent(token)}`;
     await sendTransactionalEmail({
       to: email,
       subject: "ElTurco SMM şifre yenileme bağlantısı",
