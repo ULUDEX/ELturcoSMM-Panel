@@ -355,3 +355,19 @@ body.light-premium #view-services .refill-unknown{background:#eef2f5;color:#5365
 .contact-strip .instagram-contact>b{color:#f472b6}
 .contact-strip .tiktok-contact>b{color:#5eead4}
 @media(max-width:900px){.contact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-strip>div{grid-column:1/-1}.contact-strip>a{min-width:0}}
+
+
+/* Clear, recognizable social platform marks */
+.platform-logo.logo-tiktok svg{filter:none}
+.platform-logo.logo-tiktok .tiktok-cyan{fill:#25f4ee;opacity:.9;transform:translateX(-1px)}
+.platform-logo.logo-tiktok .tiktok-red{fill:#fe2c55;opacity:.9;transform:translateX(1px)}
+.platform-logo.logo-tiktok .tiktok-white{fill:#fff}
+.contact-strip .instagram-contact>b{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:radial-gradient(circle at 30% 105%,#ffdc80 0 12%,#fcaf45 27%,#f77737 42%,#e1306c 62%,#c13584 78%,#833ab4 100%);color:#fff}
+.contact-strip .tiktok-contact>b{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#08090c;color:#fff}
+.contact-strip .social-logo{display:block;width:19px;height:19px}
+.contact-strip .instagram-contact .social-logo{fill:none;stroke:currentColor;stroke-width:1.9}
+.contact-strip .instagram-contact .logo-dot{fill:currentColor;stroke:none}
+.contact-strip .tiktok-contact .social-logo{fill:none}
+.contact-strip .tiktok-contact .tiktok-cyan{fill:#25f4ee;opacity:.9;transform:translateX(-.8px)}
+.contact-strip .tiktok-contact .tiktok-red{fill:#fe2c55;opacity:.9;transform:translateX(.8px)}
+.contact-strip .tiktok-contact .tiktok-white{fill:#fff}
