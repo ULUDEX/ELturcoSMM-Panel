@@ -1,5 +1,26 @@
-import { env } from "cloudflare:workers";
 import { digest } from "@/lib/customer-auth";
+import { env } from "cloudflare:workers";
+
+export function turnstileConfigured() {
+  const bindings = env as any;
+  return Boolean(String(bindings.TURNSTILE_SITE_KEY || "").trim() && String(bindings.TURNSTILE_SECRET_KEY || "").trim());
+}
+
+export async function verifyAccountChallenge(request: Request, body: any) {
+  const token = typeof body?.turnstileToken === "string" ? body.turnstileToken : "";
+  if (turnstileConfigured()) {
+    if (!token || token.length > 2048) return false;
+    try {
+      const form = new URLSearchParams({ secret: String((env as any).TURNSTILE_SECRET_KEY).trim(), response: token });
+      const ip = request.headers.get("CF-Connecting-IP");
+      if (ip) form.set("remoteip", ip);
+      const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: form, signal: AbortSignal.timeout(5000) });
+      const result = await response.json() as { success?: boolean; hostname?: string };
+      return response.ok && result.success === true && ["elturcosmm.com", "www.elturcosmm.com"].includes(String(result.hostname || "").toLowerCase());
+    } catch { return false; }
+  }
+  return consumeAccountChallenge(body?.challengeId, body?.challengeAnswer);
+}
 
 export async function consumeAccountChallenge(idValue: unknown, answerValue: unknown) {
   const id = typeof idValue === "string" ? idValue : "";

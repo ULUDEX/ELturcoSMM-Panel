@@ -1,11 +1,11 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { digest,passwordHash,randomHex } from "@/lib/customer-auth";
-import { consumeAccountChallenge } from "@/lib/account-challenge";
+import { verifyAccountChallenge } from "@/lib/account-challenge";
 import { sendTransactionalEmail,siteBaseUrl } from "@/lib/mailer";
 export async function POST(request:Request){
  let stage="request";try{const body=await request.json() as any,name=String(body.name||"").trim(),email=String(body.email||"").trim().toLowerCase(),password=String(body.password||"");
- if(!await consumeAccountChallenge(body.challengeId,body.challengeAnswer))return NextResponse.json({error:"Doğrulama geçersiz veya süresi dolmuş. Yeni soruyu çöz."},{status:400});
+ if(!await verifyAccountChallenge(request,body))return NextResponse.json({error:"İnsan doğrulaması başarısız veya süresi dolmuş. Lütfen tekrar doğrula."},{status:400});
  if(name.length<2||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8||password.length>128)return NextResponse.json({error:"Ad, geçerli e-posta ve 8–128 karakterli şifre gerekli."},{status:400});
  stage="lookup";
  if(await env.DB.prepare("SELECT id FROM customer_users WHERE email=?").bind(email).first())return NextResponse.json({error:"Bu e-posta zaten kayıtlı. Giriş yapmayı veya şifreni yenilemeyi dene."},{status:409});

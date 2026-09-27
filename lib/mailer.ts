@@ -133,7 +133,14 @@ export async function sendTransactionalEmail(input: { to: string; subject: strin
     await command("EHLO elturcosmm.com", [250]);
     await command("AUTH LOGIN", [334]);
     await command(base64(user).replace(/\r\n/g, ""), [334]);
-    await command(base64(password).replace(/\r\n/g, ""), [235]);
+    const authResponse = await command(base64(password).replace(/\r\n/g, ""), [235, 535]);
+    if (authResponse.code === 535) {
+      const configuredUser = emailAddress(user).toLowerCase();
+      const senderUser = emailAddress(from).toLowerCase();
+      const matches = configuredUser === senderUser;
+      console.error("transactional_email_auth_rejected", { configuredUserMatchesSender: matches, smtpHost: host.toLowerCase(), smtpPort: port, passwordLength: password.length, passwordLengthIsGoogleAppPassword: password.length === 16 });
+      throw new Error("SMTP command failed with status 535");
+    }
     await command(`MAIL FROM:<${fromAddress}>`, [250]);
     await command(`RCPT TO:<${toAddress}>`, [250, 251]);
     await command("DATA", [354]);

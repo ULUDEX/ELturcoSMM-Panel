@@ -1,8 +1,11 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { digest, randomHex } from "@/lib/customer-auth";
+import { turnstileConfigured } from "@/lib/account-challenge";
 
 export async function POST() {
+  const bindings = env as any;
+  if (turnstileConfigured()) return NextResponse.json({ mode: "turnstile", siteKey: String(bindings.TURNSTILE_SITE_KEY).trim() }, { headers: { "cache-control": "no-store" } });
   try {
     const now = Math.floor(Date.now() / 1000);
     await env.DB.prepare("DELETE FROM account_challenges WHERE expires_at<=? OR created_at<?").bind(now, now - 300).run();

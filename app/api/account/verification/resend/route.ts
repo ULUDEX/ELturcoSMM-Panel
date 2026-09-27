@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
-import { consumeAccountChallenge } from "@/lib/account-challenge";
+import { verifyAccountChallenge } from "@/lib/account-challenge";
 import { digest, randomHex } from "@/lib/customer-auth";
 import { sendTransactionalEmail, siteBaseUrl } from "@/lib/mailer";
 
@@ -10,8 +10,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json() as { email?: unknown; challengeId?: unknown; challengeAnswer?: unknown };
     const email = String(body.email || "").trim().toLowerCase();
-    if (!await consumeAccountChallenge(body.challengeId, body.challengeAnswer)) {
-      return NextResponse.json({ error: "Doğrulama geçersiz veya süresi dolmuş. Yeni soruyu çöz." }, { status: 400 });
+    if (!await verifyAccountChallenge(request,body)) {
+      return NextResponse.json({ error: "İnsan doğrulaması başarısız veya süresi dolmuş. Lütfen tekrar doğrula." }, { status: 400 });
     }
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json(generic);
 
