@@ -102,12 +102,12 @@ export async function sendTransactionalEmail(input: { to: string; subject: strin
   const user = String(bindings.SMTP_USER || "elturcosmm@gmail.com").trim();
   const password = String(bindings.SMTP_PASS || "").replace(/\s+/g, "");
   const from = String(bindings.EMAIL_FROM || `ElTurco SMM <${user}>`).trim();
-  if (!host || !user || !password || !from) return { sent: false, configured: false };
+  if (!host || !user || !password || !from) return { sent: false, configured: false, reason: "SMTP_NOT_CONFIGURED" };
 
   const port = Number(bindings.SMTP_PORT || 465);
   if (!Number.isInteger(port) || port !== 465) {
     console.error("transactional_email_failed", { reason: "SMTP_PORT must be 465" });
-    return { sent: false, configured: true };
+    return { sent: false, configured: true, reason: "SMTP_PORT_UNSUPPORTED" };
   }
 
   let socket: ReturnType<typeof connect> | undefined;
@@ -155,11 +155,11 @@ export async function sendTransactionalEmail(input: { to: string; subject: strin
     await socket.close();
     return { sent: true, configured: true };
   } catch (error) {
-    console.error("transactional_email_failed", {
-      error: error instanceof Error ? error.message.slice(0, 120) : "UnknownError",
-    });
+    const errorMessage = error instanceof Error ? error.message : "UnknownError";
+    const status = errorMessage.match(/status (\d{3})/i)?.[1];
+    console.error("transactional_email_failed", { reason: status ? `SMTP_${status}` : "SMTP_CONNECTION_FAILED" });
     try { await socket?.close(); } catch { /* Socket may already be closed. */ }
-    return { sent: false, configured: true };
+    return { sent: false, configured: true, reason: status ? `SMTP_${status}` : "SMTP_CONNECTION_FAILED" };
   }
 }
 

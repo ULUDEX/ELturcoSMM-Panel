@@ -386,3 +386,6 @@ body.light-premium #view-services .refill-unknown{background:#eef2f5;color:#5365
 .topbar .balance>span{right:9px;top:8px;width:30px;height:30px;border:1px solid #fff5;border-radius:10px;background:linear-gradient(145deg,#ffe79b,#dcae42);color:#1a170f;font-size:20px;box-shadow:0 4px 12px #d5a43135}
 .topbar .balance:disabled{cursor:wait;opacity:.7}
 @media(max-width:760px){.topbar .balance{flex:1;min-width:135px}}
+.account-feedback{margin:10px 0!important;padding:12px 14px;border:1px solid #2c936b66;border-radius:12px;background:#123323;color:#a9f1ce!important;font-size:12px;line-height:1.55}
+.account-feedback.is-error{border-color:#b95d4c77;background:#351b1b;color:#ffc3b5!important}
+#forgot-continue[hidden]{display:none!important}

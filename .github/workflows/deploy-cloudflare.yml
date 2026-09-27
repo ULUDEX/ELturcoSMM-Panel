@@ -94,6 +94,16 @@ jobs:
           node scripts/write-cloudflare-secrets.mjs
           pnpm exec wrangler secret bulk .cloudflare-secrets.json --config dist/server/wrangler.json
 
+      - name: Verify Gmail delivery once
+        if: github.event_name == 'push' && github.event.head_commit.message == 'Verify Gmail delivery once' && github.run_attempt == 1
+        continue-on-error: true
+        env:
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+          SMTP_PORT: ${{ vars.SMTP_PORT }}
+          SMTP_USER: ${{ vars.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: node scripts/smtp-delivery-smoke.mjs
+
       - name: Verify customer registration
         run: node scripts/smoke-unverified-customer.mjs
 
