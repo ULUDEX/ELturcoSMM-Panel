@@ -109,14 +109,14 @@ jobs:
 
       - name: Verify storefront stylesheet and script
         run: |
-          css_status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 40 --output /tmp/premium.css --write-out '%{http_code}' 'https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v1')"
+          css_status="$(curl --silent --show-error --compressed --retry 2 --retry-delay 3 --max-time 40 --output /tmp/premium.css --write-out '%{http_code}' 'https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v1')"
           test "$css_status" = "200"
           if ! grep -q -- '--sidebar:260px' /tmp/premium.css; then
             echo "The storefront stylesheet URL did not return the expected CSS asset."
             head -c 500 /tmp/premium.css
             exit 1
           fi
-          js_status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 40 --output /tmp/site-app.js --write-out '%{http_code}' 'https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v1')"
+          js_status="$(curl --silent --show-error --compressed --retry 2 --retry-delay 3 --max-time 40 --output /tmp/site-app.js --write-out '%{http_code}' 'https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v1')"
           test "$js_status" = "200"
           if ! grep -q 'selectedService' /tmp/site-app.js; then
             echo "The storefront script URL did not return the expected app asset."
