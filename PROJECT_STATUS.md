@@ -1,6 +1,6 @@
 # Proje Durumu
 
-Son güncelleme: 22 Eylül 2026
+Son güncelleme: 27 Eylül 2026
 
 ## Çalışan bölümler
 
@@ -39,7 +39,7 @@ Son güncelleme: 22 Eylül 2026
 - Memoji tarzı kadın/erkek avatar seçimi ve avatarın hesapta saklanması
 - Giriş yapmış müşteriler için şifre değiştirme ve tek kullanımlık e-posta kurtarma bağlantısı
 
-Canlı ortamda e-posta göndermek için Resend ve doğrulanmış gönderen adresi `RESEND_API_KEY` ve `EMAIL_FROM` Worker secret olarak tanımlanmalıdır. Yeni D1 tabloları migration `0012_customer_notifications_and_password_resets.sql` ile oluşturulur; Cloudflare deploy iş akışı dağıtımdan önce migration uygular.
+Canlı ortamda e-posta göndermek için Gmail SMTP (`smtp.gmail.com:465`) kullanılır. `SMTP_PASS`, GitHub production environment içinde `SMTP_PASS` secret olarak tanımlanmalıdır. Gmail hesabında 2 Adımlı Doğrulama açık olmalı ve ayrı bir uygulama şifresi kullanılmalıdır. Yeni D1 tabloları migration `0012_customer_notifications_and_password_resets.sql` ile oluşturulur; Cloudflare deploy iş akışı dağıtımdan önce migration uygular.
 
 ## Bilinen ürün eksikleri
 

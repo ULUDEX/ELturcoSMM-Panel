@@ -38,8 +38,11 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 | `SMM_PROVIDER_API_KEY` | Otomatik teslimat için | Sağlayıcı API anahtarı |
 | `SMM_PROVIDER_USD_TRY_RATE` | İsteğe bağlı | Sabit USD/TRY kuru; boşsa TCMB kuru kullanılır |
 | `TELEGRAM_BOT_TOKEN` | Telegram duyuruları için | BotFather tarafından verilen bot tokenı; yeni hizmetleri duyurur |
-| `RESEND_API_KEY` | Şifre kurtarma ve e-posta bildirimleri için | Resend API anahtarı; Cloudflare production secret olarak ayarlayın |
-| `EMAIL_FROM` | E-posta için | Resend içinde doğrulanmış gönderen, ör. `ElTurco SMM <no-reply@elturcosmm.com>` |
+| `SMTP_HOST` | E-posta için | Gmail SMTP sunucusu; `smtp.gmail.com` |
+| `SMTP_PORT` | E-posta için | TLS SMTP portu; `465` |
+| `SMTP_USER` | E-posta için | Gmail adresi; varsayılan `elturcosmm@gmail.com` |
+| `SMTP_PASS` | E-posta için | Gmail uygulama şifresi; production secret olarak ayarlayın |
+| `EMAIL_FROM` | E-posta için | Gönderen adresi; varsayılan `ElTurco SMM <elturcosmm@gmail.com>` |
 | `SITE_URL` | İsteğe bağlı | E-posta bağlantılarında kullanılacak HTTPS site adresi |
 | `TELEGRAM_CHAT_ID` | İsteğe bağlı | Duyuru hedefi; boş bırakılırsa `@ElTurcoSmm` kullanılır |
 | `KIVIL_API_KEY` | Harici API için | `/api/v1` erişim anahtarı |
@@ -59,7 +62,7 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 
 Sipariş oluşturma ve durum değişiklikleri ile bakiye yükleme sonuçları müşteri hesabındaki **Bildirimler** kutusuna eklenir. Admin paneli → **Site Düzenleyici → Çok dilli duyuru yayınla** bölümünden Türkçe, İngilizce, İspanyolca, Rusça, Portekizce ve Almanca metin hazırlayıp kayıtlı hesaplara uygulama içi duyuru gönderebilirsiniz.
 
-Şifremi unuttum bağlantısı, e-posta adresini açıklamayan yanıt verir ve 30 dakika geçerli, tek kullanımlık bağlantı gönderir. E-posta göndermeyi etkinleştirmek için Resend hesabında gönderici alan adını doğrulayın; GitHub → **Settings → Environments → production → Environment secrets** içine `RESEND_API_KEY`, **Environment variables** bölümüne `EMAIL_FROM` ve `SITE_URL` ekleyin. Örnek değerler: `ElTurco SMM <no-reply@elturcosmm.com>` ve `https://elturcosmm.com`. İş akışındaki secret bulk adımının bu ortam değişkenlerini Worker secretlarına aktardığını doğrulayın.
+Şifremi unuttum bağlantısı, e-posta adresini açıklamayan yanıt verir ve 30 dakika geçerli, tek kullanımlık bağlantı gönderir. Gmail için `smtp.gmail.com:465` ve `elturcosmm@gmail.com` kullanılır. Google hesabında 2 Adımlı Doğrulama açıkken ayrı bir uygulama şifresi oluşturun; normal Google şifresini kullanmayın. GitHub → **Settings → Environments → production** bölümünde `SMTP_PASS` değerini **Environment secret** olarak ekleyin. Gönderen adresi varsayılan olarak `ElTurco SMM <elturcosmm@gmail.com>` biçimindedir.
 
 ## Telegram yeni hizmet duyuruları
 
