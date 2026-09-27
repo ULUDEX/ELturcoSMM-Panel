@@ -37,6 +37,8 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 | `SMM_PROVIDER_API_URL` | Otomatik teslimat için | SMM sağlayıcı API adresi |
 | `SMM_PROVIDER_API_KEY` | Otomatik teslimat için | Sağlayıcı API anahtarı |
 | `SMM_PROVIDER_USD_TRY_RATE` | İsteğe bağlı | Sabit USD/TRY kuru; boşsa TCMB kuru kullanılır |
+| `TELEGRAM_BOT_TOKEN` | Telegram duyuruları için | BotFather tarafından verilen bot tokenı; yeni hizmetleri duyurur |
+| `TELEGRAM_CHAT_ID` | İsteğe bağlı | Duyuru hedefi; boş bırakılırsa `@ElTurcoSmm` kullanılır |
 | `KIVIL_API_KEY` | Harici API için | `/api/v1` erişim anahtarı |
 | `SHOPIER_ACCESS_TOKEN` | Shopier için | Shopier erişim anahtarı |
 | `SHOPIER_WEBHOOK_SECRET` | Shopier için | Webhook doğrulama sırrı |
@@ -48,6 +50,13 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 - Yönetim: `/admin`
 - Genel API: `/api/v1`
 - Shopier webhook: `/api/shopier/webhook`
+- Telegram hizmet duyuruları: yeni PanelFollows hizmetleri otomatik olarak `@ElTurcoSmm` adresine gönderilir; bot bu kanalda yönetici olmalıdır.
+
+## Telegram yeni hizmet duyuruları
+
+PanelFollows kataloğuna ilk kez eklenen her hizmet Telegram hedefinde tek duyuruya eklenir. Bot tokenı yoksa bildirimler D1 kuyruğunda bekler. Varsayılan hedef `@ElTurcoSmm`; başka grup veya kanal için `TELEGRAM_CHAT_ID` değerini kullanın.
+
+Kurulum: Telegram’da `@BotFather` üzerinden bir bot oluşturun, botu `@ElTurcoSmm` kanalına yönetici olarak ekleyip mesaj gönderme izni verin. BotFather’ın verdiği tokenı GitHub deposunun **Settings → Environments → production → Environment secrets** bölümüne `TELEGRAM_BOT_TOKEN` adıyla ekleyin. Hedefi değiştirecekseniz aynı yere `TELEGRAM_CHAT_ID` secret’ını ekleyin. Ardından **Actions → Deploy to Cloudflare → Run workflow** ile bir dağıtım başlatın. Tokenı sohbet veya kod içine yazmayın. Bağlantı durumu admin panelindeki **Entegrasyonlar** bölümünde görünür.
 
 ## Projeyi devralacak kişi için
 
