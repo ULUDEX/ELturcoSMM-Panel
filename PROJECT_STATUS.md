@@ -44,7 +44,7 @@ Canlı ortamda e-posta göndermek için Resend ve doğrulanmış gönderen adres
 ## Bilinen ürün eksikleri
 
 - Müşteri üyeliği ve müşteriye özel kalıcı bakiye ekranı tam ürün akışı olarak bitmiş değil.
-- Sipariş takibi müşteri hesabına bağlı değil.
+- Sipariş geçmişi giriş yapan müşteriye bağlıdır; durum adımları ve yenileme müşteri hesabındaki sipariş ekranında bulunur.
 - Shopier gerçek hesap bilgileri olmadan ödeme otomatik çalışmaz.
 - Sağlayıcı API bilgileri olmadan siparişler otomatik teslim edilmez; admin panelinde beklemede kalır.
 - Üretim öncesi uçtan uca ödeme, webhook ve sağlayıcı hata senaryosu testi gerekir.
