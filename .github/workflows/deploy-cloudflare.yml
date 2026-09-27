@@ -111,8 +111,8 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const assets = [
-            ["https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v2", "--sidebar:260px", "CSS"],
-            ["https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v2", "selectedService", "JavaScript"],
+            ["https://elturcosmm.com/site/premium-20260927.css", "--sidebar:260px", "CSS"],
+            ["https://elturcosmm.com/site/app-20260927.js", "selectedService", "JavaScript"],
           ];
           for (const [url, marker, name] of assets) {
             const response = await fetch(url, { cache: "no-store", headers: { "accept-encoding": "identity" } });
