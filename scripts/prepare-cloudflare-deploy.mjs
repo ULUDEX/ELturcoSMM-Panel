@@ -35,4 +35,19 @@ if (!r2) throw new Error("Build output is missing the MEDIA binding.");
 r2.bucket_name = process.env.CF_R2_BUCKET_NAME.trim();
 
 await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+// Cloudflare's edge currently returns invalid Brotli streams for the public
+// storefront assets. Prevent transformations for these files until that is
+// resolved; the browser can then load the original CSS and JavaScript.
+const headersPath = "dist/client/_headers";
+const storefrontHeaders = `\n/site/*.css\n  Cache-Control: public, max-age=0, must-revalidate, no-transform\n\n/site/*.js\n  Cache-Control: public, max-age=0, must-revalidate, no-transform\n`;
+let headers = "";
+try {
+  headers = await readFile(headersPath, "utf8");
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+if (!headers.includes("/site/*.css")) {
+  await writeFile(headersPath, `${headers.trimEnd()}${storefrontHeaders}`);
+}
 console.log("Cloudflare deployment bindings are ready.");
