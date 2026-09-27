@@ -110,17 +110,20 @@ jobs:
       - name: Verify storefront stylesheet and script
         run: |
           node --input-type=module <<'NODE'
+          import { brotliDecompressSync, gunzipSync, inflateSync } from "node:zlib";
           const assets = [
             ["https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v1", "--sidebar:260px", "CSS"],
             ["https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v1", "selectedService", "JavaScript"],
           ];
           for (const [url, marker, name] of assets) {
             const response = await fetch(url, { cache: "no-store" });
-            const body = await response.text();
-            if (!response.ok || !body.includes(marker)) {
-              const headers = Object.fromEntries(["content-type", "content-encoding", "content-length", "cache-control"].map((key) => [key, response.headers.get(key)]));
-              throw new Error(`${name} asset is not being served correctly (HTTP ${response.status}; ${JSON.stringify(headers)}; ${JSON.stringify(body.slice(0, 100))})`);
-            }
+            const headers = Object.fromEntries(["content-type", "content-encoding", "content-length", "cache-control"].map((key) => [key, response.headers.get(key)]));
+            let bytes = Buffer.from(await response.arrayBuffer());
+            if (headers["content-encoding"] === "br") bytes = brotliDecompressSync(bytes);
+            else if (headers["content-encoding"] === "gzip") bytes = gunzipSync(bytes);
+            else if (headers["content-encoding"] === "deflate") bytes = inflateSync(bytes);
+            const body = bytes.toString("utf8");
+            if (!response.ok || !body.includes(marker)) throw new Error(`${name} asset is invalid (HTTP ${response.status}; ${JSON.stringify(headers)}; ${JSON.stringify(body.slice(0, 100))})`);
           }
           console.log("Storefront CSS and JavaScript assets are being served.");
           NODE
