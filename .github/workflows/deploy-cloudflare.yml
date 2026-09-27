@@ -116,6 +116,13 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: node scripts/smtp-delivery-smoke.mjs
 
+      - name: Verify Gmail delivery from Cloudflare Worker once
+        if: github.event_name == 'push' && github.event.head_commit.message == 'Verify Gmail delivery once' && github.run_attempt == 1
+        env:
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: node scripts/worker-email-smoke.mjs
+
       - name: Verify customer registration
         run: node scripts/smoke-unverified-customer.mjs
 
