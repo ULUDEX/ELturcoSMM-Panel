@@ -345,3 +345,13 @@ body.light-premium #view-services .refill-refill{background:#e9f8ef;color:#18734
 body.light-premium #view-services .refill-no-refill{background:#fff4e8;color:#925316}
 body.light-premium #view-services .refill-unknown{background:#eef2f5;color:#536575}
 @media(max-width:760px){#view-services .catalog-controls{grid-template-columns:1fr}}
+
+/* ELTURCO brand image and social profiles */
+.brand-mark{overflow:hidden;background:#05070a;box-shadow:0 0 22px #0008}
+.brand-mark>img{display:block;width:100%;height:100%;object-fit:cover}
+.album-mark{overflow:hidden;background:#05070a!important}
+.album-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.contact-strip{grid-template-columns:minmax(180px,1fr) repeat(4,minmax(145px,auto))}
+.contact-strip .instagram-contact>b{color:#f472b6}
+.contact-strip .tiktok-contact>b{color:#5eead4}
+@media(max-width:900px){.contact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-strip>div{grid-column:1/-1}.contact-strip>a{min-width:0}}

@@ -29,8 +29,8 @@ export const metadata: Metadata = {
       "Hızlı, güvenli ve otomatik sosyal medya hizmetleri.",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
   },
 };
 

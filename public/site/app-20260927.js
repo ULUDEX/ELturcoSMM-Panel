@@ -156,7 +156,7 @@ function updateReviewGate(){const form=$('#review-form'),button=form?.querySelec
 $('#review-form')?.addEventListener('submit',async e=>{e.preventDefault();if(!account){openAccount('login');toast('Değerlendirmek için giriş yap veya kayıt ol.');return}try{const r=await fetch('/api/reviews',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(e.target)))}),d=await r.json();if(!r.ok){toast(d.error||'Yorum gönderilemedi.');return}e.target.reset();toast('Yorumun yayınlandı.');loadReviews()}catch{toast('Bağlantı kurulamadı. Lütfen tekrar dene.')}});loadReviews();updateReviewGate();
 
 // Brand and account-first interface copy.
-$$('.brand-mark').forEach(mark=>{mark.innerHTML='<img src="/elturco-mark.svg" alt="ElTurco">'});const radioLogo=$('.album-mark img');if(radioLogo)radioLogo.src='/elturco-mark.svg';
+$$('.brand-mark').forEach(mark=>{mark.innerHTML='<img src="/elturco.webp" alt="ElTurco">'});const radioLogo=$('.album-mark img');if(radioLogo)radioLogo.src='/elturco.webp';
 const languageNames={tr:'🇹🇷 Türkçe',en:'🇬🇧 English',es:'🇪🇸 Español',ru:'🇷🇺 Русский',pt:'🇵🇹 Português',de:'🇩🇪 Deutsch'};const languageSelect=$('#language-select');if(languageSelect)Array.from(languageSelect.options).forEach(option=>option.textContent=languageNames[option.value]||option.textContent);
 const secureNote=$('.secure-note');if(secureNote)secureNote.textContent='Sipariş vermek için hesabına giriş yap veya ücretsiz kayıt ol.';
 
