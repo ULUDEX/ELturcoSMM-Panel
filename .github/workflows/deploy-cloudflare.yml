@@ -107,6 +107,23 @@ jobs:
           fi
           node -e 'const rows=JSON.parse(require("node:fs").readFileSync("/tmp/services.json","utf8")); if(!Array.isArray(rows)||rows.length===0) throw new Error("PanelFollows katalogu boş döndü"); console.log(`${rows.length} hizmet satışa hazır.`)'
 
+      - name: Verify storefront page
+        run: |
+          for url in https://elturcosmm.com/ https://elturcosmm.com/site/; do
+            status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/storefront.html --write-out '%{http_code}' "$url")"
+            if [ "$status" != "200" ]; then
+              echo "Storefront $url returned HTTP $status:"
+              head -c 1200 /tmp/storefront.html
+              exit 1
+            fi
+            if ! grep -q 'premium-20260927.css' /tmp/storefront.html; then
+              echo "Storefront HTML from $url did not include the expected page and stylesheet:"
+              head -c 1200 /tmp/storefront.html
+              exit 1
+            fi
+          done
+          echo "Storefront root and /site/ return the styled page."
+
       - name: Verify storefront stylesheet and script
         run: |
           node --input-type=module <<'NODE'
