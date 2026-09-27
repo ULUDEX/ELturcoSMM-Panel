@@ -109,18 +109,17 @@ jobs:
 
       - name: Verify storefront stylesheet and script
         run: |
-          css_status="$(curl --silent --show-error --compressed --retry 2 --retry-delay 3 --max-time 40 --output /tmp/premium.css --write-out '%{http_code}' 'https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v1')"
-          test "$css_status" = "200"
-          if ! grep -q -- '--sidebar:260px' /tmp/premium.css; then
-            echo "The storefront stylesheet URL did not return the expected CSS asset."
-            head -c 500 /tmp/premium.css
-            exit 1
-          fi
-          js_status="$(curl --silent --show-error --compressed --retry 2 --retry-delay 3 --max-time 40 --output /tmp/site-app.js --write-out '%{http_code}' 'https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v1')"
-          test "$js_status" = "200"
-          if ! grep -q 'selectedService' /tmp/site-app.js; then
-            echo "The storefront script URL did not return the expected app asset."
-            head -c 500 /tmp/site-app.js
-            exit 1
-          fi
-          echo "Storefront CSS and JavaScript assets are being served."
+          node --input-type=module <<'NODE'
+          const assets = [
+            ["https://elturcosmm.com/site/premium.css?v=20260927-style-recovery-v1", "--sidebar:260px", "CSS"],
+            ["https://elturcosmm.com/site/app.js?v=20260927-script-recovery-v1", "selectedService", "JavaScript"],
+          ];
+          for (const [url, marker, name] of assets) {
+            const response = await fetch(url, { cache: "no-store" });
+            const body = await response.text();
+            if (!response.ok || !body.includes(marker)) {
+              throw new Error(`${name} asset is not being served correctly (HTTP ${response.status}, ${body.slice(0, 160)})`);
+            }
+          }
+          console.log("Storefront CSS and JavaScript assets are being served.");
+          NODE
