@@ -96,11 +96,11 @@ jobs:
           status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --cookie-jar /tmp/register.cookies --output /tmp/register.json --write-out '%{http_code}' https://elturcosmm.com/api/account/register --header 'content-type: application/json' --data "{\"name\":\"Deploy Test\",\"email\":\"$email\",\"password\":\"DeployTest-9284\",\"challengeId\":\"$challenge_id\",\"challengeAnswer\":\"$challenge_answer\"}")"
           cat /tmp/register.json
           test "$status" = "200"
-          status="$(curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/avatar.json --write-out '%{http_code}' https://elturcosmm.com/api/account/profile --request POST --header 'content-type: application/json' --data '{"avatar":"orbit"}')"
+          status="$(curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/avatar.json --write-out '%{http_code}' https://elturcosmm.com/api/account/profile --request POST --header 'content-type: application/json' --data '{"avatar":"man-2"}')"
           test "$status" = "200"
           curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/account.json https://elturcosmm.com/api/account
           cat /tmp/account.json
-          node -e 'const account=JSON.parse(require("node:fs").readFileSync("/tmp/account.json","utf8")); if(!account.loggedIn||account.user.balance!==0||account.user.avatar!=="orbit") throw new Error("Oturum, avatar veya bakiye doğrulanamadı");'
+          node -e 'const account=JSON.parse(require("node:fs").readFileSync("/tmp/account.json","utf8")); if(!account.loggedIn||account.user.balance!==0||account.user.avatar!=="man-2") throw new Error("Oturum, avatar veya bakiye doğrulanamadı");'
 
       - name: Sync PanelFollows catalog
         run: |
