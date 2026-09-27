@@ -118,7 +118,8 @@ jobs:
             const response = await fetch(url, { cache: "no-store" });
             const body = await response.text();
             if (!response.ok || !body.includes(marker)) {
-              throw new Error(`${name} asset is not being served correctly (HTTP ${response.status}, ${body.slice(0, 160)})`);
+              const headers = Object.fromEntries(["content-type", "content-encoding", "content-length", "cache-control"].map((key) => [key, response.headers.get(key)]));
+              throw new Error(`${name} asset is not being served correctly (HTTP ${response.status}; ${JSON.stringify(headers)}; ${JSON.stringify(body.slice(0, 100))})`);
             }
           }
           console.log("Storefront CSS and JavaScript assets are being served.");
