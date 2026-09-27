@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { currentCustomer } from "@/lib/customer-auth";
 
-const allowedAvatars = new Set(["star", "wave", "rise", "orbit", "bolt", "play"]);
+const allowedAvatars = new Set(["man-1", "man-2", "man-3", "woman-1", "woman-2", "woman-3"]);
 
 export async function POST(request: Request) {
   const user = await currentCustomer();

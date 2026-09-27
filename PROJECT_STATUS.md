@@ -32,6 +32,15 @@ Son güncelleme: 22 Eylül 2026
 5. `elturcosmm.com` DNS kayıtlarını seçilen hosting sağlayıcısına bağlayın.
 6. `public/site/audio` içindeki tüm ses dosyalarının ticari yayın hakkını kontrol edin.
 
+## Tamamlanan müşteri özellikleri
+
+- Hesap içi sipariş ve bakiye bildirimleri, okundu durumu ve çok dilli admin duyuruları
+- Sipariş geçmişinde durum adımları ve sağlayıcı durum yenileme
+- Memoji tarzı kadın/erkek avatar seçimi ve avatarın hesapta saklanması
+- Giriş yapmış müşteriler için şifre değiştirme ve tek kullanımlık e-posta kurtarma bağlantısı
+
+Canlı ortamda e-posta göndermek için Resend ve doğrulanmış gönderen adresi `RESEND_API_KEY` ve `EMAIL_FROM` Worker secret olarak tanımlanmalıdır. Yeni D1 tabloları migration `0012_customer_notifications_and_password_resets.sql` ile oluşturulur; Cloudflare deploy iş akışı dağıtımdan önce migration uygular.
+
 ## Bilinen ürün eksikleri
 
 - Müşteri üyeliği ve müşteriye özel kalıcı bakiye ekranı tam ürün akışı olarak bitmiş değil.

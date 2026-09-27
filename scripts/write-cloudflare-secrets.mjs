@@ -14,7 +14,7 @@ const secrets = Object.fromEntries(
 if (process.env.SMM_PROVIDER_API_KEY?.trim()) {
   secrets.SMM_PROVIDER_API_KEY = process.env.SMM_PROVIDER_API_KEY.trim();
 }
-for (const name of ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REDIRECT_URI"]) {
+for (const name of ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REDIRECT_URI", "RESEND_API_KEY", "EMAIL_FROM", "SITE_URL"]) {
   if (process.env[name]?.trim()) secrets[name] = process.env[name].trim();
 }
 
