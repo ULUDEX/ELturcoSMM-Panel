@@ -35,6 +35,15 @@ jobs:
             exit 1
           fi
 
+      - name: Validate customer email sender
+        env:
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          if [ -z "$SMTP_PASS" ]; then
+            echo "Add the Gmail app password as SMTP_PASS in the production environment." >&2
+            exit 1
+          fi
+
       - name: Check out source
         uses: actions/checkout@v4
 
@@ -86,24 +95,7 @@ jobs:
           pnpm exec wrangler secret bulk .cloudflare-secrets.json --config dist/server/wrangler.json
 
       - name: Verify customer registration
-        run: |
-          email="deploy-smoke-${GITHUB_RUN_ID}@example.invalid"
-          cleanup() {
-            pnpm exec wrangler d1 execute DB --remote --config dist/server/wrangler.json --command "DELETE FROM customer_sessions WHERE user_id IN (SELECT id FROM customer_users WHERE email='$email'); DELETE FROM customer_balances WHERE email='$email'; DELETE FROM customer_users WHERE email='$email';" >/dev/null 2>&1 || true
-          }
-          trap cleanup EXIT
-          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --output /tmp/challenge.json --write-out '%{http_code}' -X POST https://elturcosmm.com/api/account/challenge --header 'content-type: application/json' --data '{}')"
-          test "$status" = "200"
-          challenge_id="$(node -e 'const d=JSON.parse(require("node:fs").readFileSync("/tmp/challenge.json","utf8")); console.log(d.id)')"
-          challenge_answer="$(node -e 'const d=JSON.parse(require("node:fs").readFileSync("/tmp/challenge.json","utf8")); const n=d.question.match(/\d+/g).map(Number); if(n.length!==2) throw new Error("Doğrulama sorusu okunamadı"); console.log(n[0]+n[1])')"
-          status="$(curl --silent --show-error --retry 2 --retry-delay 3 --max-time 60 --cookie-jar /tmp/register.cookies --output /tmp/register.json --write-out '%{http_code}' https://elturcosmm.com/api/account/register --header 'content-type: application/json' --data "{\"name\":\"Deploy Test\",\"email\":\"$email\",\"password\":\"DeployTest-9284\",\"challengeId\":\"$challenge_id\",\"challengeAnswer\":\"$challenge_answer\"}")"
-          cat /tmp/register.json
-          test "$status" = "200"
-          status="$(curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/avatar.json --write-out '%{http_code}' https://elturcosmm.com/api/account/profile --request POST --header 'content-type: application/json' --data '{"avatar":"man-2"}')"
-          test "$status" = "200"
-          curl --silent --show-error --max-time 30 --cookie /tmp/register.cookies --output /tmp/account.json https://elturcosmm.com/api/account
-          cat /tmp/account.json
-          node -e 'const account=JSON.parse(require("node:fs").readFileSync("/tmp/account.json","utf8")); if(!account.loggedIn||account.user.balance!==0||account.user.avatar!=="man-2") throw new Error("Oturum, avatar veya bakiye doğrulanamadı");'
+        run: node scripts/smoke-unverified-customer.mjs
 
       - name: Sync PanelFollows catalog
         run: |
