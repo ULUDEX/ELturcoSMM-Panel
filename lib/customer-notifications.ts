@@ -5,7 +5,7 @@ export type NotificationTranslation = { title: string; body: string };
 
 export async function addCustomerNotification(input: {
   email: string;
-  kind: "order" | "balance" | "announcement" | "discount" | "security";
+  kind: "order" | "balance" | "announcement" | "security";
   title: string;
   body: string;
   translations?: Record<string, NotificationTranslation>;
