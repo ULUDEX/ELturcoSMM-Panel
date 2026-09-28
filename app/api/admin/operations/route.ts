@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import { forwardOrder,providerConfigured } from "@/lib/provider";
+import { forwardOrder,previewProviderOrder,providerConfigured } from "@/lib/provider";
 import { fetchProviderBalance } from "@/lib/provider-catalog";
 import { addCustomerNotification } from "@/lib/customer-notifications";
 import { mailConfigured, sendTransactionalEmail } from "@/lib/mailer";
@@ -25,7 +25,34 @@ export async function POST(r:Request){
   const result=await sendTransactionalEmail({to:recipient,subject:"ElTurco SMM e-posta testi",text:"ElTurco SMM e-posta gönderimi başarıyla çalışıyor."});
   return NextResponse.json(result,result.sent?{status:200}:{status:502});
  }
- if(b.action==="marketplace-order"){if(!providerConfigured())return NextResponse.json({error:"PanelFollows API ayarı yapılmamış."},{status:503});const serviceId=Number(b.serviceId),quantity=Math.floor(Number(b.quantity)),link=String(b.link||"").trim(),buyer=String(b.buyerName||"").trim().slice(0,120),reference=String(b.externalReference||"").trim().slice(0,160),saleAmount=cents(b.saleAmount);if(!serviceId||!quantity||!link||!buyer||!reference)return NextResponse.json({error:"Hizmet, müşteri adı, pazaryeri sipariş numarası, hedef link ve geçerli adet gerekli."},{status:400});const service:any=await env.DB.prepare("SELECT id,name,provider_service_id,min_order,max_order,cost_price,sale_price,price_unit,provider_fields,active FROM services WHERE id=?").bind(serviceId).first();if(!service||!service.active)return NextResponse.json({error:"Hizmet aktif değil veya bulunamadı."},{status:404});if(!service.provider_service_id)return NextResponse.json({error:"Bu hizmetin tedarikçi servis ID'si bağlı değil."},{status:400});if(quantity<Number(service.min_order)||quantity>Number(service.max_order))return NextResponse.json({error:`Adet ${service.min_order}–${service.max_order} arasında olmalı.`},{status:400});const cost=service.price_unit==="per_order"?Number(service.cost_price):Math.ceil(Number(service.cost_price)*quantity/1000);const fields:Record<string,string>={};let allowed:any[]=[];try{allowed=JSON.parse(service.provider_fields||"[]")}catch{}for(const f of allowed)if(typeof f?.default==="string"&&/^[a-z][a-z0-9_]{0,39}$/i.test(String(f.name||"")))fields[f.name]=f.default;const created:any=await env.DB.prepare("INSERT INTO orders(customer_name,customer_email,service_name,service_id,provider_service_id,link,quantity,amount,status,created_at,source,external_reference,external_sale_amount,provider_cost) VALUES(?,?,?,?,?,?,?,?,? ,?,'marketplace',?,?,?) RETURNING id").bind(buyer,"",service.name,service.id,service.provider_service_id,link,quantity,saleAmount,"pending",now(),reference,saleAmount,cost).first();const requestKey=`elturco-marketplace-${created.id}`;const result=await forwardOrder({service:String(service.provider_service_id),link,quantity,fields,idempotencyKey:requestKey});if(!result.forwarded&&!result.uncertain){await env.DB.prepare("UPDATE orders SET status='failed',provider_error=? WHERE id=?").bind(result.error||"Tedarikçi siparişi kabul etmedi.",created.id).run();return NextResponse.json({error:result.error||"Tedarikçi siparişi kabul etmedi.",id:created.id},{status:502})}await env.DB.prepare("UPDATE orders SET provider_order_id=?,provider_error=?,status=?,provider_synced_at=? WHERE id=?").bind(result.providerOrderId||"",result.error||"",result.forwarded?"processing":"pending",now(),created.id).run();await env.DB.prepare("INSERT INTO transactions(type,amount,category,description,status,created_at) VALUES('expense',?,'Pazaryeri tedarikçi maliyeti',?,'completed',?)").bind(cost,`#${created.id} · ${reference||"Dış satış"} · ${service.name}`,now()).run();return NextResponse.json({ok:true,id:created.id,providerOrderId:result.providerOrderId||"bekleniyor",status:result.forwarded?"processing":"pending",cost},{status:201})}
+ if(b.action==="marketplace-order"){
+  if(!providerConfigured())return NextResponse.json({error:"PanelFollows API ayarı yapılmamış."},{status:503});
+  const serviceId=Number(b.serviceId),quantity=Math.floor(Number(b.quantity)),link=String(b.link||"").trim(),buyer=String(b.buyerName||"").trim().slice(0,120),reference=String(b.externalReference||"").trim().slice(0,160),saleAmount=cents(b.saleAmount);
+  if(!serviceId||!quantity||!link||!buyer||!reference)return NextResponse.json({error:"Hizmet, müşteri adı, pazaryeri sipariş numarası, hedef link ve geçerli adet gerekli."},{status:400});
+  const service:any=await env.DB.prepare("SELECT id,name,provider_service_id,min_order,max_order,cost_price,sale_price,price_unit,provider_fields,active FROM services WHERE id=?").bind(serviceId).first();
+  if(!service||!service.active)return NextResponse.json({error:"Hizmet aktif değil veya bulunamadı."},{status:404});
+  if(!service.provider_service_id)return NextResponse.json({error:"Bu hizmetin tedarikçi servis ID'si bağlı değil."},{status:400});
+  if(quantity<Number(service.min_order)||quantity>Number(service.max_order))return NextResponse.json({error:`Adet ${service.min_order}–${service.max_order} arasında olmalı.`},{status:400});
+  const cost=service.price_unit==="per_order"?Number(service.cost_price):Math.ceil(Number(service.cost_price)*quantity/1000);
+  let allowed:any[]=[];try{allowed=JSON.parse(service.provider_fields||"[]")}catch{}
+  const submitted=b.fields&&typeof b.fields==="object"&&!Array.isArray(b.fields)?b.fields:{},fields:Record<string,string>={};
+  for(const field of allowed){
+    const name=String(field?.name||"");if(!/^[a-z][a-z0-9_]{0,39}$/i.test(name)||["link","quantity","service"].includes(name))continue;
+    const raw=submitted[name]??field.default??"";
+    const value=String(raw).trim();
+    if(field.required!==false&&!value)return NextResponse.json({error:`${field.label||name} alanı zorunlu. ${field.description||""}`.trim()},{status:400});
+    if(value.length>10000)return NextResponse.json({error:`${field.label||name} alanı çok uzun.`},{status:400});
+    if(value)fields[name]=value;
+  }
+  const order={service:String(service.provider_service_id),link,quantity,fields},preview=await previewProviderOrder(order);
+  if(!preview.ok)return NextResponse.json({error:preview.error||"Tedarikçi bu sipariş bilgilerini kabul etmedi."},{status:preview.status===0||preview.status>=500?502:400});
+  const created:any=await env.DB.prepare("INSERT INTO orders(customer_name,customer_email,service_name,service_id,provider_service_id,link,quantity,amount,status,created_at,source,external_reference,external_sale_amount,provider_cost) VALUES(?,?,?,?,?,?,?,?,? ,?,'marketplace',?,?,?) RETURNING id").bind(buyer,"",service.name,service.id,service.provider_service_id,link,quantity,saleAmount,"pending",now(),reference,saleAmount,cost).first();
+  const requestKey=`elturco-marketplace-${created.id}`,result=await forwardOrder({...order,idempotencyKey:requestKey});
+  if(!result.forwarded&&!result.uncertain){await env.DB.prepare("UPDATE orders SET status='failed',provider_error=? WHERE id=?").bind(result.error||"Tedarikçi siparişi kabul etmedi.",created.id).run();return NextResponse.json({error:result.error||"Tedarikçi siparişi kabul etmedi.",id:created.id},{status:502})}
+  await env.DB.prepare("UPDATE orders SET provider_order_id=?,provider_error=?,status=?,provider_synced_at=? WHERE id=?").bind(result.providerOrderId||"",result.error||"",result.forwarded?"processing":"pending",now(),created.id).run();
+  await env.DB.prepare("INSERT INTO transactions(type,amount,category,description,status,created_at) VALUES('expense',?,'Pazaryeri tedarikçi maliyeti',?,'completed',?)").bind(cost,`#${created.id} · ${reference||"Dış satış"} · ${service.name}`,now()).run();
+  return NextResponse.json({ok:true,id:created.id,providerOrderId:result.providerOrderId||"bekleniyor",status:result.forwarded?"processing":"pending",cost},{status:201})
+}
  else if(b.action==="transaction")await env.DB.prepare("INSERT INTO transactions(type,amount,category,description,status,created_at) VALUES(?,?,?,?,?,?)").bind(b.type,cents(b.amount),b.category,b.description||"","completed",now()).run();
  else if(b.action==="method")await env.DB.prepare("INSERT INTO payment_methods(name,type,instructions,active,created_at) VALUES(?,?,?,?,?)").bind(b.name,b.type,b.instructions||"",1,now()).run();
  else if(b.action==="method-update")await env.DB.prepare("UPDATE payment_methods SET name=?,type=?,instructions=?,active=? WHERE id=?").bind(String(b.name||"").trim(),String(b.type||""),String(b.instructions||"").trim(),b.active===false?0:1,Number(b.id)).run();
