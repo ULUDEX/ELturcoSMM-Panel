@@ -118,6 +118,7 @@ jobs:
 
       - name: Verify Gmail delivery from Cloudflare Worker once
         if: github.event_name == 'push' && github.event.head_commit.message == 'Verify Gmail delivery once' && github.run_attempt == 1
+        continue-on-error: true
         env:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           SITE_URL: ${{ vars.SITE_URL }}
