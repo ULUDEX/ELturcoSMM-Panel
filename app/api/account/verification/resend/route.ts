@@ -22,8 +22,8 @@ export async function POST(request: Request) {
     if (Number(recent?.total || 0) >= 3) return NextResponse.json(generic);
 
     const token = randomHex(32), tokenHash = await digest(token), expiresAt = now + 24 * 60 * 60;
-    await env.DB.prepare("UPDATE customer_email_verifications SET used_at=? WHERE user_id=? AND used_at IS NULL").bind(now, user.id).run();
-    await env.DB.prepare("INSERT INTO customer_email_verifications(user_id,token_hash,expires_at,created_at) VALUES(?,?,?,?)").bind(user.id, tokenHash, expiresAt, now).run();
+    const inserted = await env.DB.prepare("INSERT INTO customer_email_verifications(user_id,token_hash,expires_at,created_at) VALUES(?,?,?,?) RETURNING id").bind(user.id, tokenHash, expiresAt, now).first() as { id: number } | null;
+    if (!inserted?.id) throw new Error("verification_insert_failed");
     const verifyUrl = `${siteBaseUrl()}/site/#email-verify=${encodeURIComponent(token)}`;
     const safeName = String(user.name).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
     const delivery = await sendTransactionalEmail({
@@ -32,9 +32,16 @@ export async function POST(request: Request) {
       text: `ElTurco SMM hesabını etkinleştirmek için bu bağlantıyı 24 saat içinde aç:\n${verifyUrl}\n\nBu isteği sen yapmadıysan bu e-postayı yok say.`,
       html: `<div style="background:#07111a;padding:32px;font-family:Arial,sans-serif;color:#eef3f6"><div style="max-width:520px;margin:auto;border:1px solid #233b46;border-radius:18px;padding:28px;background:#0b1821"><p style="color:#f6c954;font-size:12px;letter-spacing:2px;font-weight:bold">ELTURCO SMM</p><h1 style="font-size:24px">E-postanı doğrula</h1><p style="color:#b2c0c8;line-height:1.6">Merhaba ${safeName}, hesabını etkinleştirmek için e-posta adresini doğrula. Bağlantı 24 saat geçerlidir.</p><a href="${verifyUrl}" style="display:inline-block;background:#f4c94f;color:#15191b;text-decoration:none;font-weight:bold;padding:13px 18px;border-radius:10px">E-postamı doğrula ve hesabı etkinleştir</a></div></div>`,
     });
-    if (!delivery.sent) console.error("verification_email_not_delivered", { userId: user.id, configured: delivery.configured });
-    return NextResponse.json(generic);
+    if (!delivery.sent) {
+      await env.DB.prepare("DELETE FROM customer_email_verifications WHERE id=? AND used_at IS NULL").bind(inserted.id).run();
+      console.error("verification_email_not_delivered", { userId: user.id, reason: delivery.reason || "unknown", configured: delivery.configured });
+      return NextResponse.json({ error: "Doğrulama e-postası gönderilemedi. Önceki bağlantın geçerliyse hâlâ kullanabilirsin; biraz sonra tekrar dene veya destek ekibine ulaş." }, { status: 503, headers: { "cache-control": "no-store" } });
+    }
+
+    await env.DB.prepare("UPDATE customer_email_verifications SET used_at=? WHERE user_id=? AND used_at IS NULL AND id<>?").bind(now, user.id, inserted.id).run();
+    return NextResponse.json(generic, { headers: { "cache-control": "no-store" } });
   } catch {
-    return NextResponse.json(generic);
+    console.error("verification_resend_failed", { reason: "UNEXPECTED_ERROR" });
+    return NextResponse.json({ error: "Doğrulama bağlantısı şu anda gönderilemedi. Biraz sonra tekrar dene." }, { status: 503, headers: { "cache-control": "no-store" } });
   }
 }
