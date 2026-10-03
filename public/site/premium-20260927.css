@@ -390,3 +390,120 @@ body.light-premium #view-services .refill-unknown{background:#eef2f5;color:#5365
 .account-feedback.is-error{border-color:#b95d4c77;background:#351b1b;color:#ffc3b5!important}
 #forgot-continue[hidden]{display:none!important}
 .account-challenge .turnstile-widget{grid-column:1/-1;min-height:0}.account-challenge .turnstile-widget:empty{display:none!important}.account-challenge .turnstile-widget iframe{max-width:100%}
+
+body.auth-pending{overflow:hidden}body.auth-pending .ambient,body.auth-pending .sidebar,body.auth-pending .app-shell,body.auth-pending .site-footer,body.auth-pending .mobile-nav,body.auth-pending .ops-modal:not(#account-modal){visibility:hidden!important;pointer-events:none!important}body.auth-pending #account-modal{visibility:visible!important;pointer-events:auto!important}body.auth-pending #account-modal .ops-backdrop{background:radial-gradient(ellipse at 50% 20%,#ff64272e,transparent 55%),#05090ff2;backdrop-filter:blur(18px)}body.auth-pending #account-modal .ops-card{width:min(480px,calc(100% - 32px));max-height:90vh;border:1px solid #ff642733;box-shadow:0 32px 100px #000b}
+/* Full-screen customer welcome and sign-in */
+body.auth-pending #account-modal .auth-card{display:grid;grid-template-columns:1.05fr .95fr;gap:0;width:min(1040px,calc(100% - 48px));height:min(720px,calc(100dvh - 48px));max-height:calc(100dvh - 48px);padding:0;overflow:hidden;border:1px solid #ffffff15;border-radius:28px;background:#0b111b;box-shadow:0 40px 140px #000b}
+body.auth-pending #account-modal .auth-welcome{position:relative;isolation:isolate;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:clamp(30px,5vw,58px);border-right:1px solid #ffffff12;background:radial-gradient(ellipse at 84% 45%,#ff6b2c26,transparent 38%),radial-gradient(ellipse at 12% 100%,#ff6b2c13,transparent 42%),linear-gradient(145deg,#111b2a,#0b111b 70%)}
+body.auth-pending #account-modal .auth-welcome:before{position:absolute;z-index:-1;inset:0;content:"";opacity:.24;background-image:linear-gradient(#ffffff0b 1px,transparent 1px),linear-gradient(90deg,#ffffff0b 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(135deg,#000,transparent 85%)}
+body.auth-pending #account-modal .auth-brand{display:flex;align-items:center;gap:12px;width:max-content;color:#fff;text-decoration:none}
+body.auth-pending #account-modal .auth-brand img{width:48px;height:48px;border-radius:15px;object-fit:cover;box-shadow:0 10px 30px #0005}
+body.auth-pending #account-modal .auth-brand b,body.auth-pending #account-modal .auth-brand small{display:block}
+body.auth-pending #account-modal .auth-brand b{font-size:20px;letter-spacing:.2px}
+body.auth-pending #account-modal .auth-brand small{margin-top:3px;color:#ff914d;font-size:9px;font-weight:800;letter-spacing:2.5px}
+body.auth-pending #account-modal .auth-hero-copy{margin:auto 0 26px;padding-top:42px}
+body.auth-pending #account-modal .auth-eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 18px;color:#ffad7c;font-size:10px;font-weight:800;letter-spacing:1.6px}
+body.auth-pending #account-modal .auth-eyebrow i,body.auth-pending #account-modal .auth-welcome-foot>span i{width:7px;height:7px;border-radius:50%;background:#ff7439;box-shadow:0 0 16px #ff7439}
+body.auth-pending #account-modal .auth-hero-copy h1{margin:0;color:#f8fafc;font-size:clamp(43px,5vw,66px);font-weight:800;line-height:.99;letter-spacing:-3.6px}
+body.auth-pending #account-modal .auth-hero-copy h1 em{color:#ff8246;font-style:normal}
+body.auth-pending #account-modal .auth-lead{max-width:410px;margin:22px 0 0;color:#9aa8bb;font-size:14px;line-height:1.8}
+body.auth-pending #account-modal .auth-platforms{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 17px}
+body.auth-pending #account-modal .auth-platforms span{padding:9px 12px;border:1px solid #ffffff12;border-radius:999px;background:#ffffff07;color:#d5dce6;font-size:10px;font-weight:700}
+body.auth-pending #account-modal .auth-promo-note{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid #ff7a3b2e;border-radius:16px;background:linear-gradient(100deg,#ff6b2c16,#ff6b2c05)}
+body.auth-pending #account-modal .auth-promo-note>b{display:grid;flex:none;place-items:center;width:38px;height:38px;border-radius:12px;background:#ff6b2c1e;color:#ff9a63;font-size:19px}
+body.auth-pending #account-modal .auth-promo-note span{min-width:0}
+body.auth-pending #account-modal .auth-promo-note strong,body.auth-pending #account-modal .auth-promo-note small{display:block}
+body.auth-pending #account-modal .auth-promo-note strong{color:#f8fafc;font-size:11px}
+body.auth-pending #account-modal .auth-promo-note small{margin-top:4px;color:#9ba6b7;font-size:9px;line-height:1.5}
+body.auth-pending #account-modal .auth-promo-note>i{margin-left:auto;color:#ff914d;font-style:normal}
+body.auth-pending #account-modal .auth-welcome-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:22px;color:#78869b;font-size:9px}
+body.auth-pending #account-modal .auth-welcome-foot>span{display:flex;align-items:center;gap:7px;color:#c0c8d4;font-weight:700}
+body.auth-pending #account-modal .auth-welcome-foot>span i{width:6px;height:6px}
+body.auth-pending #account-modal .auth-side{position:relative;min-width:0;overflow-y:auto;padding:46px clamp(25px,4vw,46px) 32px;scrollbar-color:#354154 transparent;scrollbar-width:thin}
+body.auth-pending #account-modal .auth-side>.ops-close{position:absolute;top:16px;right:17px;margin:0;padding:0;width:32px;height:32px;border-radius:10px;background:#ffffff08;color:#8995a9;font-size:22px}
+body.auth-pending #account-modal .auth-side>small{display:block;margin:8px 0;color:#ff914d;font-size:9px;letter-spacing:2px}
+body.auth-pending #account-modal .auth-side>h2{margin:8px 0 3px;font-size:27px;letter-spacing:-.8px}
+body.auth-pending #account-modal .auth-side .auth-tabs{margin:18px 0 16px}
+body.auth-pending #account-modal .auth-side form>label{margin-top:12px}
+body.auth-pending #account-modal .auth-side .account-challenge{margin-top:14px}
+body.auth-pending #account-modal .auth-side .auth-forgot-link{margin-top:12px}
+body.auth-pending #account-modal .auth-side .submit-order{width:100%;margin-top:15px}
+@media(max-width:760px){body.auth-pending #account-modal{padding:0!important}body.auth-pending #account-modal .auth-card{grid-template-columns:1fr;align-content:start;width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;overflow-y:auto}body.auth-pending #account-modal .auth-welcome{min-height:390px;padding:20px 23px 18px;border-right:0;border-bottom:1px solid #ffffff12;background:radial-gradient(ellipse at 85% 30%,#ff6b2c24,transparent 45%),linear-gradient(145deg,#111b2a,#0b111b)}body.auth-pending #account-modal .auth-brand img{width:38px;height:38px;border-radius:12px}body.auth-pending #account-modal .auth-brand b{font-size:16px}body.auth-pending #account-modal .auth-hero-copy{margin:17px 0 12px;padding:0}body.auth-pending #account-modal .auth-eyebrow{margin-bottom:8px;font-size:8px;letter-spacing:1.1px}body.auth-pending #account-modal .auth-hero-copy h1{font-size:35px;line-height:1.02;letter-spacing:-1.8px}body.auth-pending #account-modal .auth-lead{max-width:520px;margin:9px 0 0;font-size:11px;line-height:1.55}body.auth-pending #account-modal .auth-platforms{gap:6px;margin:0 0 10px}body.auth-pending #account-modal .auth-platforms span{padding:6px 9px;font-size:9px}body.auth-pending #account-modal .auth-promo-note{padding:10px 12px;border-radius:12px}body.auth-pending #account-modal .auth-promo-note>b{width:31px;height:31px;border-radius:9px;font-size:15px}body.auth-pending #account-modal .auth-promo-note strong{font-size:10px}body.auth-pending #account-modal .auth-promo-note small{font-size:8px}body.auth-pending #account-modal .auth-welcome-foot{display:none}body.auth-pending #account-modal .auth-side{overflow:visible;padding:21px 23px 30px}body.auth-pending #account-modal .auth-side>.ops-close{top:-54px;right:17px}body.auth-pending #account-modal .auth-side>small{margin:0 0 5px;font-size:8px}body.auth-pending #account-modal .auth-side>h2{font-size:22px}body.auth-pending #account-modal .auth-side .auth-tabs{margin:12px 0}body.auth-pending #account-modal .auth-side form>label{margin-top:10px}}body.auth-pending #account-modal .auth-side>.ops-close{display:none}body.auth-pending #account-modal .auth-side .submit-order{border:0;background:linear-gradient(110deg,#ff6427,#ff8246);color:#fff;box-shadow:0 12px 30px #ff64272e}body.auth-pending #account-modal .auth-side .submit-order:hover{filter:brightness(1.08);box-shadow:0 14px 34px #ff642742}body.auth-pending #account-modal .auth-promo-note{width:100%;font:inherit;text-align:left;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}body.auth-pending #account-modal .auth-promo-note:hover{transform:translateY(-2px);border-color:#ff7a3b77;background:linear-gradient(100deg,#ff6b2c22,#ff6b2c08)}body.auth-pending #account-modal .auth-promo-note>i{white-space:nowrap;font-size:10px;font-weight:800}
+body.auth-pending #account-modal .account-challenge{align-items:flex-start}body.auth-pending #account-modal .account-challenge>div{min-width:0;flex:1}body.auth-pending #account-modal .account-challenge strong{font-size:11px;font-weight:700;letter-spacing:0}body.auth-pending #account-modal .account-challenge .turnstile-widget{margin-top:8px}
+
+/* Refined SMM sign-in: crisp account form + product-catalog preview */
+body.auth-pending{background:#f3f5f9;color:#152033;font-family:Manrope,Inter,system-ui,sans-serif}
+body.auth-pending #account-modal .ops-backdrop{background:radial-gradient(ellipse at 16% 14%,#ffeadb 0,transparent 38%),linear-gradient(135deg,#f6f7fb,#edf1f7);backdrop-filter:none}
+body.auth-pending #account-modal .ops-card.auth-card{grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);width:min(1160px,calc(100% - 56px));height:min(760px,calc(100dvh - 56px));max-height:calc(100dvh - 56px);border:1px solid #dce2ea;border-radius:26px;background:#fff;box-shadow:0 28px 90px #1928421a}
+body.auth-pending #account-modal .auth-welcome{padding:44px 48px 34px;border:0;background:radial-gradient(ellipse at 88% 58%,#f064272e,transparent 32%),radial-gradient(ellipse at 7% 94%,#ffffff14,transparent 42%),linear-gradient(145deg,#162840,#0e1d31 74%);color:#fff}
+body.auth-pending #account-modal .auth-welcome:before{opacity:.14;background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px);background-size:34px 34px}
+body.auth-pending #account-modal .auth-brand img{width:45px;height:45px;border:1px solid #ffffff35;border-radius:14px;box-shadow:0 8px 22px #07132166}
+body.auth-pending #account-modal .auth-brand b{font-size:19px;letter-spacing:-.3px}
+body.auth-pending #account-modal .auth-brand small{color:#ffb28e;letter-spacing:2px}
+body.auth-pending #account-modal .auth-hero-copy{margin:35px 0 20px;padding:0}
+body.auth-pending #account-modal .auth-eyebrow{margin-bottom:14px;color:#ffc09d;font-size:9px;letter-spacing:1.8px}
+body.auth-pending #account-modal .auth-eyebrow i{background:#ff824d;box-shadow:0 0 0 5px #ff824d20,0 0 16px #ff824d}
+body.auth-pending #account-modal .auth-hero-copy h1{font-size:clamp(40px,4.6vw,59px);line-height:1.06;letter-spacing:-2.6px}
+body.auth-pending #account-modal .auth-hero-copy h1 em{color:#ff9a6c}
+body.auth-pending #account-modal .auth-lead{max-width:470px;margin-top:13px;color:#c3cfdd;font-size:13px;line-height:1.7}
+body.auth-pending #account-modal .auth-catalog-preview{position:relative;display:grid;gap:8px;margin:8px 0 14px;padding:14px;border:1px solid #ffffff27;border-radius:17px;background:linear-gradient(145deg,#ffffff16,#ffffff09);box-shadow:0 16px 36px #06111f30;backdrop-filter:blur(8px)}
+body.auth-pending #account-modal .catalog-preview-top{display:flex;align-items:center;justify-content:space-between;padding:2px 3px 6px;color:#ffe3d3;font-size:8px;font-weight:800;letter-spacing:1.4px}
+body.auth-pending #account-modal .catalog-preview-top>span{display:flex;align-items:center;gap:8px}
+body.auth-pending #account-modal .catalog-preview-top>span i{width:7px;height:7px;border-radius:50%;background:#65dfa6;box-shadow:0 0 12px #65dfa6}
+body.auth-pending #account-modal .catalog-preview-top small{color:#afbdcc;font-size:8px;letter-spacing:1px}
+body.auth-pending #account-modal .catalog-preview-row{display:flex;align-items:center;gap:11px;min-height:52px;padding:7px 10px;border:1px solid #ffffff13;border-radius:12px;background:#06152645}
+body.auth-pending #account-modal .catalog-platform{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:10px;color:#fff;font-size:16px;font-style:normal}
+body.auth-pending #account-modal .catalog-platform.instagram{background:linear-gradient(145deg,#ffb65e,#ed4a76 55%,#8946c7)}
+body.auth-pending #account-modal .catalog-platform.tiktok{background:#111923;border:1px solid #ffffff2a}
+body.auth-pending #account-modal .catalog-platform.youtube{background:#f34035}
+body.auth-pending #account-modal .catalog-preview-row>span{min-width:0;display:grid;gap:3px}
+body.auth-pending #account-modal .catalog-preview-row strong{color:#fff;font-size:10px}
+body.auth-pending #account-modal .catalog-preview-row small{color:#b7c5d4;font-size:8px}
+body.auth-pending #account-modal .catalog-preview-row>i{margin-left:auto;color:#ffae85;font-size:15px;font-style:normal}
+body.auth-pending #account-modal .catalog-preview-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 4px 0;color:#bdcad8;font-size:9px}
+body.auth-pending #account-modal .catalog-preview-bottom>b{color:#ffbd9c;font-size:9px}
+body.auth-pending #account-modal .catalog-preview-bottom i{margin-left:3px;font-style:normal}
+body.auth-pending #account-modal .auth-platforms{gap:7px;margin:0 0 11px}
+body.auth-pending #account-modal .auth-platforms span{padding:7px 10px;border-color:#ffffff25;background:#ffffff10;color:#f0f4f8;font-size:9px}
+body.auth-pending #account-modal .auth-promo-note{min-height:61px;padding:11px 13px;border-color:#ffffff2c;border-radius:14px;background:#07172855}
+body.auth-pending #account-modal .auth-promo-note>b{width:34px;height:34px;background:#ff814126;color:#ffc09d}
+body.auth-pending #account-modal .auth-promo-note strong{color:#fff;font-size:10px}
+body.auth-pending #account-modal .auth-promo-note small{color:#c2cfdb;font-size:8px}
+body.auth-pending #account-modal .auth-promo-note>i{color:#ffbd9c;font-size:9px}
+body.auth-pending #account-modal .auth-promo-note:hover{border-color:#ffab7c88;background:#10263c}
+body.auth-pending #account-modal .auth-welcome-foot{margin-top:auto;padding-top:13px;color:#9fadc0;font-size:8px}
+body.auth-pending #account-modal .auth-welcome-foot>span{color:#e9eef4}
+body.auth-pending #account-modal .auth-welcome-foot>span i{background:#68dca7;box-shadow:0 0 10px #68dca7}
+body.auth-pending #account-modal .auth-side{display:flex;flex-direction:column;justify-content:center;overflow-y:auto;padding:48px clamp(34px,5vw,62px) 38px;background:#fff;color:#172236;scrollbar-color:#d8dee7 transparent}
+body.auth-pending #account-modal .auth-side>small{margin:0 0 8px;color:#d75824;font-size:9px;font-weight:800;letter-spacing:1.7px}
+body.auth-pending #account-modal .auth-side>h2{margin:0;color:#152033;font-size:29px;line-height:1.2;letter-spacing:-1.1px}
+body.auth-pending #account-modal .auth-side .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:23px 0 20px;padding:4px;border:1px solid #e5e9ef;border-radius:12px;background:#f3f5f8}
+body.auth-pending #account-modal .auth-side .auth-tabs button{min-height:39px;border:0;border-radius:9px;background:transparent;color:#69768a;font:700 11px Manrope,Inter,system-ui,sans-serif;cursor:pointer}
+body.auth-pending #account-modal .auth-side .auth-tabs button.active{background:#fff;color:#16243a;box-shadow:0 2px 9px #14203316}
+body.auth-pending #account-modal .auth-side form>label{display:grid;gap:7px;margin-top:14px;color:#39465a;font-size:10px;font-weight:750;letter-spacing:.2px}
+body.auth-pending #account-modal .auth-side form>label input{width:100%;min-height:46px;padding:0 13px;border:1px solid #dfe4eb;border-radius:11px;background:#fbfcfe;color:#162033;font:500 12px Manrope,Inter,system-ui,sans-serif;outline:none;transition:border-color .18s,box-shadow .18s}
+body.auth-pending #account-modal .auth-side form>label input:focus{border-color:#ef8258;box-shadow:0 0 0 3px #ef82581c}
+body.auth-pending #account-modal .auth-side form>label input::placeholder{color:#9aa5b3}
+body.auth-pending #account-modal .auth-side .account-challenge{margin-top:17px;padding:12px;border-color:#e4e8ee;border-radius:12px;background:#f8fafc}
+body.auth-pending #account-modal .auth-side .account-challenge small{color:#647286;font-size:8px;letter-spacing:1px}
+body.auth-pending #account-modal .auth-side .account-challenge strong{color:#536174;font-size:10px}
+body.auth-pending #account-modal .auth-side .account-challenge button{border-color:#e0e5ed;background:#fff;color:#647286}
+body.auth-pending #account-modal .auth-side .auth-forgot-link{margin:12px 0 0;padding:0;color:#8f4a30;font-size:9px}
+body.auth-pending #account-modal .auth-side .submit-order{min-height:48px;margin-top:17px;border:0;border-radius:11px;background:linear-gradient(105deg,#e85b25,#f2773f);color:#fff;font:800 12px Manrope,Inter,system-ui,sans-serif;box-shadow:0 9px 20px #e85b252b;transition:transform .18s,box-shadow .18s}
+body.auth-pending #account-modal .auth-side .submit-order:hover{transform:translateY(-1px);box-shadow:0 12px 25px #e85b2538}
+body.auth-pending #account-modal .auth-side .submit-order:disabled{transform:none;box-shadow:none}
+body.auth-pending #account-modal .auth-side .account-feedback{border-color:#acd9c4;background:#effaf4;color:#176c48!important}
+body.auth-pending #account-modal .auth-side .account-feedback.is-error{border-color:#f0c2b9;background:#fff4f1;color:#9d3e2d!important}
+body.auth-pending #account-modal .auth-side .account-aux-form{border-color:#e6eaf0;background:#f8fafc}
+body.auth-pending #account-modal .auth-side .account-aux-form>p{color:#69768a}
+body.auth-pending #account-modal .auth-side .account-aux-form label{color:#39465a}
+body.auth-pending #account-modal .auth-side .auth-forgot-link:hover{color:#d75824;text-decoration:underline}
+@media(max-width:900px) and (min-width:761px){body.auth-pending #account-modal .ops-card.auth-card{grid-template-columns:minmax(0,1fr) minmax(370px,.95fr);width:calc(100% - 32px);height:calc(100dvh - 32px)}body.auth-pending #account-modal .auth-welcome{padding:34px 32px 28px}body.auth-pending #account-modal .auth-side{padding:38px 30px 30px}body.auth-pending #account-modal .auth-hero-copy h1{font-size:42px}}
+@media(max-width:760px){body.auth-pending #account-modal .ops-card.auth-card{grid-template-columns:1fr;align-content:start;width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;overflow-y:auto}body.auth-pending #account-modal .auth-welcome{min-height:0;padding:22px 24px 20px;border-bottom:1px solid #dce2ea;background:radial-gradient(ellipse at 88% 30%,#f064272e,transparent 40%),linear-gradient(145deg,#162840,#0e1d31 74%)}body.auth-pending #account-modal .auth-brand img{width:38px;height:38px}body.auth-pending #account-modal .auth-brand b{font-size:16px}body.auth-pending #account-modal .auth-hero-copy{margin:22px 0 14px;padding:0}body.auth-pending #account-modal .auth-eyebrow{margin-bottom:9px;font-size:8px;letter-spacing:1px}body.auth-pending #account-modal .auth-hero-copy h1{font-size:34px;line-height:1.04;letter-spacing:-1.6px}body.auth-pending #account-modal .auth-lead{margin-top:8px;font-size:10px;line-height:1.5}body.auth-pending #account-modal .auth-catalog-preview{display:none}body.auth-pending #account-modal .auth-platforms{gap:5px;margin:0 0 10px}body.auth-pending #account-modal .auth-platforms span{padding:6px 8px;font-size:8px}body.auth-pending #account-modal .auth-promo-note{min-height:48px;padding:8px 10px}body.auth-pending #account-modal .auth-promo-note>b{width:29px;height:29px}body.auth-pending #account-modal .auth-welcome-foot{display:none}body.auth-pending #account-modal .auth-side{overflow:visible;justify-content:flex-start;padding:23px 24px 32px}body.auth-pending #account-modal .auth-side>small{font-size:8px}body.auth-pending #account-modal .auth-side>h2{font-size:23px}body.auth-pending #account-modal .auth-side .auth-tabs{margin:14px 0}body.auth-pending #account-modal .auth-side form>label{margin-top:11px}body.auth-pending #account-modal .auth-side .account-challenge{margin-top:13px}body.auth-pending #account-modal .auth-side .submit-order{margin-top:14px}}
+/* Final fit and typography polish */
+body.auth-pending #account-modal .auth-hero-copy{margin:25px 0 13px}
+body.auth-pending #account-modal .auth-catalog-preview{gap:6px;padding:12px}
+body.auth-pending #account-modal .catalog-preview-row{min-height:47px}
+body.auth-pending #account-modal .auth-promo-note{min-height:56px}
+body.auth-pending #account-modal .auth-side>h2{font-family:Manrope,Inter,system-ui,sans-serif;font-weight:800}
+body.auth-pending #account-modal .auth-side .submit-order:disabled{background:#e8ecf1;color:#8792a0;box-shadow:none;cursor:not-allowed}
