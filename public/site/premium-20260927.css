@@ -580,6 +580,14 @@ body.light-premium .site-footer :is(h2,h3,.footer-brand p,.footer-bottom){color:
 .brand-art-orbit.brand-orbit-two{animation-duration:44s;animation-direction:reverse}
 .art-node{animation:elturco-social-small 6s ease-in-out infinite}
 .art-node:nth-child(2n){animation-delay:-3s}
-@media(prefers-reduced-motion:reduce){
-:is(.landing-brand>img,.brand-mark>img,.auth-brand>img,.footer-brand img,.brand-art-core>img,.platform-list i,.platform-logo,.contact-strip .social-logo,.brand-art-orbit,.art-node){animation:none!important;translate:none;rotate:none}
-}
+
+
+/* Keep the requested logo motion visible, including reduced-motion browsers. */
+body :is(.landing-brand>img,.brand-mark>img,.auth-brand>img,.footer-brand img){animation:elturco-brand-breathe 5s ease-in-out infinite!important}
+body .brand-art-core>img{animation:elturco-hero-float 6s ease-in-out infinite!important}
+body .platform-list i{animation:elturco-social-float 5s ease-in-out infinite!important}
+body .platform-list>span:nth-child(2n) i{animation-delay:-1.7s!important}
+body .platform-list>span:nth-child(3n) i{animation-delay:-3.3s!important}
+body :is(.platform-logo,.contact-strip .social-logo,.art-node){animation:elturco-social-small 5.5s ease-in-out infinite!important}
+body .brand-art-orbit{animation:elturco-orbit-turn 32s linear infinite!important}
+body .brand-art-orbit.brand-orbit-two{animation:elturco-orbit-turn 44s linear infinite reverse!important}
