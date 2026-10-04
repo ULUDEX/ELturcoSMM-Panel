@@ -507,3 +507,58 @@ body.auth-pending #account-modal .catalog-preview-row{min-height:47px}
 body.auth-pending #account-modal .auth-promo-note{min-height:56px}
 body.auth-pending #account-modal .auth-side>h2{font-family:Manrope,Inter,system-ui,sans-serif;font-weight:800}
 body.auth-pending #account-modal .auth-side .submit-order:disabled{background:#e8ecf1;color:#8792a0;box-shadow:none;cursor:not-allowed}
+
+/* Light theme: cover later dashboard, account and payment styles. */
+body.light-premium{color-scheme:light;--card:#fff;--panel:#fff;--bg:#f1f5f9;--line:#cbd5e1;--text:#17232c;--muted:#526575;--orange:#9a4d0b;--orange2:#8a5300;--green:#147448}
+body.light-premium .app-shell :is(h1,h2,h3,h4,label),body.light-premium .sidebar :is(b,.nav-label),body.light-premium .site-footer h3{color:#17232c}
+body.light-premium :is(.side-card,.help-card,.growth-metrics article,.orders-heading,.local-order-card,.order-track,.ops-card,.account-aux-form,.avatar-editor,.notification-item,.chat-inline,.agent-msg,.payment-method,.payment-option,.loyalty-peek){background:#fff;color:#17232c;border-color:#cbd5e1;box-shadow:0 8px 24px #17232c08}
+body.light-premium :is(.side-platforms a,.nav-item span,.brand-copy small,.side-card p,.help-card p,.secure-note,.filter-label,.service-meta em,.table-row small,.growth-metrics span,.orders-heading p,.order-updated,.order-track-head small,.notification-item p,.notification-item time,.notification-empty,.avatar-editor-head small,.account-aux-form>p,.music-copy em,.music-list small){color:#526575}
+body.light-premium :is(.topbar .account-button,.topbar .notification-button,.mobile-menu,.global-search,.locale-tools select,.locale-tools button,.order-steps,.service-info,.amount-box,.chat-start input,.chat-form input,.ops-card input,.ops-card select,.ops-card textarea){background:#fff;color:#17232c;border-color:#cbd5e1}
+body.light-premium :is(input,textarea)::placeholder{color:#64748b;opacity:1}
+body.light-premium :is(input,select,textarea){color-scheme:light}
+body.light-premium :is(input,select,textarea,button,a):focus-visible{outline:2px solid #8a5300;outline-offset:3px}
+body.light-premium :is(.global-search input,.account-button b,.trust b,.summary-lines b,.status-item b,.dashboard-order-row b,.local-order-top b,.notification-item b,.account-summary h3,.review-summary strong,.growth-metrics strong,.music-copy strong,.music-head b){color:#17232c}
+body.light-premium :is(.global-search kbd,.trust span,.pill,.order-steps .step,.service-meta em,.track-step i){background:#f1f5f9;color:#526575;border-color:#cbd5e1}
+body.light-premium :is(.order-steps .step.active,.track-step.done,.track-step.done i,.catalog-platforms button.active,.catalog-countries button.active,.avatar-gender-tabs button.active){background:#fff4ce;color:#72500b;border-color:#cba44b}
+body.light-premium :is(.summary-total strong,.summary-total small,.amount-box,.service-chip strong,.order-track-head span,.orders-heading small,.notification-kind,.new-service-badge,.account-summary>strong){color:#80500b}
+body.light-premium .summary-total{background:#fff8e5;border-color:#dfc17a}
+body.light-premium .topbar .balance{background:linear-gradient(130deg,#fff6d9,#fff);border-color:#cba44b}
+body.light-premium .topbar .balance :is(small,b){color:#72500b}
+body.light-premium #view-new-order .platform-picks button,body.light-premium #view-new-order .panel-head>button{background:#f8fafc!important;color:#17232c!important;border-color:#cbd5e1!important;box-shadow:none!important}
+body.light-premium #view-new-order .platform-picks button:hover,body.light-premium #view-new-order .panel-head>button:hover{background:#fff4ce!important;color:#72500b!important;border-color:#cba44b!important}
+body.light-premium #view-new-order .platform-picks button.active{background:#fff4ce!important;color:#72500b!important;border-color:#cba44b!important;box-shadow:inset 0 0 0 1px #cba44b!important}
+body.light-premium #view-new-order :is(.summary-lines b,.status-item b){color:#17232c}
+body.light-premium #view-new-order .status-item small{color:#526575}
+body.light-premium #view-new-order .status-item>i{background:#fff4ce;color:#72500b;border-color:#cba44b}
+body.light-premium :is(.profile-actions button,.avatar-gender-tabs button,.notifications-title-row>button,.orders-heading button,.orders-new-button,.auth-tabs button,.ops-close,.music-list button,.music-controls button,.service-table button,.help-card button){color:#72500b}
+body.light-premium :is(.profile-actions button,.avatar-gender-tabs button,.notifications-title-row>button,.orders-heading button,.orders-new-button,.auth-tabs button,.avatar-picker button){background:#f8fafc;border-color:#cbd5e1}
+body.light-premium .notification-item.unread{background:#fff8e5;border-color:#dfc17a}
+body.light-premium .ops-card :is(h2,h3,label,b,strong){color:#17232c}
+body.light-premium .ops-card :is(p,small){color:#526575}
+body.light-premium :is(.submit-order,.chat-form button,.customer-msg,.chat-launch){background:linear-gradient(110deg,#a75213,#8a430f);color:#fff}
+body.light-premium .submit-order :is(span,b){color:#fff}
+body.light-premium .summary-submit{background:linear-gradient(110deg,#f5c84b,#ffe07a);color:#17232c}
+body.light-premium .toast{background:#fff;color:#17232c;border-color:#cbd5e1}
+body.light-premium .account-feedback{background:#e8f6ee;color:#17613c!important;border-color:#9dceb1}
+body.light-premium .account-feedback.is-error{background:#fff0ec;color:#9d3527!important;border-color:#e8aba0}
+body.light-premium .music-list button:is(:hover,.active){background:#fff4ce;color:#72500b;border-color:#dfc17a}
+body.light-premium .music-controls .play-main{background:#a75213;color:#fff!important}
+body.light-premium .skeleton{background:linear-gradient(90deg,#e8eef4,#f7fafc,#e8eef4);background-size:200%}
+@media(max-width:760px){body.light-premium .service-table .table-row:not(.table-head){background:#f8fafc;border-color:#cbd5e1}}
+
+body.light-premium .side-platforms a{background:#eef2f7;color:#334155;border-color:#cbd5e1}
+body.light-premium .app-shell :is(.welcome h2 em,.launch-copy h2 em,.launch-copy>small,.panel-head small,.section-mini-head small,.faq-section>div>small,.review-form small,.ad-index,.art-caption){color:#80500b}
+body.light-premium #view-new-order .summary-total{background:#fff8e5;border-color:#dfc17a}
+body.light-premium #view-new-order .summary-total :is(small,strong){color:#72500b}
+body.light-premium #view-new-order :is(.summary-heading small,.summary-lines p,.panel-title p,.panel-head p){color:#526575}
+body.light-premium #view-new-order .order-panel :is(input,select){background:#fff;color:#17232c;border-color:#cbd5e1}
+body.light-premium #view-new-order :is(.service-info,.amount-box){background:#f8fafc;color:#526575;border-color:#cbd5e1}
+body.light-premium #view-new-order .amount-box{color:#72500b}
+body.light-premium #view-new-order .order-steps :is(.step,.step b){background:#eef2f7;color:#334155;border-color:#cbd5e1}
+body.light-premium #view-new-order .order-steps .step.active b{background:#fff4ce;color:#72500b;border-color:#cba44b}
+body.light-premium #view-new-order .order-steps>i{background:#cbd5e1}
+body.light-premium .account-button small{color:#526575}
+body.light-premium .app-shell .launch-actions button{background:#fff4ce;color:#72500b;border-color:#cba44b}
+body.light-premium .sidebar .side-card i{color:#147448}
+body.light-premium .site-footer :is(.channel-cta,.contact-strip){background:#f8fafc;color:#17232c;border-color:#cbd5e1}
+body.light-premium .site-footer :is(h2,h3,.footer-brand p,.footer-bottom){color:#334155}
