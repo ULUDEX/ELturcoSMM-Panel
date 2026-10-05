@@ -1,6 +1,15 @@
 
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  fetch('/api/site-config', { cache: 'no-store' })
+    .then((r) => r.ok ? r.json() : null)
+    .then((data) => {
+      const allowed = new Set(['cinematic','classic-purple','midnight-glass','neon-grid']);
+      const theme = allowed.has(data?.settings?.welcome_theme) ? data.settings.welcome_theme : 'cinematic';
+      document.documentElement.dataset.welcomeTheme = theme;
+    })
+    .catch(() => { document.documentElement.dataset.welcomeTheme = 'cinematic'; });
+
   const phone = document.querySelector('.wv-phone-wrap');
   const orbit = document.querySelector('.wv-orbit-stage');
   const hero = document.querySelector('.wv-hero');
