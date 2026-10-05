@@ -83,6 +83,55 @@ jobs:
       - name: Deploy Worker
         run: pnpm exec wrangler deploy --config dist/server/wrangler.json
 
+      - name: Ensure elturcosmm.com uses this Worker
+        env:
+          DOMAIN_HOSTNAME: elturcosmm.com
+        run: |
+          set -euo pipefail
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/domains"
+          response="$(curl --silent --show-error --fail-with-body \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "$api?hostname=$DOMAIN_HOSTNAME")"
+          current_service="$(printf '%s' "$response" | node -e '
+            let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+              const j=JSON.parse(s), row=(j.result||[]).find(x=>x.hostname===process.env.DOMAIN_HOSTNAME);
+              process.stdout.write(row?.service||"");
+            });
+          ')"
+          echo "Current custom-domain worker: ${current_service:-none}"
+          echo "Target worker: $CF_WORKER_NAME"
+          if [ "$current_service" != "$CF_WORKER_NAME" ]; then
+            payload="$(node -e 'process.stdout.write(JSON.stringify({hostname:process.env.DOMAIN_HOSTNAME,service:process.env.CF_WORKER_NAME,zone_name:process.env.DOMAIN_HOSTNAME}))')"
+            update="$(curl --silent --show-error --fail-with-body -X PUT \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data "$payload" \
+              "$api")"
+            printf '%s' "$update" | node -e '
+              let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                const j=JSON.parse(s);
+                if(!j.success) throw new Error(JSON.stringify(j.errors||j));
+                console.log("Custom domain attached:",j.result?.hostname,"->",j.result?.service);
+              });
+            '
+            sleep 5
+          fi
+
+      - name: Verify direct Worker welcome
+        run: |
+          direct="https://${CF_WORKER_NAME}.uludex-tr.workers.dev/"
+          status="$(curl --silent --show-error --location --header 'Cache-Control: no-cache' --output /tmp/direct.html --write-out '%{http_code}' "$direct?deploy=$GITHUB_SHA")"
+          echo "Direct Worker HTTP $status"
+          if [ "$status" != "200" ]; then
+            head -c 1000 /tmp/direct.html
+            exit 1
+          fi
+          if grep -q '/welcome/style.css' /tmp/direct.html; then
+            echo "Direct Worker serves cinematic welcome."
+          else
+            echo "Direct Worker root marker missing; first response bytes:"
+            head -c 1200 /tmp/direct.html
+          fi
       - name: Sync runtime secrets
         env:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -139,14 +188,14 @@ jobs:
 
       - name: Verify storefront page
         run: |
-          root_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/welcome.html --write-out '%{http_code}' https://elturcosmm.com/)"
+          root_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --header 'Cache-Control: no-cache' --output /tmp/welcome.html --write-out '%{http_code}' "https://elturcosmm.com/?deploy=$GITHUB_SHA")"
           if [ "$root_status" != "200" ] || ! grep -q '/welcome/style.css' /tmp/welcome.html; then
             echo "Standalone welcome page verification failed (HTTP $root_status):"
             head -c 1200 /tmp/welcome.html
             exit 1
           fi
 
-          panel_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/panel.html --write-out '%{http_code}' https://elturcosmm.com/site/)"
+          panel_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --header 'Cache-Control: no-cache' --output /tmp/panel.html --write-out '%{http_code}' "https://elturcosmm.com/site/?deploy=$GITHUB_SHA")"
           if [ "$panel_status" != "200" ] || ! grep -q 'premium-20260927.css' /tmp/panel.html; then
             echo "Customer panel verification failed (HTTP $panel_status):"
             head -c 1200 /tmp/panel.html
