@@ -1,3 +1,29 @@
+
+// site-social-field-clones
+(() => {
+  const bg=document.querySelector('.site-bg-social');
+  if(!bg) return;
+  const seeds=[...bg.querySelectorAll('.site-bg-icon')];
+  const layout=[
+    [4,8,48,16,-8],[13,13,70,19,10],[23,7,56,13,-12],[35,15,84,21,7],[48,8,52,15,-6],[61,17,72,18,11],[74,9,60,14,-10],[88,15,88,22,8],[96,7,50,17,-5],
+    [7,31,78,20,12],[18,37,50,14,-7],[29,28,68,17,9],[42,36,92,23,-11],[55,29,58,15,6],[67,39,76,19,-8],[79,30,54,13,10],[91,38,82,21,-6],
+    [3,56,58,14,8],[14,63,86,22,-10],[26,53,52,15,12],[38,64,74,18,-7],[51,55,96,24,9],[64,67,56,14,-11],[76,56,70,17,6],[89,66,90,21,-9],[97,53,48,13,8],
+    [8,82,72,18,-12],[21,75,50,14,7],[34,87,88,22,-8],[47,78,58,16,11],[60,89,76,20,-6],[73,80,52,14,9],[85,90,84,21,-10],[95,78,60,16,6]
+  ];
+  layout.forEach((item,i)=>{
+    const source=seeds[i%seeds.length];
+    if(!source)return;
+    const clone=source.cloneNode(true);
+    clone.style.setProperty('--x',item[0]+'%');
+    clone.style.setProperty('--y',item[1]+'%');
+    clone.style.setProperty('--size',item[2]+'px');
+    clone.style.setProperty('--dur',item[3]+'s');
+    clone.style.setProperty('--delay',(-((i*1.7)%13))+'s');
+    clone.style.setProperty('--rot',item[4]+'deg');
+    bg.appendChild(clone);
+  });
+  seeds.forEach(n=>n.remove());
+})();
 let services=[],selectedService=null;const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);const money=n=>{const currency=typeof displayCurrency==='undefined'?'TRY':displayCurrency,rate=typeof fx==='undefined'?1:(fx[currency]||1),value=Number(n||0)*rate;return new Intl.NumberFormat(currency==='TRY'?'tr-TR':'en-US',{style:'currency',currency,minimumFractionDigits:2,maximumFractionDigits:currency==='TRY'?2:3}).format(value)};const escapeHtml=s=>{const d=document.createElement('div');d.textContent=s??'';return d.innerHTML};
 function toast(text){const t=$('.toast');t.textContent=text;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 function showView(name){$$('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));$$('.nav-item[data-view]').forEach(v=>v.classList.toggle('active',v.dataset.view===name));const titles={'new-order':'Yeni Sipariş',services:'Hizmetler',orders:'Siparişlerim',support:'Canlı Destek'};$('#page-title').textContent=titles[name]||'ElTurco SMM';$('#sidebar').classList.remove('open');scrollTo({top:0,behavior:'smooth'});if(name==='support')loadChat();if(name==='orders')renderLocalOrders()}

@@ -591,3 +591,22 @@ body .platform-list>span:nth-child(3n) i{animation-delay:-3.3s!important}
 body :is(.platform-logo,.contact-strip .social-logo,.art-node){animation:elturco-social-small 5.5s ease-in-out infinite!important}
 body .brand-art-orbit{animation:elturco-orbit-turn 32s linear infinite!important}
 body .brand-art-orbit.brand-orbit-two{animation:elturco-orbit-turn 44s linear infinite reverse!important}
+
+/* ELTURCO social universe background inside the signed-in panel */
+body{position:relative;isolation:isolate;background:radial-gradient(circle at 70% 5%,#8e53ff14,transparent 24%),#070b14}
+.site-bg-social{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.site-bg-icon{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);display:grid;place-items:center;color:rgba(220,205,239,.15);filter:blur(.45px) drop-shadow(0 0 24px rgba(140,78,255,.13));transform:translate(-50%,-50%) rotate(var(--rot));animation:siteBgDrift var(--dur) ease-in-out var(--delay) infinite alternate;will-change:transform,opacity}
+.site-bg-icon svg{width:100%;height:100%}
+.site-bg-icon:nth-child(4n+1){opacity:.72}
+.site-bg-icon:nth-child(4n+2){opacity:.48;filter:blur(1px)}
+.site-bg-icon:nth-child(4n+3){opacity:.6}
+.site-bg-icon:nth-child(4n){opacity:.42;filter:blur(1.5px)}
+.site-bg-icon.yt{color:rgba(255,84,84,.13)}.site-bg-icon.tg{color:rgba(86,190,255,.15)}.site-bg-icon.wa{color:rgba(75,230,133,.13)}.site-bg-icon.fb{color:rgba(92,156,255,.13)}.site-bg-icon.tt{color:rgba(246,239,255,.15)}.site-bg-icon.ig{color:rgba(224,194,255,.16)}.site-bg-icon.x{color:rgba(235,232,240,.13)}
+@keyframes siteBgDrift{0%{transform:translate(-50%,-50%) translate3d(-16px,12px,0) rotate(var(--rot)) scale(.94)}50%{transform:translate(-50%,-50%) translate3d(8px,-6px,0) rotate(calc(var(--rot) + 4deg)) scale(1.02)}100%{transform:translate(-50%,-50%) translate3d(24px,-28px,0) rotate(calc(var(--rot) + 10deg)) scale(1.08)}}
+.ambient{z-index:1}
+.app-shell{z-index:2}
+.sidebar{background:rgba(8,13,23,.90)}
+.topbar{position:relative;z-index:3;background:rgba(7,11,20,.48);backdrop-filter:blur(10px)}
+.panel,.trust span,.balance,.account-button,.global-search,.launch-banner,.new-services-showcase{backdrop-filter:blur(16px)}
+.panel{background:linear-gradient(145deg,rgba(15,22,36,.90),rgba(11,17,29,.88))}
+@media(max-width:760px){.site-bg-icon{width:calc(var(--size) * .72);height:calc(var(--size) * .72);opacity:.48}.site-bg-icon:nth-child(3n){display:none}}
