@@ -80,3 +80,32 @@
 :root[data-welcome-theme="neon-grid"] .wv-trial,
 :root[data-welcome-theme="neon-grid"] .wv-bottom{background:linear-gradient(145deg,#071009,#07090a)}
 :root[data-welcome-theme="neon-grid"] .wv-label{color:#a8ff7f}
+
+
+/* Safe motion preview: no element is hidden unless JS explicitly enables motion. */
+html.safe-motion .wv-title{animation:safeTitleIn .9s cubic-bezier(.2,.8,.2,1) both}
+html.safe-motion .wv-sub{animation:safeFadeUp .8s ease .18s both}
+html.safe-motion .wv-kicker{animation:safeFadeUp .7s ease .08s both}
+html.safe-motion .wv-phone{animation:safePhoneFloat 4.6s ease-in-out infinite}
+html.safe-motion .wv-float.one{animation:safeFloatA 4.2s ease-in-out infinite}
+html.safe-motion .wv-float.two{animation:safeFloatB 4.8s ease-in-out infinite}
+html.safe-motion .wv-float.three{animation:safeFloatC 5.2s ease-in-out infinite}
+html.safe-motion .safe-reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+html.safe-motion .safe-reveal.safe-visible{opacity:1;transform:translateY(0)}
+html.safe-motion .wv-chip{transition:transform .25s ease,border-color .25s ease}
+html.safe-motion .wv-chip:hover{transform:translateY(-4px);border-color:rgba(155,95,255,.38)}
+html.safe-motion .wv-pane{transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}
+html.safe-motion .wv-pane:hover{transform:translateY(-6px);border-color:rgba(155,95,255,.35);box-shadow:0 26px 70px rgba(80,30,150,.2)}
+html.safe-motion .wv-workcard,html.safe-motion .wv-trial-card{transition:transform .28s ease,border-color .28s ease}
+html.safe-motion .wv-workcard:hover,html.safe-motion .wv-trial-card:hover{transform:translateY(-5px);border-color:rgba(155,95,255,.32)}
+@keyframes safeTitleIn{from{opacity:0;transform:translateX(-50%) translateY(22px) scale(.98)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes safeFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes safePhoneFloat{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-8px)}}
+@keyframes safeFloatA{0%,100%{translate:0 0}50%{translate:-5px -7px}}
+@keyframes safeFloatB{0%,100%{translate:0 0}50%{translate:6px -8px}}
+@keyframes safeFloatC{0%,100%{translate:-50% 0}50%{translate:-50% -6px}}
+@media (prefers-reduced-motion: reduce){
+  html.safe-motion *{scroll-behavior:auto!important}
+  html.safe-motion .wv-title,html.safe-motion .wv-sub,html.safe-motion .wv-kicker,html.safe-motion .wv-phone,html.safe-motion .wv-float{animation:none!important}
+  html.safe-motion .safe-reveal{opacity:1!important;transform:none!important;transition:none!important}
+}
