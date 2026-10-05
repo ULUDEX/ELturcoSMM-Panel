@@ -147,3 +147,17 @@ html.safe-motion .wv-title,html.safe-motion .wv-sub,html.safe-motion .wv-kicker{
 .wv-hero:before,.wv-grid{z-index:0}
 .wv-section{background:rgba(5,5,7,.82)!important;backdrop-filter:blur(2px)}
 .wv-social-card,.wv-pane,.wv-video,.wv-workcard,.wv-trial,.wv-trial-card,.wv-bottom{background-color:rgba(10,9,14,.84)!important;backdrop-filter:blur(14px)}
+
+/* Layering hotfix for full-site social background */
+.public-landing{position:relative;isolation:isolate;z-index:0}
+.wv-bg-social{position:fixed!important;inset:0!important;z-index:-1!important;pointer-events:none!important}
+.wv-ticker{position:relative!important;z-index:20!important}
+.wv-nav{position:absolute!important;z-index:30!important}
+.wv-hero{position:relative!important;z-index:2!important}
+.wv-pin{position:sticky!important;top:0!important;z-index:2!important}
+.wv-grid{z-index:0!important}
+.wv-kicker,.wv-title,.wv-sub{z-index:6!important}
+.wv-orbit-stage{z-index:4!important}
+.wv-phone-wrap,.wv-float{z-index:8!important}
+.wv-section{position:relative!important;z-index:2!important}
+.wv-support{position:fixed!important;z-index:90!important}
