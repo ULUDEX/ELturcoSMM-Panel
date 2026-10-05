@@ -139,3 +139,11 @@ html.safe-motion .wv-title,html.safe-motion .wv-sub,html.safe-motion .wv-kicker{
   .wv-bg-icon{width:calc(var(--size) * .72);height:calc(var(--size) * .72);opacity:.5}
   .wv-bg-icon:nth-child(3n){display:none}
 }
+
+/* Extend social universe across the entire public welcome page */
+.wv-bg-social{position:fixed!important;inset:0!important;width:100vw;height:100vh;z-index:1!important}
+.public-landing{isolation:isolate}
+.wv-ticker,.wv-nav,.wv-hero,.wv-section,.wv-support{position:relative;z-index:3}
+.wv-hero:before,.wv-grid{z-index:0}
+.wv-section{background:rgba(5,5,7,.82)!important;backdrop-filter:blur(2px)}
+.wv-social-card,.wv-pane,.wv-video,.wv-workcard,.wv-trial,.wv-trial-card,.wv-bottom{background-color:rgba(10,9,14,.84)!important;backdrop-filter:blur(14px)}
