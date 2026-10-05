@@ -46,3 +46,31 @@
     if (event.key === "Escape" && accountModal.classList.contains("show")) dismiss();
   }, true);
 })();
+
+
+;(() => {
+  const initWelcomeAuthEnhancements = () => {
+    document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.querySelector(button.dataset.passwordToggle || "");
+        if (!(target instanceof HTMLInputElement)) return;
+        const show = target.type === "password";
+        target.type = show ? "text" : "password";
+        button.textContent = show ? "🙈" : "👁";
+        button.setAttribute("aria-label", show ? "Şifreyi gizle" : "Şifreyi göster");
+      });
+    });
+    const remember = document.querySelector("#remember-login");
+    const email = document.querySelector('#auth-form input[name="email"]');
+    if (remember instanceof HTMLInputElement && email instanceof HTMLInputElement) {
+      const saved = localStorage.getItem("elturco_remembered_email") || "";
+      if (saved) { email.value = saved; remember.checked = true; }
+      document.querySelector("#auth-form")?.addEventListener("submit", () => {
+        if (remember.checked && email.value.trim()) localStorage.setItem("elturco_remembered_email", email.value.trim());
+        else localStorage.removeItem("elturco_remembered_email");
+      });
+    }
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initWelcomeAuthEnhancements);
+  else initWelcomeAuthEnhancements();
+})();
