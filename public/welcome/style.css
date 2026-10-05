@@ -80,3 +80,41 @@
 :root[data-welcome-theme="neon-grid"] .wv-trial,
 :root[data-welcome-theme="neon-grid"] .wv-bottom{background:linear-gradient(145deg,#071009,#07090a)}
 :root[data-welcome-theme="neon-grid"] .wv-label{color:#a8ff7f}
+
+
+/* Full cinematic motion layer */
+.motion-ready .wv-nav{opacity:0;transform:translateX(-50%) translateY(-18px)}
+.motion-ready .wv-kicker{opacity:0}
+.motion-ready .wv-title{opacity:0;transform:translateX(-50%) translateY(28px) scale(.96)}
+.motion-ready .wv-sub{opacity:0;transform:translateX(-50%) translateY(22px)}
+.motion-ready .wv-phone-wrap{opacity:0;transform:translate(-50%,-46%) scale(.88)}
+.motion-ready .wv-float{opacity:0}
+.motion-ready.wv-loaded .wv-nav{opacity:1;transform:translateX(-50%) translateY(0);transition:opacity .7s ease .05s,transform .8s cubic-bezier(.2,.8,.2,1) .05s}
+.motion-ready.wv-loaded .wv-kicker{opacity:1;transition:opacity .7s ease .2s,transform .3s linear}
+.motion-ready.wv-loaded .wv-title{opacity:1;transform:translateX(-50%) translateY(0) scale(1);transition:opacity .9s ease .22s,transform 1.05s cubic-bezier(.16,1,.3,1) .22s}
+.motion-ready.wv-loaded .wv-sub{opacity:1;transform:translateX(-50%) translateY(0);transition:opacity .75s ease .5s,transform .85s cubic-bezier(.2,.8,.2,1) .5s}
+.motion-ready.wv-loaded .wv-phone-wrap{opacity:1;transform:translate(-50%,-50%) scale(1);transition:opacity .9s ease .55s,transform 1.15s cubic-bezier(.16,1,.3,1) .55s}
+.motion-ready.wv-loaded .wv-float{opacity:1;transition:opacity .7s ease .95s,transform .2s linear}
+.wv-phone{animation:wvPhoneFloat 4.8s ease-in-out infinite}
+@keyframes wvPhoneFloat{0%,100%{translate:0 0}50%{translate:0 -9px}}
+.wv-screen:after{content:"";position:absolute;inset:-35% -60%;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.08) 46%,transparent 57%);transform:translateX(-70%) rotate(8deg);animation:wvSheen 5.5s ease-in-out infinite}
+@keyframes wvSheen{0%,45%{transform:translateX(-70%) rotate(8deg)}75%,100%{transform:translateX(70%) rotate(8deg)}}
+.wv-reveal{opacity:0;transform:translateY(46px) scale(.985);transition:opacity .85s ease,transform 1s cubic-bezier(.16,1,.3,1)}
+.wv-reveal.is-visible{opacity:1;transform:translateY(0) scale(1)}
+.wv-reveal-side{opacity:0;transition:opacity .85s ease,transform 1.05s cubic-bezier(.16,1,.3,1)}
+.wv-reveal-side[data-side="left"]{transform:translateX(-58px) rotate(-3deg)}
+.wv-reveal-side[data-side="right"]{transform:translateX(58px) rotate(3deg)}
+.wv-reveal-side.is-visible{opacity:1;transform:translateX(0) rotate(0)}
+.wv-chip{transition:transform .28s ease,border-color .28s ease,background .28s ease}
+.wv-chip:hover{transform:translateY(-4px) scale(1.03);border-color:rgba(167,102,255,.35);background:rgba(255,255,255,.08)}
+.wv-pane{transition:box-shadow .4s ease,border-color .4s ease}
+.wv-pane:hover{border-color:rgba(153,91,255,.35);box-shadow:0 35px 100px rgba(95,35,180,.22)}
+.wv-workcard,.wv-trial-card{transition:transform .32s ease,border-color .32s ease,background .32s ease}
+.wv-workcard:hover,.wv-trial-card:hover{transform:translateY(-7px);border-color:rgba(154,92,255,.32);background:rgba(255,255,255,.045)}
+.wv-video:before{transform:translateY(var(--wv-video-shift,0px));transition:transform .08s linear}
+.wv-play{animation:wvPulse 2.4s ease-in-out infinite}
+@keyframes wvPulse{0%,100%{box-shadow:0 0 0 0 rgba(149,86,255,.18)}50%{box-shadow:0 0 0 18px rgba(149,86,255,0)}}
+.wv-support{animation:wvSupport 3.2s ease-in-out infinite}
+@keyframes wvSupport{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.motion-reduced .wv-nav,.motion-reduced .wv-kicker,.motion-reduced .wv-title,.motion-reduced .wv-sub,.motion-reduced .wv-phone-wrap,.motion-reduced .wv-float,.motion-reduced .wv-reveal,.motion-reduced .wv-reveal-side{opacity:1!important;transform:none!important;transition:none!important;animation:none!important}
+@media(max-width:760px){.wv-phone{animation-duration:5.4s}.wv-reveal-side[data-side="left"],.wv-reveal-side[data-side="right"]{transform:translateY(36px)}.wv-reveal-side.is-visible{transform:translateY(0)}}
