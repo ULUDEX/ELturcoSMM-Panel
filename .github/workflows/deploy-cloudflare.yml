@@ -139,20 +139,20 @@ jobs:
 
       - name: Verify storefront page
         run: |
-          for url in https://elturcosmm.com/ https://elturcosmm.com/site/; do
-            status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/storefront.html --write-out '%{http_code}' "$url")"
-            if [ "$status" != "200" ]; then
-              echo "Storefront $url returned HTTP $status:"
-              head -c 1200 /tmp/storefront.html
-              exit 1
-            fi
-            if ! grep -q 'premium-20260927.css' /tmp/storefront.html; then
-              echo "Storefront HTML from $url did not include the expected page and stylesheet:"
-              head -c 1200 /tmp/storefront.html
-              exit 1
-            fi
-          done
-          echo "Storefront root and /site/ return the styled page."
+          root_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/welcome.html --write-out '%{http_code}' https://elturcosmm.com/)"
+          if [ "$root_status" != "200" ] || ! grep -q '/welcome/style.css' /tmp/welcome.html; then
+            echo "Standalone welcome page verification failed (HTTP $root_status):"
+            head -c 1200 /tmp/welcome.html
+            exit 1
+          fi
+
+          panel_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --output /tmp/panel.html --write-out '%{http_code}' https://elturcosmm.com/site/)"
+          if [ "$panel_status" != "200" ] || ! grep -q 'premium-20260927.css' /tmp/panel.html; then
+            echo "Customer panel verification failed (HTTP $panel_status):"
+            head -c 1200 /tmp/panel.html
+            exit 1
+          fi
+          echo "Standalone welcome and customer panel are both serving correctly."
 
       - name: Verify storefront stylesheet and script
         run: |
