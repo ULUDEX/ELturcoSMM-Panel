@@ -12,6 +12,7 @@
 
   qa('[data-account]').forEach((el) => el.addEventListener('click', () => {
     const mode = el.getAttribute('data-account') || 'login';
+    sessionStorage.setItem('elturco_welcome_auth_entry', mode);
     location.href = '/site/?auth=' + encodeURIComponent(mode);
   }));
   qa('[data-assistant-open]').forEach((el) => el.addEventListener('click', () => {
