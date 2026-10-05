@@ -1,5 +1,4 @@
 (() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const qa = (s, r=document) => [...r.querySelectorAll(s)];
 
   fetch('/api/site-config', { cache: 'no-store' })
@@ -19,7 +18,6 @@
     location.href = '/site/?assistant=1';
   }));
 
-  if (reduce) return;
 
   // Enable motion only after all handlers are safely installed.
   document.documentElement.classList.add('safe-motion');
