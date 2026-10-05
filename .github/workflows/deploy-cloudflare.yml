@@ -135,21 +135,8 @@ jobs:
           routes_status="$(curl --silent --show-error --output /tmp/routes.json --write-out '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$routes_url")"
           echo "Worker routes API HTTP $routes_status"
           if [ "$routes_status" = "200" ]; then
-            node - <<'NODE'
-const fs=require('fs');
-const j=JSON.parse(fs.readFileSync('/tmp/routes.json','utf8'));
-for(const r of j.result||[]) console.log('Route:',r.pattern,'->',r.script||'<no script>','id='+r.id);
-NODE
-            node - <<'NODE' > /tmp/conflicting-route-ids
-const fs=require('fs');
-const j=JSON.parse(fs.readFileSync('/tmp/routes.json','utf8'));
-const host=process.env.DOMAIN_HOSTNAME.toLowerCase();
-for(const r of j.result||[]){
-  const pattern=String(r.pattern||'').toLowerCase();
-  const hostPart=pattern.replace(/^https?:\/\//,'').split('/')[0].replace(/^\*\./,'');
-  if(hostPart===host || hostPart==='*'+host || hostPart.endsWith('.'+host)) console.log(r.id);
-}
-NODE
+            node -e "const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/routes.json','utf8')); for(const r of j.result||[]) console.log('Route:',r.pattern,'->',r.script||'<no script>','id='+r.id)"
+            node -e "const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/routes.json','utf8')),host=process.env.DOMAIN_HOSTNAME.toLowerCase(); for(const r of j.result||[]){const pattern=String(r.pattern||'').toLowerCase(),hostPart=pattern.replace(/^https?:\\/\\//,'').split('/')[0].replace(/^\\*\\./,''); if(hostPart===host||hostPart==='*'+host||hostPart.endsWith('.'+host)) console.log(r.id)}" > /tmp/conflicting-route-ids
             while IFS= read -r route_id; do
               [ -n "$route_id" ] || continue
               echo "Removing conflicting route $route_id so Custom Domain owns the hostname…"
