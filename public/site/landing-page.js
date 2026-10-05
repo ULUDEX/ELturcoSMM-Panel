@@ -74,3 +74,20 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initWelcomeAuthEnhancements);
   else initWelcomeAuthEnhancements();
 })();
+
+;(() => {
+  const run = () => {
+    const params = new URLSearchParams(location.search);
+    const auth = params.get('auth');
+    if (auth === 'login' || auth === 'register') {
+      const button = document.querySelector('[data-account="' + auth + '"]');
+      if (button) setTimeout(() => button.click(), 120);
+    }
+    if (params.get('assistant') === '1') {
+      const button = document.querySelector('[data-assistant-open]');
+      if (button) setTimeout(() => button.click(), 180);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
