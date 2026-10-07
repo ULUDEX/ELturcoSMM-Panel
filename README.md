@@ -83,3 +83,7 @@ Kurulum: Telegram’da `@BotFather` üzerinden bir bot oluşturun, botu `@ElTurc
 ## Lisans ve medya
 
 Bu depo özel proje kullanımı içindir. Lisanslı MP3 dosyaları GitHub üzerinden dağıtılmaz. Müziği admin medya yükleyicisinden ekleyin veya kullanım hakkı bulunan dosyaları yerelde `public/site/audio` altına koyun.
+
+## Canlı destek ve Yardım Merkezi
+
+ELturcoSMM’nin giriş, müşteri paneli ve hizmet sayfaları `public/live-support.js` ile tawk.to canlı sohbetine bağlanır. Sohbet kurulumu ELturcoSMM property’sini kullanır; Kıvıl Digital’e bağlantı eklenmez. Widget kimlikleri herkese açık embed tanımlarıdır, gizli API anahtarı değildir. Müşteri e-posta adresi ve hesap bilgileri otomatik olarak üçüncü tarafa aktarılmaz. Yardım Merkezi: https://elturcosmmcom.tawk.help. Çevrimdışı ziyaretçiler sohbet formuna mesaj bırakabilir. Widget engellenirse “Canlı desteği aç” düğmesi doğrudan sohbet bağlantısı sunar. Mevcut panel içi destek mesajları korunur. AI Assist ayrıca etkinleştirilmedikçe sohbet yanıtlarını destek temsilcisi verir.
