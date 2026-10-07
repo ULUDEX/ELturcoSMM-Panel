@@ -190,4 +190,4 @@ html.safe-motion .wv-float.three{animation:none}
  .wv-phone-wrap{top:670px}.wv-phone{width:245px;height:493px}
  .wv-float.one{top:925px;left:5%}.wv-float.two{top:925px;right:5%;left:auto}.wv-float.three{top:975px;font-size:9px;white-space:normal}
 }
-@media(prefers-reduced-motion:reduce){.wv-ticker-track,.wv-orbit-stage,.wv-logo,.wv-bg-icon,html.safe-motion .wv-phone{animation:none}html.safe-motion .safe-reveal{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.wv-ticker-track{animation-duration:64s}.wv-orbit-stage,.wv-logo{animation-duration:96s}.wv-bg-icon{animation-duration:40s}html.safe-motion .safe-reveal{opacity:1;transform:none}html.safe-motion .wv-phone{animation-duration:9s}}

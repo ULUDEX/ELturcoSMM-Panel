@@ -245,6 +245,9 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const assets = [
+            ["https://elturcosmm.com/?deploy=" + process.env.GITHUB_SHA, "20261007hero3", "Welcome entry"],
+            ["https://elturcosmm.com/welcome/?deploy=" + process.env.GITHUB_SHA, "title=\"Apple Music\"", "Welcome orbit logos"],
+            ["https://elturcosmm.com/welcome/style.css?v=20261007hero3", ".wv-ticker-group", "Welcome motion CSS"],
             ["https://elturcosmm.com/site/premium-20260927.css", "--sidebar:260px", "CSS"],
             ["https://elturcosmm.com/site/app-20260927.js", "selectedService", "JavaScript"],
             ["https://elturcosmm.com/live-support.js", "https://embed.tawk.to/6ac60b8069205a34bff50751/1k4appsfq", "Live Support"],
