@@ -610,3 +610,47 @@ body{position:relative;isolation:isolate;background:radial-gradient(circle at 70
 .panel,.trust span,.balance,.account-button,.global-search,.launch-banner,.new-services-showcase{backdrop-filter:blur(16px)}
 .panel{background:linear-gradient(145deg,rgba(15,22,36,.90),rgba(11,17,29,.88))}
 @media(max-width:760px){.site-bg-icon{width:calc(var(--size) * .72);height:calc(var(--size) * .72);opacity:.48}.site-bg-icon:nth-child(3n){display:none}}
+
+/* ELTURCO violet identity shared with the animated welcome screen. */
+body:not(.light-premium){--bg:#08070c;--card:#110d19;--line:#382448;--muted:#a59aaf;--text:#f8f4fb;--orange:#a855f7;--orange2:#d4a1ff;--gold:#c084fc;--blue:#9b7bff;background:radial-gradient(ellipse at 78% 8%,#6b36a32e,transparent 32%),radial-gradient(ellipse at 13% 74%,#642ca51b,transparent 34%),#08070c}
+body:not(.light-premium) .sidebar{background:linear-gradient(180deg,#110b19f5,#0b0910f5);border-color:#382448}
+body:not(.light-premium) .topbar{background:#0b0910e8;border-color:#382448}
+body:not(.light-premium) .site-footer{background:linear-gradient(180deg,#0b0910,#09070c);border-color:#382448}
+body:not(.light-premium) .panel,body:not(.light-premium) .order-panel,body:not(.light-premium) .popular,body:not(.light-premium) .help-card,body:not(.light-premium) .order-summary,body:not(.light-premium) .order-status,body:not(.light-premium) .platform-categories,body:not(.light-premium) .faq-section,body:not(.light-premium) .future-panel{border-color:#382448;background:linear-gradient(145deg,#15101eF5,#0e0b14F5)}
+body:not(.light-premium) .nav-item.active{border-color:#9b5de866;background:linear-gradient(110deg,#8b5cf633,#c084fc14);color:#e9d5ff}
+body:not(.light-premium) .nav-item:hover{background:#a855f712;color:#f0ddff}
+body:not(.light-premium) .submit-order,body:not(.light-premium) .summary-submit{background:linear-gradient(105deg,#8b5cf6,#c026d3);box-shadow:0 9px 24px #7e22ce25}
+body:not(.light-premium) .order-steps .step.active b,body:not(.light-premium) .platform-picks button.active{border-color:#b471f5;background:#a855f71c;color:#efdfff}
+body:not(.light-premium) .category-card:hover,body:not(.light-premium) .service-chip:hover{border-color:#a855f76e;box-shadow:0 13px 34px #7725a71c}
+body:not(.light-premium) .category-card .platform-logo,body:not(.light-premium) .platform-picks .platform-logo,body:not(.light-premium) .service-chip .platform-logo{transition:transform .24s cubic-bezier(.2,.8,.2,1),filter .24s}
+body:not(.light-premium) .category-card:hover .platform-logo,body:not(.light-premium) .platform-picks button:hover .platform-logo,body:not(.light-premium) .service-chip:hover .platform-logo{transform:translateY(-2px) rotate(-5deg) scale(1.08);filter:drop-shadow(0 4px 9px #b26dff44)}
+.side-future-links{display:grid;gap:2px;margin:12px 0 14px;padding-top:13px;border-top:1px solid #ffffff0d}
+.side-future-links .nav-label{margin:0 0 5px}.side-future-links .future-api-label{margin-top:9px}
+.future-panel{display:flex;align-items:center;gap:18px;max-width:900px;margin-top:18px;padding:28px;border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px #0002}
+.future-panel>span{display:grid;place-items:center;flex:none;width:52px;height:52px;border:1px solid #b46af044;border-radius:16px;background:#a855f717;color:#d4a1ff;font-size:23px}
+.future-panel small{color:#c084fc;font-size:9px;font-weight:850;letter-spacing:1.5px}.future-panel h3{margin:5px 0;font-size:18px}.future-panel p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+.new-services-showcase{overflow:hidden}.new-services-grid{display:flex;width:max-content;max-width:none;gap:0;animation:new-service-travel 38s linear infinite}.new-services-showcase:hover .new-services-grid,.new-services-showcase:focus-within .new-services-grid{animation-play-state:paused}
+.new-services-track{display:flex;align-items:stretch;gap:10px;padding-right:10px}.new-services-track .new-service-chip{flex:0 0 clamp(260px,27vw,360px);width:clamp(260px,27vw,360px);min-width:0;margin:0;animation:service-card-enter .45s both}.new-services-track .new-service-chip:nth-child(2){animation-delay:.05s}.new-services-track .new-service-chip:nth-child(3){animation-delay:.1s}.new-services-track .new-service-chip:nth-child(4){animation-delay:.15s}
+@keyframes new-service-travel{to{transform:translateX(-50%)}}@keyframes service-card-enter{from{opacity:.5;translate:0 6px}to{opacity:1;translate:0 0}}
+.channel-cta{border-color:#8b5cf633;background:radial-gradient(ellipse at 90% 10%,#9b35ee24,transparent 42%),linear-gradient(120deg,#15101f,#0e0b14)}
+.channel-cta small{color:#d4a1ff}.channel-cta>a{background:linear-gradient(105deg,#8b5cf6,#c026d3);box-shadow:0 8px 23px #8b5cf626}
+.contact-strip{grid-template-columns:minmax(190px,1fr) repeat(4,minmax(140px,auto));gap:10px;border-color:#382448;background:#100d17}
+.contact-strip>button,.contact-strip>a{display:flex;align-items:center;justify-content:flex-start;gap:10px;min-width:0;min-height:60px;padding:10px 12px;border:1px solid #ffffff12;border-radius:13px;background:#ffffff05;color:#f6efff;text-align:left;text-decoration:none;transition:transform .2s,border-color .2s,background .2s}
+.contact-strip>button:hover,.contact-strip>a:hover{transform:translateY(-2px);border-color:#b56af466;background:#a855f710}
+.contact-strip>button{font-size:11px;font-weight:800;cursor:pointer}.contact-strip>a>b{display:grid;place-items:center;flex:none;width:31px;height:31px;border-radius:9px;background:#a855f720;color:#ead4ff}.contact-strip>a>b .platform-logo{width:20px;height:20px;box-shadow:none}.contact-strip>a>b .platform-logo svg{width:15px;height:15px}
+.contact-strip>a>span{display:grid;min-width:0;gap:2px}.contact-strip>a small{font-size:7px;letter-spacing:1px}.contact-strip>a strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.contact-strip>a>i{margin-left:auto;color:#b58ad7;font-size:12px;font-style:normal}
+.contact-strip .instagram-contact>b{background:linear-gradient(135deg,#8b5cf633,#ec489933);color:#f6dfff}.contact-strip .tiktok-contact>b{background:#17131c;color:#fff}.contact-strip .telegram-contact>b{background:#249bd51d;color:#8ed7ff}
+@media(max-width:1050px){.contact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-strip>div{grid-column:1/-1}}
+@media(max-width:760px){.new-services-track .new-service-chip{flex-basis:78vw;width:78vw}.future-panel{align-items:flex-start;padding:19px}.future-panel h3{font-size:16px}.contact-strip{grid-template-columns:1fr 1fr}.contact-strip>div{grid-column:1/-1}.contact-strip>button,.contact-strip>a{min-height:56px;padding:8px}.contact-strip>a strong{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.new-services-grid{animation-duration:120s}.new-service-chip,.category-card .platform-logo,.platform-picks .platform-logo,.service-chip .platform-logo{animation:none;transition:none}}
+
+/* Reorder the signed-in home so its first screen stays focused on ordering. */
+#view-new-order>.welcome{grid-column:1;grid-row:1}
+#view-new-order .order-panel{grid-column:1;grid-row:2}
+#view-new-order .right-column{grid-column:2;grid-row:1/3}
+#view-new-order>.home-service-showcase{grid-column:1/-1;grid-row:3}
+#view-new-order>.new-services-showcase{grid-column:1/-1;grid-row:4;margin-top:0}
+#view-new-order>.platform-categories{grid-column:1/-1;grid-row:5}
+#view-new-order>.faq-section{grid-column:1/-1;grid-row:6}
+#view-new-order>.launch-banner,#view-new-order>.growth-metrics,#view-new-order>.trust-section{display:none!important}
+@media(max-width:1050px){#view-new-order>.welcome,#view-new-order .order-panel,#view-new-order .right-column,#view-new-order>.home-service-showcase,#view-new-order>.new-services-showcase,#view-new-order>.platform-categories,#view-new-order>.faq-section{grid-column:1;grid-row:auto}}
