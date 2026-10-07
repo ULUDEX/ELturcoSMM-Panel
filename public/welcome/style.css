@@ -161,3 +161,33 @@ html.safe-motion .wv-title,html.safe-motion .wv-sub,html.safe-motion .wv-kicker{
 .wv-phone-wrap,.wv-float{z-index:8!important}
 .wv-section{position:relative!important;z-index:2!important}
 .wv-support{position:fixed!important;z-index:90!important}
+
+/* Continuous ticker and a clear text/visual hierarchy. */
+.wv-ticker-track{gap:0;animation:wvTicker 32s linear infinite}
+.wv-ticker-group{display:flex;align-items:center;justify-content:space-around;gap:34px;padding:0 17px;flex:0 0 auto;min-width:100vw}
+.wv-hero{height:auto;min-height:1040px}.wv-pin{position:relative!important;height:1040px;overflow:visible}
+.wv-kicker{top:145px!important;z-index:10!important}
+.wv-title{top:180px!important;width:94%;font-family:Manrope,Arial,sans-serif;font-size:clamp(58px,7vw,108px);font-weight:800;line-height:1.25;letter-spacing:-.045em;white-space:nowrap;background:none;color:#f7f3ff;overflow:visible;z-index:10!important}
+.wv-title span{background:linear-gradient(110deg,#ad7aff,#dca6ff 60%,#f0d8ff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.wv-sub{top:325px!important;max-width:650px;width:86%;font-size:16px;line-height:1.75;z-index:10!important}
+html.safe-motion .wv-sub{animation:wvCenteredFade .8s ease .18s both}
+@keyframes wvCenteredFade{from{opacity:0;transform:translate(-50%,18px)}to{opacity:1;transform:translate(-50%,0)}}
+.wv-orbit-stage{top:735px;width:760px;height:760px;animation-duration:48s}
+.wv-ring.r1{inset:45px}.wv-ring.r2{inset:140px}
+.wv-slot{transform:rotate(var(--a)) translateY(-335px)}.wv-slot.orbit-1{transform:rotate(var(--a)) translateY(-240px)}
+.wv-logo{width:66px;height:66px;margin:-33px;border-radius:21px;animation-duration:48s}.wv-logo svg{width:32px;height:32px}
+.wv-phone-wrap{top:735px}.wv-phone{width:285px;height:566px}.wv-phone-cta{bottom:18px}
+.wv-float.one{top:740px;left:calc(50% - 415px)}.wv-float.two{top:870px;left:calc(50% + 235px)}.wv-float.three{top:1010px;white-space:nowrap}
+html.safe-motion .wv-float.three{animation:none}
+@media(max-width:760px){
+ .wv-hero{min-height:1010px}.wv-pin{height:1010px}
+ .wv-kicker{top:132px!important;font-size:8px;letter-spacing:2.4px}
+ .wv-title{top:162px!important;font-size:clamp(38px,10vw,72px);white-space:normal;line-height:1.25;width:94%}
+ .wv-sub{top:280px!important;font-size:13px;width:88%;max-width:480px}
+ .wv-orbit-stage{top:670px;width:540px;height:540px}.wv-ring.r1{inset:20px}.wv-ring.r2{inset:85px}
+ .wv-slot{transform:rotate(var(--a)) translateY(-250px)}.wv-slot.orbit-1{transform:rotate(var(--a)) translateY(-185px)}
+ .wv-logo{width:47px;height:47px;margin:-23.5px;border-radius:15px}.wv-logo svg{width:24px;height:24px}
+ .wv-phone-wrap{top:670px}.wv-phone{width:245px;height:493px}
+ .wv-float.one{top:925px;left:5%}.wv-float.two{top:925px;right:5%;left:auto}.wv-float.three{top:975px;font-size:9px;white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.wv-ticker-track,.wv-orbit-stage,.wv-logo,.wv-bg-icon,html.safe-motion .wv-phone{animation:none}html.safe-motion .safe-reveal{opacity:1;transform:none}}
