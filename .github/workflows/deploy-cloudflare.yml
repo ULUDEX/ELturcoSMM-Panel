@@ -247,6 +247,7 @@ jobs:
           const assets = [
             ["https://elturcosmm.com/site/premium-20260927.css", "--sidebar:260px", "CSS"],
             ["https://elturcosmm.com/site/app-20260927.js", "selectedService", "JavaScript"],
+            ["https://elturcosmm.com/live-support.js", "https://embed.tawk.to/6ac60b8069205a34bff50751/1k4appsfq", "Live Support"],
           ];
           for (const [url, marker, name] of assets) {
             const response = await fetch(url, { cache: "no-store", headers: { "accept-encoding": "identity" } });
