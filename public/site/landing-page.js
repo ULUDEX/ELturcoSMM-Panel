@@ -84,7 +84,7 @@
       if (button) setTimeout(() => button.click(), 120);
     }
     if (params.get('assistant') === '1') {
-      const button = document.querySelector('[data-assistant-open]');
+      const button = document.querySelector('[data-live-support]');
       if (button) setTimeout(() => button.click(), 180);
     }
   };
