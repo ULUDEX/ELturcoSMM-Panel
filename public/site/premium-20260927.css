@@ -654,3 +654,14 @@ body:not(.light-premium) .category-card:hover .platform-logo,body:not(.light-pre
 #view-new-order>.faq-section{grid-column:1/-1;grid-row:6}
 #view-new-order>.launch-banner,#view-new-order>.growth-metrics,#view-new-order>.trust-section{display:none!important}
 @media(max-width:1050px){#view-new-order>.welcome,#view-new-order .order-panel,#view-new-order .right-column,#view-new-order>.home-service-showcase,#view-new-order>.new-services-showcase,#view-new-order>.platform-categories,#view-new-order>.faq-section{grid-column:1;grid-row:auto}}
+
+/* User-selected profile portraits. */
+.avatar-picker{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:14px 0 6px}
+.avatar-picker button{width:100%;aspect-ratio:1;padding:0;overflow:hidden;border-radius:50%;background:#10151d;line-height:0}
+.avatar-picker button img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.avatar-picker button[hidden]{display:none}
+.avatar-picker button.active{box-shadow:0 0 0 3px #f2c86c26,0 0 0 1px #f2c86c}
+.profile-avatar.has-avatar-image{overflow:hidden;padding:0!important}
+.profile-avatar.has-avatar-image img{display:block;width:100%;height:100%;border-radius:inherit;object-fit:cover}
+.avatar-editor .avatar-gender-tabs button{white-space:nowrap}
+@media(max-width:460px){.avatar-editor-head{align-items:flex-start;flex-direction:column}.avatar-gender-tabs{align-self:stretch}.avatar-gender-tabs button{flex:1}.avatar-picker{gap:7px}}

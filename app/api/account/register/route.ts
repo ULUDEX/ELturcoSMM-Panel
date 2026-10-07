@@ -5,11 +5,12 @@ import { verifyAccountChallenge } from "@/lib/account-challenge";
 import { sendTransactionalEmail,siteBaseUrl } from "@/lib/mailer";
 export async function POST(request:Request){
  let stage="request";try{const body=await request.json() as any,name=String(body.name||"").trim(),email=String(body.email||"").trim().toLowerCase(),password=String(body.password||"");
+ const avatar=String(body.avatar||"man-1");if(!new Set(["man-1","man-2","man-3","man-4","man-5","man-6","woman-1","woman-2","woman-3","woman-4","woman-5","woman-6"]).has(avatar))return NextResponse.json({error:"Geçersiz avatar seçimi."},{status:400});
  if(!await verifyAccountChallenge(request,body))return NextResponse.json({error:"İnsan doğrulaması başarısız veya süresi dolmuş. Lütfen tekrar doğrula."},{status:400});
  if(name.length<2||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8||password.length>128)return NextResponse.json({error:"Ad, geçerli e-posta ve 8–128 karakterli şifre gerekli."},{status:400});
  stage="lookup";
  if(await env.DB.prepare("SELECT id FROM customer_users WHERE email=?").bind(email).first())return NextResponse.json({error:"Bu e-posta zaten kayıtlı. Giriş yapmayı veya şifreni yenilemeyi dene."},{status:409});
- stage="password";const salt=randomHex(16),hash=await passwordHash(password,salt),created=Math.floor(Date.now()/1000);stage="user";const createdUser:any=await env.DB.prepare("INSERT INTO customer_users(name,email,password_hash,password_salt,avatar,created_at) VALUES(?,?,?,?,?,?) RETURNING id").bind(name,email,hash,salt,"man-1",created).first();
+ stage="password";const salt=randomHex(16),hash=await passwordHash(password,salt),created=Math.floor(Date.now()/1000);stage="user";const createdUser:any=await env.DB.prepare("INSERT INTO customer_users(name,email,password_hash,password_salt,avatar,created_at) VALUES(?,?,?,?,?,?) RETURNING id").bind(name,email,hash,salt,avatar,created).first();
  const userId=Number(createdUser?.id);if(!Number.isInteger(userId)||userId<1)throw new Error("user_id");stage="balance";await env.DB.prepare("INSERT OR IGNORE INTO customer_balances(email,balance,created_at,updated_at) VALUES(?,0,?,?)").bind(email,created,created).run();
  stage="verification";const token=randomHex(32),tokenHash=await digest(token),expiresAt=created+24*60*60;await env.DB.prepare("INSERT INTO customer_email_verifications(user_id,token_hash,expires_at,created_at) VALUES(?,?,?,?)").bind(userId,tokenHash,expiresAt,created).run();
  const verifyUrl=`${siteBaseUrl()}/site/#email-verify=${encodeURIComponent(token)}`;
