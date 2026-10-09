@@ -1,0 +1,60 @@
+/* Account center: profile summary and full settings drawer */
+.account-summary{max-width:500px;margin:0 auto;padding:22px!important;text-align:left!important;border:1px solid #29364a;border-radius:20px;background:linear-gradient(145deg,#111b2b,#0d1522)}
+.account-overview-head{display:flex;align-items:center;gap:14px;text-align:left}
+.account-overview-head .profile-avatar-large{flex:none!important;margin:0!important;width:58px!important;height:58px!important}
+.account-overview-head h3{margin:0 0 5px!important;font-size:18px}
+.account-overview-head p{font-size:12px!important;overflow-wrap:anywhere}
+.account-summary .account-overview-balance{display:flex;align-items:center;justify-content:space-between;margin:20px 0 14px;padding:13px 15px;border:1px solid #ffffff12;border-radius:13px;background:#080e18}
+.account-overview-balance small{color:#93a1b2;font-size:11px}
+.account-summary .account-overview-balance strong{margin:0!important;font-size:18px!important}
+.account-summary .account-settings-open{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;border:1px solid #ff914d40;border-radius:14px;background:#ff914d10;color:#f8fafc;text-align:left}
+.account-settings-open span b,.account-settings-open span small{display:block}
+.account-settings-open span b{font-size:13px;color:#ffd09b}
+.account-settings-open span small{margin-top:4px;color:#93a1b2;font-size:10px}
+.account-settings-open> b{font-size:24px;color:#ffbd83}
+.account-summary .account-logout,.account-settings-card .account-logout{display:block;width:100%;margin-top:12px;padding:11px;border:1px solid #ffffff14;border-radius:12px;background:#ffffff05;color:#bdc7d5;font-size:11px}
+.account-settings-modal{z-index:130}
+.account-settings-card{width:min(920px,calc(100% - 28px));max-height:calc(100dvh - 32px);overflow:auto;padding:30px}
+.account-settings-card>.ops-close{position:sticky;float:right;top:0;z-index:2}
+.account-settings-card h2{margin:10px 0 4px;font-size:27px}
+.account-settings-card>.settings-intro{margin:0 0 20px;color:#93a1b2;font-size:12px}
+.settings-profile{display:flex;align-items:center;gap:14px;margin:16px 0;padding:15px;border:1px solid #ffffff12;border-radius:15px;background:#080e18}
+.settings-profile .profile-avatar-large{flex:none!important;margin:0!important}
+.settings-profile>div{min-width:0;flex:1}
+.settings-profile>div b,.settings-profile>div span{display:block;overflow-wrap:anywhere}
+.settings-profile>div b{font-size:14px}
+.settings-profile>div span{margin-top:4px;color:#93a1b2;font-size:11px}
+.settings-profile>strong{color:#ffd09b;font-size:18px}
+.settings-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin:0 0 18px}.settings-actions>#notifications-open{padding:12px 15px;border:1px solid #ffffff14;border-radius:13px;background:#ffffff05;color:#cbd5e1;font-size:11px;cursor:pointer}.settings-actions>#notifications-open span{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:5px;border-radius:999px;background:#ff914d18;color:#ffd09b}
+.settings-actions .loyalty-peek{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:5px 12px;width:100%;padding:13px 15px;border:1px solid #ff914d38;border-radius:14px;background:linear-gradient(110deg,#ff914d13,#f2c86c08);color:#f8fafc;text-align:left;cursor:pointer}
+.settings-actions .loyalty-peek>span{grid-row:span 2;color:#ffd09b;font-size:23px}
+.settings-actions .loyalty-peek>b{font-size:13px}
+.settings-actions .loyalty-peek>strong{grid-column:3;grid-row:1 / span 2;color:#ffd09b;font-size:15px}
+.settings-actions .loyalty-peek>small{grid-column:2;color:#93a1b2;font-size:10px}
+.settings-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:16px}
+.settings-section{min-width:0;padding:17px;border:1px solid #ffffff12;border-radius:16px;background:#ffffff04}
+.settings-section-heading{margin-bottom:12px}
+.settings-section-heading b,.settings-section-heading small{display:block}
+.settings-section-heading b{font-size:14px}
+.settings-section-heading small{margin-top:4px;color:#93a1b2;font-size:10px;line-height:1.5}.settings-password-toggle{margin-top:11px;padding:9px 12px;border:1px solid #ff914d40;border-radius:10px;background:#ff914d10;color:#ffd09b;font-size:11px;cursor:pointer}
+.settings-section .avatar-editor{margin:0;padding:0;border:0;background:none}
+.settings-section .avatar-editor-head{align-items:flex-start}
+.settings-section .avatar-editor-head>div:first-child{display:none}
+.settings-section .avatar-gender-tabs{width:100%}
+.settings-section .avatar-gender-tabs button{flex:1}
+.settings-section .avatar-picker{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin:13px 0}
+.settings-section .avatar-picker button{width:auto;height:auto;aspect-ratio:1;border-radius:14px;background:#101827}
+.settings-section .avatar-picker button img{width:100%;height:100%;border-radius:11px;object-fit:cover}
+.settings-section #avatar-status{display:block;min-height:16px;color:#93a1b2;font-size:10px}
+.settings-section .account-aux-form[hidden]{display:none}
+.settings-section .account-aux-form label{display:block;margin:12px 0;color:#a7b1c1;font-size:11px}
+.settings-section .account-aux-form input{width:100%;margin-top:6px;padding:11px 12px;border:1px solid #253247;border-radius:10px;background:#09101b;color:#eef2f8}
+.settings-section .account-aux-form .submit-order{width:100%;margin-top:4px}
+.settings-email-note{margin-top:20px;padding:13px;border:1px solid #ffffff12;border-radius:12px;background:#080e18}
+.settings-email-note span,.settings-email-note b,.settings-email-note small{display:block}
+.settings-email-note span{color:#93a1b2;font-size:10px}
+.settings-email-note b{margin-top:4px;font-size:12px;overflow-wrap:anywhere}
+.settings-email-note small{margin-top:7px;color:#7f8ca2;font-size:9px;line-height:1.5}
+.profile-avatar.has-avatar-image{overflow:hidden}
+.profile-avatar.has-avatar-image img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+@media(max-width:760px){.account-settings-card{width:100%;height:100dvh;max-height:100dvh;padding:22px 16px;border:0;border-radius:0}.settings-grid{grid-template-columns:1fr}.settings-profile{align-items:flex-start;flex-wrap:wrap}.settings-profile>strong{margin-left:auto}.settings-section .avatar-picker{gap:7px}.settings-actions{grid-template-columns:1fr}.settings-actions>#notifications-open{text-align:left}}
