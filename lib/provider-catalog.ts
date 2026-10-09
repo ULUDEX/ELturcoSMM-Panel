@@ -14,8 +14,10 @@ export async function fetchProviderBalance(){const payload=await v2("balance");r
 export async function syncProviderCatalog(){
  const services=await fetchProviderCatalog();
  const existing=await env.DB.prepare("SELECT id,provider_service_id FROM services WHERE provider_service_id<>''").all();
- const byProviderId=new Map((existing.results as any[]).map(row=>[String(row.provider_service_id),Number(row.id)]));
- let added=0,updated=0;
+ const existingRows=existing.results as any[];
+ const byProviderId=new Map(existingRows.map(row=>[String(row.provider_service_id),Number(row.id)]));
+ const currentProviderIds=new Set(services.map(service=>service.providerServiceId));
+ let added=0,updated=0,disabled=0;
  const batches:any[][]=[];
  let currentBatch:any[]=[];
  const createdAt=Math.floor(Date.now()/1000);
@@ -31,8 +33,15 @@ export async function syncProviderCatalog(){
    if(currentBatch.length+group.length>100){batches.push(currentBatch);currentBatch=[]}currentBatch.push(...group);
   }
  }
+ // Keep historical service rows and orders intact, but hide services removed from the supplier.
+ const staleIds=existingRows.filter(row=>!currentProviderIds.has(String(row.provider_service_id))).map(row=>Number(row.id));
+ disabled=staleIds.length;
+ for(let i=0;i<staleIds.length;i+=100){
+  const staleBatch=staleIds.slice(i,i+100).map(id=>env.DB.prepare("UPDATE services SET active=0 WHERE id=?").bind(id));
+  if(staleBatch.length)batches.push(staleBatch);
+ }
  if(currentBatch.length)batches.push(currentBatch);
- for(const batch of batches)await env.DB.batch(batch);
+ for(const batch of batches)if(batch.length)await env.DB.batch(batch);
  const notification=await flushCatalogAnnouncements();
- return{total:services.length,added,updated,telegramSent:notification.sent,telegramConfigured:notification.configured};
+ return{total:services.length,added,updated,disabled,telegramSent:notification.sent,telegramConfigured:notification.configured};
 }
