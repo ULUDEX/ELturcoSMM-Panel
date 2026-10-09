@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      frontend_only:
+        description: 'Deploy UI without migrations, secret sync, customer tests or provider sync'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -27,6 +32,7 @@ jobs:
 
     steps:
       - name: Validate PanelFollows key
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           SMM_PROVIDER_API_KEY: ${{ secrets.SMM_PROVIDER_API_KEY }}
         run: |
@@ -36,6 +42,7 @@ jobs:
           fi
 
       - name: Validate customer email sender
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
@@ -45,6 +52,7 @@ jobs:
           fi
 
       - name: Validate Turnstile keys
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY || secrets.TURNSTILE_SITE_KEY }}
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
@@ -78,12 +86,14 @@ jobs:
         run: node scripts/prepare-cloudflare-deploy.mjs
 
       - name: Apply D1 migrations
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: pnpm exec wrangler d1 migrations apply DB --remote --config dist/server/wrangler.json
 
       - name: Deploy Worker
-        run: pnpm exec wrangler deploy --config dist/server/wrangler.json
+        run: pnpm exec wrangler deploy --config dist/server/wrangler.json ${{ (inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) && '--keep-vars' || '' }}
 
       - name: Ensure elturcosmm.com uses this Worker
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           DOMAIN_HOSTNAME: elturcosmm.com
         run: |
@@ -118,6 +128,7 @@ jobs:
           fi
 
       - name: Remove conflicting routes and purge old storefront cache
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         continue-on-error: true
         env:
           DOMAIN_HOSTNAME: elturcosmm.com
@@ -171,6 +182,7 @@ jobs:
             head -c 1200 /tmp/direct.html
           fi
       - name: Sync runtime secrets
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           ADMIN_SESSION_SECRET: ${{ secrets.ADMIN_SESSION_SECRET }}
@@ -212,9 +224,11 @@ jobs:
         run: node scripts/worker-email-smoke.mjs
 
       - name: Verify customer registration
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: node scripts/smoke-unverified-customer.mjs
 
       - name: Sync PanelFollows catalog
+        if: ${{ !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: |
           status="$(curl --silent --show-error --retry 2 --retry-delay 5 --max-time 120 --output /tmp/services.json --write-out '%{http_code}' https://elturcosmm.com/api/services)"
           if [ "$status" != "200" ]; then
@@ -245,7 +259,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const assets = [
-            ["https://elturcosmm.com/?deploy=" + process.env.GITHUB_SHA, "20261007hero3", "Welcome entry"],
+            ["https://elturcosmm.com/?deploy=" + process.env.GITHUB_SHA, "20261007hero4", "Welcome entry"],
             ["https://elturcosmm.com/welcome/?deploy=" + process.env.GITHUB_SHA, "title=\"Apple Music\"", "Welcome orbit logos"],
             ["https://elturcosmm.com/welcome/style.css?v=20261007hero3", ".wv-ticker-group", "Welcome motion CSS"],
             ["https://elturcosmm.com/site/premium-20260927.css", "--sidebar:260px", "CSS"],
