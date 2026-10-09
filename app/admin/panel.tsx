@@ -73,7 +73,7 @@ function Services({items,form,setForm,save,edit,remove,editId,cancel,search,setS
  </>}
 
 function Marketplace({items,orders,api,reload}:any){
- const services=Array.isArray(items)?items as Service:[],rows=Array.isArray(orders)?orders:[];
+ const services=(Array.isArray(items)?items as Service:[]).filter(x=>x.active===true||Number(x.active)===1),rows=Array.isArray(orders)?orders:[];
  const [platform,setPlatform]=useState(""),[category,setCategory]=useState(""),[refill,setRefill]=useState("all"),[sort,setSort]=useState("cost-up"),[query,setQuery]=useState(""),[serviceId,setServiceId]=useState(""),[quantity,setQuantity]=useState("1000"),[link,setLink]=useState(""),[buyer,setBuyer]=useState(""),[reference,setReference]=useState(""),[salePrice,setSalePrice]=useState(""),[providerValues,setProviderValues]=useState<Record<string,string>>({}),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
  const platforms=Array.from(new Set(services.map(x=>x.platform).filter(Boolean))).sort(),categories=Array.from(new Set(services.filter(x=>!platform||x.platform===platform).map(x=>x.category).filter(Boolean))).sort();
  const refillState=(x:Service)=>{let f=x.providerFeatures;if(typeof f==="string"){try{f=JSON.parse(f)}catch{f={}}}const v=f?.refill,t=x.name+" "+x.description;return v===true||v===1||/^(true|1|yes|available)$/i.test(String(v))?"refill":v===false||v===0||/^(false|0|no|unavailable)$/i.test(String(v))?"no-refill":/no refill|telafisiz|telafi yok|without refill/i.test(t)?"no-refill":/refill|telafili|telafi/i.test(t)?"refill":"unknown"};
