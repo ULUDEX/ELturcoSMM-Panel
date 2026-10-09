@@ -1,17 +1,21 @@
 <!doctype html>
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07111f"><meta name="description" content="ElTurco SMM Panel: Instagram, TikTok, YouTube ve diğer sosyal medya platformları için hizmetler ve sipariş takibi."><link rel="canonical" href="https://elturcosmm.com/site/"><meta property="og:type" content="website"><meta property="og:url" content="https://elturcosmm.com/site/"><meta property="og:title" content="ElTurco SMM | Sosyal Medya Paneli"><meta property="og:description" content="Sosyal medya hizmetlerini seç, siparişlerini ve bakiyeni ElTurco SMM panelinden yönet."><title>ElTurco SMM | Sosyal Medya Paneli</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/site/premium-20260927.css?v=20261007-avatar1"><link rel="stylesheet" href="/site/landing-page.css?v=20261003e"><link rel="stylesheet" href="/site/account-settings.css?v=20261009-account-popover"><link rel="icon" type="image/png" href="/favicon.png"><style>html{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}.landing-category-grid{grid-template-columns:minmax(0,1fr)}.landing-category-card.category-social{max-width:none}.landing-brand-art .chip-social{left:50%;transform:translateX(-50%)}@media(max-width:760px){.landing-category-grid{grid-template-columns:minmax(0,1fr)}}.wv-password-wrap{position:relative}.wv-password-wrap input{padding-right:48px!important}.wv-eye{position:absolute;right:9px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#777;font-size:17px;cursor:pointer;padding:6px}.wv-remember{display:flex!important;align-items:center;gap:8px;margin:-2px 0 12px;font-size:12px;color:#6d6a73}.wv-remember input{width:auto!important;accent-color:#8e53ff}.auth-card.register .login-only{display:none!important}</style><script>
-document.documentElement.classList.add('panel-auth-check');
 (() => {
   const params = new URLSearchParams(location.search);
   const mode = params.get('auth');
-  const handoff = sessionStorage.getItem('elturco_welcome_auth_entry');
-  const fromWelcome = (mode === 'login' || mode === 'register') && handoff === mode;
-  const show = () => document.documentElement.classList.remove('panel-auth-check');
-  if (fromWelcome) {
-    sessionStorage.removeItem('elturco_welcome_auth_entry');
-    show();
+  const directAuth = mode === 'login' || mode === 'register';
+  if (directAuth) {
+    document.documentElement.classList.add('direct-auth');
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('account-modal');
+      if (modal) modal.classList.add('show');
+      document.body.classList.add('auth-modal-open');
+      try { sessionStorage.removeItem('elturco_welcome_auth_entry'); } catch {}
+    }, { once:true });
     return;
   }
+  document.documentElement.classList.add('panel-auth-check');
+  const show = () => document.documentElement.classList.remove('panel-auth-check');
   fetch('/api/account', { cache:'no-store', credentials:'same-origin' })
     .then(r => r.ok ? r.json() : null)
     .then(data => {
