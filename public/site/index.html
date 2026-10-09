@@ -4,10 +4,9 @@ document.documentElement.classList.add('panel-auth-check');
 (() => {
   const params = new URLSearchParams(location.search);
   const mode = params.get('auth');
-  const handoff = sessionStorage.getItem('elturco_welcome_auth_entry');
-  const fromWelcome = (mode === 'login' || mode === 'register') && handoff === mode;
   const show = () => document.documentElement.classList.remove('panel-auth-check');
-  if (fromWelcome) {
+  // Allow direct login and registration links to render without a session handoff.
+  if (mode === 'login' || mode === 'register') {
     sessionStorage.removeItem('elturco_welcome_auth_entry');
     show();
     return;
