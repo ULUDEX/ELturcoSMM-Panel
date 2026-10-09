@@ -239,6 +239,14 @@ jobs:
             head -c 1200 /tmp/panel.html
             exit 1
           fi
+          auth_status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 45 --header 'Cache-Control: no-cache' --output /tmp/auth.html --write-out '%{http_code}' "https://elturcosmm.com/site/?auth=login&deploy=$GITHUB_SHA")"
+          if [ "$auth_status" != "200" ] || ! grep -q 'direct-auth' /tmp/auth.html || ! grep -q 'app-20260927.js?v=20261009-authfix1' /tmp/auth.html; then
+            echo "Direct login route verification failed (HTTP $auth_status):"
+            head -c 1200 /tmp/auth.html
+            exit 1
+          fi
+          echo "Direct login route serves the immediate auth overlay."
+
           echo "Standalone welcome and customer panel are both serving correctly."
 
       - name: Verify storefront stylesheet and script
@@ -249,7 +257,7 @@ jobs:
             ["https://elturcosmm.com/welcome/?deploy=" + process.env.GITHUB_SHA, "title=\"Apple Music\"", "Welcome orbit logos"],
             ["https://elturcosmm.com/welcome/style.css?v=20261007hero3", ".wv-ticker-group", "Welcome motion CSS"],
             ["https://elturcosmm.com/site/premium-20260927.css", "--sidebar:260px", "CSS"],
-            ["https://elturcosmm.com/site/app-20260927.js", "selectedService", "JavaScript"],
+            ["https://elturcosmm.com/site/app-20260927.js?v=20261009-authfix1", "requestedAuthMode==='login'", "JavaScript"],
             ["https://elturcosmm.com/live-support.js", "https://embed.tawk.to/6ac60b8069205a34bff50751/1k4appsfq", "Live Support"],
           ];
           for (const [url, marker, name] of assets) {
