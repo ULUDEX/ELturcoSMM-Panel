@@ -7,9 +7,9 @@ document.documentElement.classList.add('panel-auth-check');
   const show = () => document.documentElement.classList.remove('panel-auth-check');
   // Allow direct login and registration links to render without a session handoff.
   if (mode === 'login' || mode === 'register') {
-    sessionStorage.removeItem('elturco_welcome_auth_entry');
     document.documentElement.classList.add('direct-auth');
     show();
+    try { sessionStorage.removeItem('elturco_welcome_auth_entry'); } catch {}
     return;
   }
   fetch('/api/account', { cache:'no-store', credentials:'same-origin' })
