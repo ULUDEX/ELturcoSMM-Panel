@@ -1,3 +1,4 @@
+import { invalidateCatalogCache } from "./catalog-cache";
 import { env } from "cloudflare:workers";
 import { providerSalePrice } from "@/lib/provider-pricing";
 import { providerConfig, providerId, type ProviderId } from "@/lib/providers";
@@ -54,6 +55,6 @@ async function syncCatalogRows(id:ProviderId){
  }
  if(currentBatch.length)batches.push(currentBatch);
  for(const batch of batches)if(batch.length)await env.DB.batch(batch);
- const notification=await flushCatalogAnnouncements();
+ await invalidateCatalogCache();const notification=await flushCatalogAnnouncements();
  return{providerId:id,total:services.length,added,updated,disabled,telegramSent:notification.sent,telegramConfigured:notification.configured};
 }
