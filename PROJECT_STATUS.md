@@ -64,3 +64,8 @@ Canlı ortamda e-posta göndermek için Gmail SMTP (`smtp.gmail.com:465`) kullan
 ## 10 Ekim 2026 · Yönetim modülleri
 
 Önceden kapalı 20 bölüm için ekranlar, kalıcı kayıtlar, rol izinleri ve API kontrolleri eklendi. Rapor/CSV, içerik ve kara liste yönetimi, personel oturumları, ödeme bonusu, planlı sipariş rezervasyonu/iptali, zamanlayıcı durumu hazır. Blog yazıları, SSS, duyurular ve dil metinleri müşteri tarafına bağlandı. Abonelikler aynı URL için planlı tekrar kapsamındadır; otomatik yeni gönderi keşfi yoktur. Yetki, bakiye, tekrar gönderim ve bonus testleri offline çalışır. Önceki Shopier aktivasyon kısıtı devam eder.
+
+## Pazaryeri katalog düzeni — 10 Ekim 2026
+- Ayrı tedarikçi sütunu, tedarikçi filtresi, iki servis kimliği, seçilen hizmet kartı ve 25 hizmetlik sayfalama.
+- Hizmet değişiminde özel alanlar temizlenir ve adet hizmet limitlerine göre belirlenir.
+- Boş satış tutarı için varsayılan fiyat kuruştan TL’ye çevrilerek gönderilir; geçmişteki kayıtlar değiştirilmez.
