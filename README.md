@@ -35,6 +35,7 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 | `ADMIN_PASSWORD` | Evet | `/admin` giriş şifresi |
 | `ADMIN_SESSION_SECRET` | Evet | Admin oturum imzası; uzun ve rastgele olmalı |
 | `SMM_PROVIDER_API_URL` | Otomatik teslimat için | SMM sağlayıcı API adresi |
+| `SMMXSERVER_API_KEY` | İkinci tedarikçi için | SMMXServer API anahtarı; GitHub production secret olarak saklanır |
 | `SMM_PROVIDER_API_KEY` | Otomatik teslimat için | Sağlayıcı API anahtarı |
 | `SMM_PROVIDER_USD_TRY_RATE` | İsteğe bağlı | Sabit USD/TRY kuru; boşsa TCMB kuru kullanılır |
 | `TELEGRAM_BOT_TOKEN` | Telegram duyuruları için | BotFather tarafından verilen bot tokenı; yeni hizmetleri duyurur |
@@ -56,7 +57,7 @@ Gerçek değerleri yalnızca hosting panelinde veya yerel `.env.local` içinde t
 - Yönetim: `/admin`
 - Genel API: `/api/v1`
 - Shopier webhook: `/api/shopier/webhook`
-- Telegram hizmet duyuruları: yeni PanelFollows hizmetleri otomatik olarak `@ElTurcoSmm` adresine gönderilir; bot bu kanalda yönetici olmalıdır.
+- Telegram hizmet duyuruları: yeni PanelFollows ve SMMXServer hizmetleri otomatik olarak `@ElTurcoSmm` adresine gönderilir; bot bu kanalda yönetici olmalıdır.
 
 ## Müşteri bildirimleri ve şifre kurtarma
 
@@ -66,7 +67,7 @@ Sipariş oluşturma ve durum değişiklikleri ile bakiye yükleme sonuçları m�
 
 ## Telegram yeni hizmet duyuruları
 
-PanelFollows kataloğuna ilk kez eklenen her hizmet Telegram hedefinde tek duyuruya eklenir. Bot tokenı yoksa bildirimler D1 kuyruğunda bekler. Varsayılan hedef `@ElTurcoSmm`; başka grup veya kanal için `TELEGRAM_CHAT_ID` değerini kullanın.
+Tedarikçi kataloglarına ilk kez eklenen her hizmet Telegram hedefinde tek duyuruya eklenir. Bot tokenı yoksa bildirimler D1 kuyruğunda bekler. Varsayılan hedef `@ElTurcoSmm`; başka grup veya kanal için `TELEGRAM_CHAT_ID` değerini kullanın.
 
 Kurulum: Telegram’da `@BotFather` üzerinden bir bot oluşturun, botu `@ElTurcoSmm` kanalına yönetici olarak ekleyip mesaj gönderme izni verin. BotFather’ın verdiği tokenı GitHub deposunun **Settings → Environments → production → Environment secrets** bölümüne `TELEGRAM_BOT_TOKEN` adıyla ekleyin. Hedefi değiştirecekseniz aynı yere `TELEGRAM_CHAT_ID` secret’ını ekleyin. Ardından **Actions → Deploy to Cloudflare → Run workflow** ile bir dağıtım başlatın. Tokenı sohbet veya kod içine yazmayın. Bağlantı durumu admin panelindeki **Entegrasyonlar** bölümünde görünür.
 
@@ -87,3 +88,15 @@ Bu depo özel proje kullanımı içindir. Lisanslı MP3 dosyaları GitHub üzeri
 ## Canlı destek ve Yardım Merkezi
 
 ELturcoSMM’nin giriş, müşteri paneli ve hizmet sayfaları `public/live-support.js` ile tawk.to canlı sohbetine bağlanır. Sohbet kurulumu ELturcoSMM property’sini kullanır; Kıvıl Digital’e bağlantı eklenmez. Widget kimlikleri herkese açık embed tanımlarıdır, gizli API anahtarı değildir. Müşteri e-posta adresi ve hesap bilgileri otomatik olarak üçüncü tarafa aktarılmaz. Yardım Merkezi: https://elturcosmmcom.tawk.help. Çevrimdışı ziyaretçiler sohbet formuna mesaj bırakabilir. Widget engellenirse “Canlı desteği aç” düğmesi doğrudan sohbet bağlantısı sunar. Müşteri desteği yalnızca tawk.to üzerinden alınır. Eski form ve yerel asistan kaldırılmıştır; /api/support POST 410 döner. Eski destek kayıtları silinmez, admin geçmişinde okunabilir. AI Assist ayrıca etkinleştirilmedikçe sohbet yanıtlarını destek temsilcisi verir.
+
+## İki tedarikçi ve satış fiyatları
+
+PanelFollows ve SMMXServer hizmetleri `provider_id` ile ayrı tutulur. Eski hizmet ve siparişlerin tedarikçisi `panelfollows` kalır; yeni siparişler hizmetin tedarikçisini kayıt anında saklar. Katalog eşitlemesi yalnızca seçilen tedarikçinin hizmetlerini günceller. SMMXServer API v2 kullanır ve anahtarı `SMMXSERVER_API_KEY` production secret içinde saklanır.
+
+Tedarikçiye bağlı hizmetlerde alış fiyatı 10 TL altındaysa %75, 10 TL–50 TL arasındaysa %65, 50 TL ve üzerindeyse %50 eklenir. Eşikler hizmetin 1.000 adet veya paket alış birimi üzerinden hesaplanır. Fiyatlar kuruş olarak saklanır; sipariş geçmişinin tutarları değişmez. Komisyon ve vergiler bu brüt farktan düşülmelidir.
+
+Doğrulama: `node --experimental-sqlite scripts/provider-tests.cjs` ve `pnpm build`. Tedarikçi testleri gerçek sipariş göndermez. `[providers-only]` yayını yeni migrationları uygular, yalnızca SMMXServer anahtarını ekler ve mevcut runtime ayarlarını korur.
+
+### Hizmet bazında fiyat ve otomatik duyurular
+Admin hizmet tablosunda her satırın satış fiyatı kaydedilebilir. Özel fiyat katalog eşitlemesinde korunur; Otomatik kâra dön seçeneği varsayılan %75/%65/%50 hesaplamasını yeniden açar.
+Cloudflare zamanlayıcısı her 5 dakikada çalışır: katalog 6 saatte bir yenilenir, Telegram kuyruğu gönderilir. Yeni hizmetler mevcut yeni hizmetler vitrinine girer. Telegram hedefi TELEGRAM_CHAT_ID (varsayılan @ElTurcoSmm), bildirim anahtarları tedarikçi ve servis ID ile ayrılır.

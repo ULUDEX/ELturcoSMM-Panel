@@ -31,14 +31,14 @@ export async function flushCatalogAnnouncements() {
   const lockValue = `${now()}:${crypto.randomUUID()}`;
   const lockTime = now();
   await db().prepare("INSERT INTO site_settings(key,value,updated_at) VALUES(?,?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at WHERE site_settings.updated_at < ?")
-    .bind(LOCK_KEY, lockValue, lockTime, lockTime - 60).run();
+    .bind(LOCK_KEY, lockValue, lockTime, lockTime - 600).run();
   const held: any = await db().prepare("SELECT value FROM site_settings WHERE key=?").bind(LOCK_KEY).first();
   if (held?.value !== lockValue) return { sent: 0, configured: true };
 
   let sent = 0;
   let notices: { key: string; notice: CatalogNotice }[] = [];
   try {
-    const result: any = await db().prepare("SELECT key,value FROM site_settings WHERE key GLOB ? ORDER BY updated_at,key LIMIT 20").bind(`${OUTBOX_PREFIX}*`).all();
+    const result: any = await db().prepare("SELECT key,value FROM site_settings WHERE key GLOB ? ORDER BY updated_at,key LIMIT 100").bind(`${OUTBOX_PREFIX}*`).all();
     notices = (result.results as any[]).flatMap((row) => {
       try { return [{ key: String(row.key), notice: JSON.parse(String(row.value)) as CatalogNotice }]; }
       catch { console.error("Telegram catalog notice has invalid saved data."); return []; }

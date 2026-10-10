@@ -1,0 +1,1 @@
+ALTER TABLE services ADD COLUMN price_override INTEGER NOT NULL DEFAULT 0;
