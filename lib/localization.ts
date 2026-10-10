@@ -30,7 +30,7 @@ export async function translateTexts(locale:string,texts:string[],queue=true){
       writes.push(db().prepare('DELETE FROM translation_queue WHERE locale=? AND source_hash=?').bind(locale,missing[i].hash));
      }if(writes.length)await db().batch(writes);
     }
-   }catch{console.error('Translation batch unavailable');}
+   }catch(error){console.error('Translation batch unavailable',String(error instanceof Error?error.message:error).slice(0,300));}
   }
  }
  const pending=missing.filter(x=>!result[x.source]);if(queue&&pending.length)await db().batch(pending.map(x=>db().prepare('INSERT OR IGNORE INTO translation_queue(locale,source_hash,source,created_at) VALUES(?,?,?,?)').bind(locale,x.hash,x.source,at())));
