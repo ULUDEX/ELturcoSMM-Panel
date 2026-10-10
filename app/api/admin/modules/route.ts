@@ -8,18 +8,20 @@ import { createAutomation,changeAutomation } from "@/lib/automation-jobs";
 import { requestProviderOrderAction } from "@/lib/provider";
 import { providerId } from "@/lib/providers";
 import { runCatalogSchedule } from "@/lib/catalog-schedule";
+import { LOCALES,translationOverview,runTranslationQueue,textHash } from "@/lib/localization";
 
 const editable=new Set(["blacklist-ip","blacklist-link","blacklist-email","blog-category","blog-posts","role-permissions","payment-bonuses","modules","news","languages","faqs"]);
 const fields:Record<string,string[]>={
  "blacklist-ip":["value","reason"],"blacklist-link":["value","reason"],"blacklist-email":["value","reason"],
  "blog-category":["title","slug"],"blog-posts":["title","slug","category","body"],"role-permissions":["title","permissions"],
- "payment-bonuses":["title","minimum","percent"],"modules":["name"],"news":["title","body"],"languages":["locale","key","value"],"faqs":["question","answer"],
+ "payment-bonuses":["title","minimum","percent"],"modules":["name"],"news":["title","body"],"languages":["locale","key","value","source"],"faqs":["question","answer"],
 };
 export async function GET(r:Request){
  const identity=await adminIdentity();if(!identity)return NextResponse.json({error:"Yetkisiz"},{status:403});
  const module=new URL(r.url).searchParams.get("module")||"session";
  if(module==="session")return NextResponse.json(identity);
  if(!await isAdmin(r))return NextResponse.json({error:"Bu bölüme erişim iznin yok."},{status:403});
+ if(module==='languages'&&new URL(r.url).searchParams.get('translations')==='1')return NextResponse.json(await translationOverview((new URL(r.url).searchParams.get('search')||'').slice(0,100)));
  if(editable.has(module))return NextResponse.json(await records(module));
  if((module==="dripfeed"||module==="subscriptions")&&new URL(r.url).searchParams.get("catalog")==="1"){
  const search=(new URL(r.url).searchParams.get("search")||"").slice(0,100);const q:any=await db().prepare("SELECT id,name,provider_id providerId,sale_price salePrice,price_unit priceUnit FROM services WHERE active=1 AND name LIKE ? ORDER BY id DESC LIMIT 30").bind(`%${search}%`).all();return NextResponse.json(q.results);
@@ -45,6 +47,13 @@ export async function POST(r:Request){
  const identity=await adminIdentity();let b:any;try{b=await r.json()}catch{return NextResponse.json({error:"Geçersiz istek"},{status:400})}
  const module=String(b.module||""),id=Number(b.id)||0;
  try{
+  if(module==='languages'&&b.action==='translation-run'){await runTranslationQueue();return NextResponse.json({ok:true});}
+  if(module==='languages'&&b.action==='translation-save'){
+   const locale=String(b.locale||''),source=String(b.source||'').trim(),translated=String(b.translated||'').trim();
+   if(!LOCALES.includes(locale as any)||!source||source.length>3000||!translated||translated.length>10000)throw Error('Geçerli dil ve metin gir.');
+   await db().prepare('INSERT INTO translation_cache(locale,source_hash,source,translated,updated_at,manual) VALUES(?,?,?,?,?,1) ON CONFLICT(locale,source_hash) DO UPDATE SET translated=excluded.translated,manual=1,updated_at=excluded.updated_at').bind(locale,await textHash(source),source,translated,now()).run();
+   await db().prepare('DELETE FROM translation_queue WHERE locale=? AND source_hash=?').bind(locale,await textHash(source)).run();await activity(identity!.name,'admin','languages:translation-save',locale);return NextResponse.json({ok:true});
+  }
   if(module==="dripfeed"||module==="subscriptions"){
    const result=b.action==="save"?await createAutomation({...b.data,kind:module}):await changeAutomation(id,b.action);
    await activity(identity!.name,"admin",`${module}:${b.action}`,String(id||result?.id||""));return NextResponse.json({ok:true,...result});
@@ -75,11 +84,11 @@ export async function POST(r:Request){
    else {
     const data:any={};for(const key of fields[module])data[key]=key==="permissions"?b.data?.[key]:String(b.data?.[key]??"").trim();
     if(Object.values(data).some(v=>typeof v==="string"&&v.length>20000))throw Error("Metin çok uzun.");
-    const first=fields[module][0];if(!data[first]||fields[module].some(k=>!["reason","category","permissions"].includes(k)&&!data[k]))throw Error("Zorunlu alanları doldur.");
+    const first=fields[module][0];if(!data[first]||fields[module].some(k=>!["reason","category","permissions","source"].includes(k)&&!data[k]))throw Error("Zorunlu alanları doldur.");
     if(module==="role-permissions"){data.permissions=Array.isArray(data.permissions)?data.permissions.filter((p:any)=>MODULES.some(m=>p===`${m}:read`||p===`${m}:write`)):[];if(!data.permissions.length)throw Error("En az bir izin seç.");}
     if(module==="payment-bonuses"){data.minimum=Number(data.minimum);data.percent=Number(data.percent);if(!Number.isFinite(data.minimum)||data.minimum<0||!Number.isFinite(data.percent)||data.percent<0||data.percent>100)throw Error("Geçerli eşik ve %0–100 bonus gir.");}
     if(module==="modules"&&!['dripfeed','subscriptions','orders','blog','radio','api'].includes(data.name))throw Error("Geçerli modül seç.");
-    if(module==="languages"&&(!['tr','en','es','ru','pt','de'].includes(data.locale)||!/^[a-zA-Z0-9._-]{1,80}$/.test(data.key)))throw Error("Geçerli dil ve metin anahtarı gir.");
+    if(module==="languages"&&(![...LOCALES,'pt'].includes(data.locale)||!/^[a-zA-Z0-9._-]{1,80}$/.test(data.key)))throw Error("Geçerli dil ve metin anahtarı gir.");
     if(module.startsWith("blog-")&&!/^[a-z0-9-]{1,120}$/.test(data.slug))throw Error("Adres yalnızca küçük harf, rakam ve tire içerebilir.");
     if(module==="blacklist-email"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.value))throw Error("Geçerli e-posta gir.");
     if(module==="blacklist-ip"&&!/^([0-9]{1,3}\.){3}[0-9]{1,3}$|^[a-f0-9:]+$/i.test(data.value))throw Error("Geçerli IP gir.");

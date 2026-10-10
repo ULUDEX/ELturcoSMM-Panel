@@ -110,3 +110,14 @@ Planlar aynı URL için standart, ek alan gerektirmeyen hizmetleri tekrar sipari
 Ödeme bonusları yalnızca bekleyen ödeme onayına eklenir; mevcut onaylara geriye dönük uygulanmaz. Shopier webhook doğrulaması mevcut davranışını korur. Blog /blog adresindedir. SSS, duyurular ve altı dilde services/search/account/popular gibi mevcut metin anahtarları müşteri vitriniyle bağlıdır. Kara listeler yeni giriş/kayıt ve siparişleri engeller; geçmiş kayıtlar korunur. Günlükler bu sürümden itibaren oluşur.
 
 Yeni tablolar 0018 migration ile oluşturulur; boş kayıtlar ve ücretli planlar otomatik eklenmez. Test: node --experimental-sqlite scripts/admin-module-tests.cjs. [admin-modules] yayını migration ve build uygular, mevcut runtime ayarlarını korur.
+# Storefront localization
+
+The storefront supports TR, EN, FR, UK, IT, RU, DE, BR (pt-BR), and ES with SVG flag selectors. Complete rendered sentences, service names, descriptions, placeholders and future public content use `/api/localization`, a D1 translation cache and the production Workers AI binding. Source text is retained when changing languages. Quantities, prices, URLs and brands are protected; malformed translations stay queued. Private account fields and form values are excluded. Admin → Diller shows cached/queued counts and permits manual corrections that automatic translations cannot overwrite. Public manual corrections refresh when the page or language opens.
+
+Automatic translation is bounded to 250,000 input characters including prompt allowance per UTC day. Uncached text may take time on first use; quota exhaustion leaves it queued for subsequent days. Cached content requires no model call. Scheduled work processes pending translations alongside the existing catalog and order jobs. Apply `0019_localization.sql` before deployment. `prepare-cloudflare-deploy.mjs` adds `AI`; no API secret is exposed to the browser.
+
+TRY, USD, EUR, GBP, UAH, RUB and BRL display rates refresh daily through ExchangeRate-API. Stored rates are retained during outages and missing currencies are disabled; balances, order billing and supplier accounting remain in TRY.
+
+Tawk.to uses a separate localized widget for each language in the existing property. `switchWidget` follows the storefront selector; active conversations keep their current widget until the conversation ends. Native widget text and custom Online/Away/Offline cards were configured in the dashboard. The two global Turkish-only greeting/rescue triggers were disabled; greetings and wait/offline instructions now appear in the localized widget cards. Human-written conversation history is retained in its original language.
+
+Validation: `node --experimental-sqlite scripts/localization-tests.cjs`, existing admin/provider tests, `pnpm build`, browser checks after production deployment.

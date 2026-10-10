@@ -84,6 +84,7 @@ jobs:
         run: |
           node --experimental-sqlite scripts/provider-tests.cjs
           node --experimental-sqlite scripts/admin-module-tests.cjs
+          node --experimental-sqlite scripts/localization-tests.cjs
 
       - name: Build
         run: pnpm build
