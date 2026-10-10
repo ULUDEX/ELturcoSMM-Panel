@@ -204,7 +204,16 @@ html.safe-motion .wv-float.three{animation:none}
 @media(max-width:760px){.wv-promise{top:352px;padding:0 14px;font-size:16px}.wv-metrics{top:390px;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:min(440px,88%)}.wv-metrics article{grid-template-columns:auto 1fr;justify-items:start;align-items:center;gap:0 8px;padding:7px 9px;border-radius:11px}.wv-metrics strong{grid-row:span 2;font-size:16px}.wv-metrics span{text-align:left;font-size:8px}.wv-promo-rail{top:502px;width:90%;height:34px}.wv-promo-track>div{min-width:90vw;gap:22px;padding:0 14px}.wv-promo-track span{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.wv-metrics article{animation:none}.wv-promo-track{animation-duration:90s}}
 
-/* Keep the price promise above the headline, clear of the orbit artwork. */
-.wv-kicker{top:112px!important}
-.wv-promise{top:140px;left:50%;transform:translateX(-50%);width:max-content;max-width:90%;padding:7px 16px;border:1px solid #b887ff38;border-radius:999px;background:linear-gradient(110deg,#21142fe6,#100d19e6);color:#e7d7ff;font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0;text-wrap:balance;box-shadow:0 4px 24px #955bff0d}
-@media(max-width:760px){.wv-kicker{top:109px!important}.wv-promise{top:133px;padding:6px 12px;font-size:11px;max-width:92%}.wv-title{top:181px!important}}
+
+/* Show proof points and service ribbon before the main headline. */
+.wv-kicker{top:110px!important}
+.wv-metrics{top:140px}
+.wv-promo-rail{top:224px}
+.wv-title{top:287px!important}
+.wv-sub{top:432px!important}
+@media(max-width:760px){.wv-kicker{top:109px!important}.wv-metrics{top:137px}.wv-promo-rail{top:233px}.wv-title{top:292px!important}.wv-sub{top:395px!important}}
+
+.wv-hero{min-height:1160px}.wv-pin{height:1160px}
+.wv-orbit-stage,.wv-phone-wrap{top:855px}
+.wv-float.one{top:860px}.wv-float.two{top:990px}.wv-float.three{top:1130px}
+@media(max-width:760px){.wv-hero{min-height:1130px}.wv-pin{height:1130px}.wv-orbit-stage,.wv-phone-wrap{top:790px}.wv-float.one,.wv-float.two{top:1045px}.wv-float.three{top:1095px}}
