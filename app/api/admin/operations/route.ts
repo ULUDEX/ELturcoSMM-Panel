@@ -6,10 +6,13 @@ import { forwardOrder,previewProviderOrder,providerConfigured } from "@/lib/prov
 import { fetchProviderBalance } from "@/lib/provider-catalog";
 import { addCustomerNotification } from "@/lib/customer-notifications";
 import { mailConfigured, sendTransactionalEmail } from "@/lib/mailer";
+import { approvePayment } from "@/lib/payment-approval";
+import { activity,blocked,moduleEnabled } from "@/lib/admin-controls";
+import { adminIdentity } from "@/lib/admin-auth";
 const now=()=>Math.floor(Date.now()/1000),cents=(v:unknown)=>Math.max(0,Math.round(Number(v||0)*100));
 async function ensureReviews(){await env.DB.prepare("CREATE TABLE IF NOT EXISTS customer_reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, customer_email TEXT NOT NULL UNIQUE, customer_name TEXT NOT NULL, rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5), title TEXT NOT NULL DEFAULT '', comment TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL)").run()}
 export async function GET(r:Request){
- if(!await isAdmin())return NextResponse.json({error:"Yetkisiz"},{status:403});const view=new URL(r.url).searchParams.get("view")||"overview";
+ if(!await isAdmin(r))return NextResponse.json({error:"Yetkisiz"},{status:403});const view=new URL(r.url).searchParams.get("view")||"overview";
  if(view==="integration"){let providerBalance=null;if(providerConfigured())try{providerBalance=await fetchProviderBalance()}catch{}let telegramPendingCount=0;try{const pending:any=await env.DB.prepare("SELECT COUNT(*) total FROM site_settings WHERE key GLOB 'telegram_catalog_outbox:*'").first();telegramPendingCount=Number(pending?.total||0)}catch{}const providers=await Promise.all(providerSummaries().map(async p=>{let balance=null;if(p.configured)try{balance=await fetchProviderBalance(p.id)}catch{}return {...p,balance};}));return NextResponse.json({providers,providerConfigured:providerConfigured(),providerBalance,publicApiConfigured:Boolean((env as any).ELTURCO_API_KEY),shopierConfigured:Boolean((env as any).SHOPIER_ACCESS_TOKEN&&(env as any).SHOPIER_WEBHOOK_SECRET),shopierCheckoutConfigured:Boolean((env as any).SHOPIER_CHECKOUT_URL),emailConfigured:mailConfigured(),telegramConfigured:Boolean((env as any).TELEGRAM_BOT_TOKEN),telegramTarget:String((env as any).TELEGRAM_CHAT_ID||"@ElTurcoSmm"),telegramPendingCount,providerUrl:providerSummaries().find(p=>p.id==="panelfollows")?.url||""})}
  if(view==="marketplace-orders"){try{const q=await env.DB.prepare("SELECT id,customer_name,service_name,link,quantity,amount,status,provider_id,provider_order_id,provider_error,provider_cost,external_sale_amount,external_reference,created_at FROM orders WHERE source='marketplace' ORDER BY id DESC LIMIT 100").all();return NextResponse.json(q.results)}catch{return NextResponse.json({error:"Pazaryeri sipariş tablosu güncellemesi henüz uygulanmamış."},{status:503})}}
  if(view==="settings"){const q=await env.DB.prepare("SELECT key,value FROM site_settings").all();return NextResponse.json(Object.fromEntries((q.results as any[]).map(x=>[x.key,x.value])))}
@@ -33,13 +36,16 @@ export async function GET(r:Request){
  const tables:any={transactions:"transactions",payments:"payment_requests",methods:"payment_methods",orders:"orders",support:"support_threads"},table=tables[view];if(!table)return NextResponse.json([]);const q=await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id DESC LIMIT 200`).all();if(view==="support"){for(const t of q.results as any[]){const m=await env.DB.prepare("SELECT * FROM support_messages WHERE thread_id=? ORDER BY id ASC").bind(t.id).all();t.messages=m.results}}return NextResponse.json(q.results)
 }
 export async function POST(r:Request){
- if(!await isAdmin())return NextResponse.json({error:"Yetkisiz"},{status:403});const b=await r.json() as any;
+ if(!await isAdmin(r))return NextResponse.json({error:"Yetkisiz"},{status:403});const b=await r.json() as any;await activity((await adminIdentity())?.name||"Yönetici","admin",String(b.action||"işlem")+":attempt",String(b.id||""));
+ if(b.action==="status"&&b.target==="payment"){if(b.status==="approved"){try{return NextResponse.json({ok:true,...await approvePayment(Number(b.id))})}catch(e){return NextResponse.json({error:e instanceof Error?e.message:"Ödeme onaylanamadı."},{status:409})}}const p:any=await env.DB.prepare("SELECT status FROM payment_requests WHERE id=?").bind(Number(b.id)).first();if(!p||p.status!=="pending"||b.status!=="rejected")return NextResponse.json({error:"Yalnızca bekleyen ödeme reddedilebilir."},{status:409});}
+
  if(b.action==="smtp-test"){
   const recipient=String((env as any).SMTP_USER||"elturcosmm@gmail.com").trim();
   const result=await sendTransactionalEmail({to:recipient,subject:"ElTurco SMM e-posta testi",text:"ElTurco SMM e-posta gönderimi başarıyla çalışıyor."});
   return NextResponse.json(result,result.sent?{status:200}:{status:502});
  }
  if(b.action==="marketplace-order"){
+ if(!await moduleEnabled("orders")||await blocked(r,"",String(b.link||"")))return NextResponse.json({error:"Sipariş modülü kapalı veya bağlantı engellenmiş."},{status:403});
   const serviceId=Number(b.serviceId),quantity=Math.floor(Number(b.quantity)),link=String(b.link||"").trim(),buyer=String(b.buyerName||"").trim().slice(0,120),reference=String(b.externalReference||"").trim().slice(0,160),saleAmount=cents(b.saleAmount);
   if(!serviceId||!quantity||!link||!buyer||!reference)return NextResponse.json({error:"Hizmet, müşteri adı, pazaryeri sipariş numarası, hedef link ve geçerli adet gerekli."},{status:400});
   const service:any=await env.DB.prepare("SELECT id,name,provider_id,provider_service_id,min_order,max_order,cost_price,sale_price,price_unit,provider_fields,active FROM services WHERE id=?").bind(serviceId).first();
@@ -81,4 +87,4 @@ export async function POST(r:Request){
  else if(b.action==="reply"){await env.DB.prepare("INSERT INTO support_messages(thread_id,sender,message,created_at) VALUES(?,'admin',?,?)").bind(b.threadId,b.message,now()).run();await env.DB.prepare("UPDATE support_threads SET updated_at=? WHERE id=?").bind(now(),b.threadId).run()}
  else return NextResponse.json({error:"Geçersiz işlem"},{status:400});return NextResponse.json({ok:true})
 }
-export async function DELETE(r:Request){if(!await isAdmin())return NextResponse.json({error:"Yetkisiz"},{status:403});const u=new URL(r.url),kind=u.searchParams.get("kind"),id=Number(u.searchParams.get("id"));const allowed:any={transaction:"transactions",method:"payment_methods",music:"music_tracks",review:"customer_reviews"};if(!allowed[kind]||!id)return NextResponse.json({error:"Geçersiz"},{status:400});if(kind==="review")await ensureReviews();await env.DB.prepare(`DELETE FROM ${allowed[kind]} WHERE id=?`).bind(id).run();return NextResponse.json({ok:true})}
+export async function DELETE(r:Request){if(!await isAdmin(r))return NextResponse.json({error:"Yetkisiz"},{status:403});const u=new URL(r.url),kind=u.searchParams.get("kind"),id=Number(u.searchParams.get("id"));const allowed:any={transaction:"transactions",method:"payment_methods",music:"music_tracks",review:"customer_reviews"};if(!allowed[kind]||!id)return NextResponse.json({error:"Geçersiz"},{status:400});if(kind==="review")await ensureReviews();await env.DB.prepare(`DELETE FROM ${allowed[kind]} WHERE id=?`).bind(id).run();return NextResponse.json({ok:true})}

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 
 export async function POST(r:Request){
- if(!await isAdmin())return NextResponse.json({error:"Yetkisiz"},{status:403});
+ if(!await isAdmin(r))return NextResponse.json({error:"Yetkisiz"},{status:403});
  const form=await r.formData(),file=form.get("file");
  if(!(file instanceof File))return NextResponse.json({error:"Dosya seçilmedi."},{status:400});
  if(!file.type.startsWith("audio/")&&!file.name.toLowerCase().endsWith(".mp3"))return NextResponse.json({error:"Yalnızca ses dosyası yükleyebilirsin."},{status:400});

@@ -1,0 +1,10 @@
+CREATE TABLE admin_records (id INTEGER PRIMARY KEY AUTOINCREMENT, module TEXT NOT NULL, data TEXT NOT NULL DEFAULT '{}', active INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL);
+CREATE INDEX idx_admin_records_module ON admin_records(module,active);
+CREATE TABLE admin_activity (id INTEGER PRIMARY KEY AUTOINCREMENT, actor TEXT NOT NULL, kind TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL);
+CREATE INDEX idx_admin_activity_time ON admin_activity(kind,created_at);
+CREATE TABLE admin_staff (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE COLLATE NOCASE, name TEXT NOT NULL, password_hash TEXT NOT NULL, password_salt TEXT NOT NULL, role_id INTEGER NOT NULL REFERENCES admin_records(id), active INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL);
+CREATE TABLE admin_staff_sessions (token_hash TEXT PRIMARY KEY, staff_id INTEGER NOT NULL REFERENCES admin_staff(id), expires_at INTEGER NOT NULL);
+CREATE TABLE automation_jobs (id INTEGER PRIMARY KEY AUTOINCREMENT, request_key TEXT NOT NULL UNIQUE, kind TEXT NOT NULL, customer_email TEXT NOT NULL, customer_name TEXT NOT NULL, service_id INTEGER NOT NULL, service_name TEXT NOT NULL, provider_id TEXT NOT NULL, provider_service_id TEXT NOT NULL, link TEXT NOT NULL, quantity INTEGER NOT NULL, unit_amount INTEGER NOT NULL, unit_cost INTEGER NOT NULL, total_runs INTEGER NOT NULL, completed_runs INTEGER NOT NULL DEFAULT 0, interval_minutes INTEGER NOT NULL, next_run_at INTEGER NOT NULL, state TEXT NOT NULL DEFAULT 'active', error TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL);
+CREATE INDEX idx_automation_due ON automation_jobs(state,next_run_at);
+CREATE TABLE automation_runs (job_id INTEGER NOT NULL REFERENCES automation_jobs(id), run_number INTEGER NOT NULL, order_id INTEGER, state TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY(job_id,run_number));
+ALTER TABLE payment_requests ADD COLUMN bonus_amount INTEGER NOT NULL DEFAULT 0;

@@ -5,6 +5,7 @@ import { flushCatalogAnnouncements } from "@/lib/telegram-announcements";
 
 export async function runCatalogSchedule() {
   const at = Math.floor(Date.now() / 1000);
+ await env.DB.prepare("INSERT INTO site_settings(key,value,updated_at) VALUES('schedule_last_run',?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at").bind(String(at),at).run();
   for (const id of ["panelfollows", "smmxserver"] as const) {
     if (!providerConfigured(id)) continue;
     const key = id === "panelfollows" ? "provider_catalog_last_sync" : `provider_catalog_last_sync:${id}`;

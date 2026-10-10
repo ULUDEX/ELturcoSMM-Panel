@@ -60,3 +60,7 @@ Canlı ortamda e-posta göndermek için Gmail SMTP (`smtp.gmail.com:465`) kullan
 - `lib/provider.ts`: SMM sağlayıcı bağlantısı
 - `lib/admin-auth.ts`: Admin oturum doğrulaması
 - `.openai/hosting.json`: Mevcut Cloud/Sites bağlantısı
+
+## 10 Ekim 2026 · Yönetim modülleri
+
+Önceden kapalı 20 bölüm için ekranlar, kalıcı kayıtlar, rol izinleri ve API kontrolleri eklendi. Rapor/CSV, içerik ve kara liste yönetimi, personel oturumları, ödeme bonusu, planlı sipariş rezervasyonu/iptali, zamanlayıcı durumu hazır. Blog yazıları, SSS, duyurular ve dil metinleri müşteri tarafına bağlandı. Abonelikler aynı URL için planlı tekrar kapsamındadır; otomatik yeni gönderi keşfi yoktur. Yetki, bakiye, tekrar gönderim ve bonus testleri offline çalışır. Önceki Shopier aktivasyon kısıtı devam eder.

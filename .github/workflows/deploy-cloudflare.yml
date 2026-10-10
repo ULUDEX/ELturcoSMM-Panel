@@ -43,7 +43,7 @@ jobs:
           fi
 
       - name: Validate customer email sender
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Validate Turnstile keys
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY || secrets.TURNSTILE_SITE_KEY }}
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
@@ -81,7 +81,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test supplier isolation
-        run: node --experimental-sqlite scripts/provider-tests.cjs
+        run: |
+          node --experimental-sqlite scripts/provider-tests.cjs
+          node --experimental-sqlite scripts/admin-module-tests.cjs
 
       - name: Build
         run: pnpm build
@@ -94,7 +96,7 @@ jobs:
         run: pnpm exec wrangler d1 migrations apply DB --remote --config dist/server/wrangler.json
 
       - name: Configure additional supplier secret
-        if: startsWith(github.event.head_commit.message, '[providers-only]')
+        if: (startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]'))
         env:
           SMMXSERVER_API_KEY: ${{ secrets.SMMXSERVER_API_KEY }}
         run: |
@@ -103,10 +105,10 @@ jobs:
           pnpm exec wrangler secret bulk .smmx-secret.json --config dist/server/wrangler.json
 
       - name: Deploy Worker
-        run: pnpm exec wrangler deploy --config dist/server/wrangler.json ${{ (startsWith(github.event.head_commit.message, '[providers-only]') || inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) && '--keep-vars' || '' }}
+        run: pnpm exec wrangler deploy --config dist/server/wrangler.json ${{ ((startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) || inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) && '--keep-vars' || '' }}
 
       - name: Ensure elturcosmm.com uses this Worker
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           DOMAIN_HOSTNAME: elturcosmm.com
         run: |
@@ -141,7 +143,7 @@ jobs:
           fi
 
       - name: Remove conflicting routes and purge old storefront cache
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         continue-on-error: true
         env:
           DOMAIN_HOSTNAME: elturcosmm.com
@@ -195,7 +197,7 @@ jobs:
             head -c 1200 /tmp/direct.html
           fi
       - name: Sync runtime secrets
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         env:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           ADMIN_SESSION_SECRET: ${{ secrets.ADMIN_SESSION_SECRET }}
@@ -238,11 +240,11 @@ jobs:
         run: node scripts/worker-email-smoke.mjs
 
       - name: Verify customer registration
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: node scripts/smoke-unverified-customer.mjs
 
       - name: Sync PanelFollows catalog
-        if: ${{ !startsWith(github.event.head_commit.message, '[providers-only]') && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
+        if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: |
           status="$(curl --silent --show-error --retry 2 --retry-delay 5 --max-time 120 --output /tmp/services.json --write-out '%{http_code}' https://elturcosmm.com/api/services)"
           if [ "$status" != "200" ]; then

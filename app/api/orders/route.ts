@@ -6,6 +6,7 @@ import { awardCompletedOrder } from "@/lib/rewards";
 import { addCustomerNotification } from "@/lib/customer-notifications";
 import { forwardOrder, getProviderRefillStatus, getProviderStatuses, previewProviderOrder, providerConfigured, requestProviderOrderAction } from "@/lib/provider";
 
+import { blocked,moduleEnabled,activity } from "@/lib/admin-controls";
 const now=()=>Math.floor(Date.now()/1000);
 function mapStatus(input:unknown){const value=String(input||"").trim().toLocaleLowerCase("tr-TR");if(/partial|kısmi/.test(value))return"partial";if(/cancel|canceled|cancelled|iptal|refunded|iade/.test(value))return"canceled";if(/complete|completed|tamamlandı|bitti|success/.test(value))return"completed";if(/progress|processing|in_progress|işleniyor|başladı/.test(value))return"processing";if(/fail|error|rejected|başarısız/.test(value))return"failed";return"pending"}
 function features(row:any){try{return JSON.parse(row.provider_features||"{}")}catch{return{}}}
@@ -41,6 +42,7 @@ export async function POST(request:Request){
   await env.DB.prepare("UPDATE orders SET provider_action=?,provider_refill_id=?,provider_error=?,provider_synced_at=? WHERE id=? AND customer_email=?").bind(actionState,result.refillId||"", "",now(),id,customer.email).run();
   return NextResponse.json({ok:true,action:actionState,message:action==="refill"?"Telafi isteği sağlayıcıya gönderildi.":"İptal isteği sağlayıcıya gönderildi."});
  }
+ if(!await moduleEnabled("orders")||await blocked(request,customer.email,String(body.link||"")))return NextResponse.json({error:"Sipariş şu anda kabul edilmiyor."},{status:403});
  const quantity=Math.floor(Number(body.quantity)),serviceId=Number(body.serviceId),link=String(body.link||"").trim();
  if(!serviceId||!link||!Number.isFinite(quantity)||quantity<1)return NextResponse.json({error:"Hizmet, bağlantı ve adet zorunlu."},{status:400});
  const service:any=await env.DB.prepare("SELECT id,name,provider_id,provider_service_id,min_order,max_order,sale_price,price_unit,provider_fields FROM services WHERE id=? AND active=1").bind(serviceId).first();
@@ -63,5 +65,5 @@ export async function POST(request:Request){
  await env.DB.prepare("UPDATE orders SET provider_order_id=?,provider_error=?,status=?,provider_synced_at=? WHERE id=?").bind(result.providerOrderId||"",result.error||"",result.forwarded?"processing":"pending",now(),created.id).run();
  await env.DB.prepare("INSERT INTO transactions(type,amount,category,description,status,created_at) VALUES('expense',?,'Müşteri siparişi',?,'completed',?)").bind(amount,`#${created.id} · ${customer.email} · ${service.name}`,now()).run();
  await addCustomerNotification({email:customer.email,kind:"order",orderId:Number(created.id),title:`Sipariş #${created.id} alındı`,body:`${service.name} · ${result.forwarded?"Sağlayıcıya iletildi":"İşlem sırasına alındı"}.`,emailSubject:`ElTurco SMM · Sipariş #${created.id} alındı`});
- return NextResponse.json({id:created.id,forwarded:result.forwarded,status:result.forwarded?"processing":"pending",amount},{status:201});
+ await activity(customer.email,"customer","order",String(created.id));return NextResponse.json({id:created.id,forwarded:result.forwarded,status:result.forwarded?"processing":"pending",amount},{status:201});
 }

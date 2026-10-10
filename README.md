@@ -100,3 +100,13 @@ Doğrulama: `node --experimental-sqlite scripts/provider-tests.cjs` ve `pnpm bui
 ### Hizmet bazında fiyat ve otomatik duyurular
 Admin hizmet tablosunda her satırın satış fiyatı kaydedilebilir. Özel fiyat katalog eşitlemesinde korunur; Otomatik kâra dön seçeneği varsayılan %75/%65/%50 hesaplamasını yeniden açar.
 Cloudflare zamanlayıcısı her 5 dakikada çalışır: katalog 6 saatte bir yenilenir, Telegram kuyruğu gönderilir. Yeni hizmetler mevcut yeni hizmetler vitrinine girer. Telegram hedefi TELEGRAM_CHAT_ID (varsayılan @ElTurcoSmm), bildirim anahtarları tedarikçi ve servis ID ile ayrılır.
+
+## Yönetim modülleri
+
+20 yönetim bölümü aktiftir: rapor/CSV, dripfeed ve süreli tekrar planları, aboneler, iptal talepleri, kullanıcı/personel günlüğü, IP/e-posta/bağlantı kara listesi, blog kategorileri/yazıları, personel ve rol izinleri, ödeme bonusları, modül kontrolleri, duyurular, dil metinleri, SSS ve zamanlayıcı durumu. Personel kullanıcı adıyla, ana yönetici kullanıcı adı boşken mevcut şifresiyle giriş yapar. Rol izinleri her API isteğinde kontrol edilir; personel ve rol yönetimi ana yöneticiye aittir.
+
+Planlar aynı URL için standart, ek alan gerektirmeyen hizmetleri tekrar sipariş eder; yeni sosyal medya gönderilerini keşfetmez. 2–100 tekrar ve en az 5 dakika aralık desteklenir. Toplam müşteri bakiyesi başta ayrılır, her çalıştırma tek kez sahiplenilir. Belirsiz tedarikçi yanıtı planı incelemeye durdurur. İptalde gönderilmemiş tekrarlar iade edilir. Cloudflare zamanlayıcısı her 5 dakikada en fazla 5 plan gönderir; yoğunluk başlangıcı geciktirebilir. Gerçek ücretli sipariş testi yapılmaz.
+
+Ödeme bonusları yalnızca bekleyen ödeme onayına eklenir; mevcut onaylara geriye dönük uygulanmaz. Shopier webhook doğrulaması mevcut davranışını korur. Blog /blog adresindedir. SSS, duyurular ve altı dilde services/search/account/popular gibi mevcut metin anahtarları müşteri vitriniyle bağlıdır. Kara listeler yeni giriş/kayıt ve siparişleri engeller; geçmiş kayıtlar korunur. Günlükler bu sürümden itibaren oluşur.
+
+Yeni tablolar 0018 migration ile oluşturulur; boş kayıtlar ve ücretli planlar otomatik eklenmez. Test: node --experimental-sqlite scripts/admin-module-tests.cjs. [admin-modules] yayını migration ve build uygular, mevcut runtime ayarlarını korur.
