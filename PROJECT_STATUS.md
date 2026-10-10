@@ -76,3 +76,7 @@ Nine storefront locales with real flag assets, seven daily display currencies, c
 ## Translation performance — 2026-10-10
 
 Removed three-second serial delays, doubled batches with bounded concurrency, prioritize visible text and defer hidden panels, batch-lookup requested automatic translations alongside preloaded manual corrections, and read cached batch entries in one indexed query. Frontend checks the shared cache before sending new AI work; unrelated visitor text is never enumerated. Production is Workers Paid; localization and catalog indexes are deployed. Current translation model: llama-3.3-70b-instruct-fp8-fast.
+
+## Customer workspace polish — 2026-10-10
+
+Compact flag/language picker moves before search on desktop and to the left of currency controls on mobile. Tawk waits for actual onLoad, queues clicks and offers the selected-language direct chat link if loading is blocked. Order submit disables both buttons during requests, catches uncertain network outcomes, refreshes the balance after success and displays the same integer-cent charge as the server. Changing categories resets stale descriptions and custom fields; changing languages preserves quantities. Catalog includes service IDs and per-order/per-1000 units. Account order history adds local search/status filtering and quantity/target details, retaining the last list on network failure. Partnership and integration pages replace construction placeholders with truthful support workflows; customer API credential provisioning remains manual. Payment flow unchanged.

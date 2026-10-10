@@ -86,6 +86,8 @@ jobs:
           node --experimental-sqlite scripts/admin-module-tests.cjs
           node --experimental-sqlite scripts/localization-tests.cjs
           node scripts/localization-ui-tests.cjs
+          node scripts/panel-workspace-tests.cjs
+          node scripts/live-support-tests.cjs
 
       - name: Build
         run: pnpm build

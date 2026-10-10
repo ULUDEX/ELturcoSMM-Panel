@@ -8,6 +8,7 @@
   const embedUrl=`https://embed.tawk.to/${propertyId}/${widgets[loaded]}`;
   let pendingOpen = false;
   let failed = false;
+  let ready = false;
   let fallbackTimer;
   const api = window.Tawk_API = window.Tawk_API || {};
   const previousOnLoad = api.onLoad;
@@ -16,6 +17,9 @@
   const previousOnChatEnded=api.onChatEnded;
   api.onChatEnded=function(){if(typeof previousOnChatEnded==='function')previousOnChatEnded.apply(this,arguments);syncLanguage()};
   api.onLoad = function () {
+    ready = true;
+    failed = false;
+    document.getElementById('live-support-fallback')?.remove();
     clearTimeout(fallbackTimer);
     if (typeof previousOnLoad === 'function') previousOnLoad.apply(this, arguments);
     syncLanguage();
@@ -28,9 +32,11 @@
     const button = event.target instanceof Element && event.target.closest('[data-live-support]');
     if (!button) return;
     event.preventDefault();
-    if (typeof api.maximize === 'function') return api.maximize();
+    if (ready && !failed && typeof api.maximize === 'function') {
+      try { api.maximize(); return; } catch { failed = true; }
+    }
     if (failed) {
-      window.open(chatUrl(), '_blank', 'noopener,noreferrer');
+      window.location.assign(chatUrl());
       return;
     }
     pendingOpen = true;
@@ -38,10 +44,18 @@
     fallbackTimer = setTimeout(() => {
       // If a blocker prevents the widget from loading, offer a normal chat link.
       failed = true;
-      button.textContent = 'Sohbeti yeni sekmede aç';
+      offerFallback();
       pendingOpen = false;
-    }, 8000);
+    }, 5000);
   });
+  function offerFallback(){
+    if(document.getElementById('live-support-fallback'))return;
+    const box=document.createElement('aside');box.id='live-support-fallback';box.setAttribute('role','status');
+    box.style.cssText='position:fixed;right:16px;bottom:96px;z-index:10000;max-width:300px;padding:16px;border:1px solid #334155;border-radius:16px;background:#101827;color:#fff;box-shadow:0 12px 40px #0006;font:13px/1.6 Arial,sans-serif';
+    const message=document.createElement('p');message.textContent='Canlı sohbet yüklenemedi. Destek sayfasından devam edebilirsin.';message.style.margin='0 0 10px';
+    const link=document.createElement('a');link.href=chatUrl();link.textContent='Canlı desteği aç →';link.style.cssText='display:block;color:#fff;background:#713de0;border-radius:9px;padding:9px 12px;text-decoration:none';
+    const close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Kapat');close.style.cssText='position:absolute;right:5px;top:0;background:none;border:0;color:#fff;font-size:20px;cursor:pointer';close.onclick=()=>box.remove();box.append(message,link,close);document.body.append(box);window.ElTurcoI18n?.refresh();
+  }
   if (document.querySelector('script[src="' + embedUrl + '"]')) return;
   window.Tawk_LoadStart = new Date();
   const script = document.createElement('script');
