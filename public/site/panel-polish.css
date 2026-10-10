@@ -1,5 +1,6 @@
 /* Customer workspace: calm spacing, readable details and consistent controls. */
 .topbar{gap:12px}.topbar .global-search{min-width:120px;flex:1}.topbar .page-heading{min-width:100px}.topbar>.locale-picker{flex:none}
+.topbar .balance{gap:2px;justify-content:center}.topbar .balance b{flex:none;line-height:1.2}.topbar .balance small{flex:none}
 .order-panel .service-info{max-height:220px;overflow:auto;align-items:flex-start}.service-info p{white-space:pre-line;line-height:1.7;overflow-wrap:anywhere}
 .order-panel input,.order-panel select,.order-panel textarea{min-height:44px}.order-panel textarea{resize:vertical}.submit-order:disabled,.summary-submit:disabled{opacity:.6;cursor:wait}
 .orders-tools{display:flex;align-items:flex-end;gap:16px;margin:0 0 20px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
