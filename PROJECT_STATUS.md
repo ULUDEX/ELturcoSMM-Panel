@@ -72,3 +72,7 @@ Canlı ortamda e-posta göndermek için Gmail SMTP (`smtp.gmail.com:465`) kullan
 # Localization update — 2026-10-10
 
 Nine storefront locales with real flag assets, seven daily display currencies, complete sentence/service translation with shared D1 cache and guarded Workers AI, source-preserving language changes, and admin translation search/manual overrides. New public text is detected automatically; first-time translations can queue under the daily cap. Tawk.to remains the support system with per-language native widgets and custom cards in the existing property; global Turkish-only automation messages are replaced by localized card content. Existing supplier pricing, balances, order routing, catalog synchronization and Telegram delivery remain intact. Localization migration and CI tests are included.
+
+## Translation performance — 2026-10-10
+
+Removed three-second serial delays, doubled batches with bounded concurrency, prioritize visible text and defer hidden panels, batch-lookup requested automatic translations alongside preloaded manual corrections, and read cached batch entries in one indexed query. Frontend checks the shared cache before sending new AI work; unrelated visitor text is never enumerated. Production is Workers Paid; localization and catalog indexes are deployed. Current translation model: llama-3.3-70b-instruct-fp8-fast.

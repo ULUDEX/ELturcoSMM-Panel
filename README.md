@@ -121,3 +121,7 @@ TRY, USD, EUR, GBP, UAH, RUB and BRL display rates refresh daily through Exchang
 Tawk.to uses a separate localized widget for each language in the existing property. `switchWidget` follows the storefront selector; active conversations keep their current widget until the conversation ends. Native widget text and custom Online/Away/Offline cards were configured in the dashboard. The two global Turkish-only greeting/rescue triggers were disabled; greetings and wait/offline instructions now appear in the localized widget cards. Human-written conversation history is retained in its original language.
 
 Validation: `node --experimental-sqlite scripts/localization-tests.cjs`, existing admin/provider tests, `pnpm build`, browser checks after production deployment.
+
+## Translation loading performance
+
+A cache-only lookup of the requested visible texts lets new visitors reuse automatic translations immediately without exposing unrelated visitor content. Manual translations preload separately. Hidden panels and closed menus are translated when opened. Visible viewport text is prioritized; batches contain up to 24 items with two requests in parallel, without fixed delays, capped at 30 starts per minute per page. Cache reads use one indexed query per batch. Daily AI limits and manual corrections remain enforced. First-time unseen text still requires model processing.
