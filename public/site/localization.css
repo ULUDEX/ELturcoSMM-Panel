@@ -3,7 +3,7 @@
 /* Compact flag controls, isolated from theme button widths. */
 .locale-picker .locale-current{width:auto;min-width:82px;height:38px;padding:8px 10px;gap:8px;white-space:nowrap;justify-content:flex-start;line-height:1}
 .locale-picker .locale-current span{font-size:12px;letter-spacing:.04em}.locale-picker .locale-current b{margin-left:auto;line-height:1}
-.locale-picker .locale-options{left:0;right:auto;max-width:calc(100vw - 32px)}
+.locale-picker .locale-options{left:auto;right:0;max-width:calc(100vw - 32px)}
 .locale-picker .locale-options button{width:100%;min-height:42px;padding:10px;text-align:left;justify-content:flex-start}
 .locale-progress{left:16px;right:auto;bottom:18px}
-@media(max-width:1100px){.topbar>.locale-picker{grid-column:1/3;grid-row:4;justify-self:start}.topbar .locale-tools{grid-column:3/-1;grid-row:4;justify-content:flex-end}.topbar .locale-tools #currency-select{flex:none;width:78px}.topbar .locale-tools .currency-source{display:none}}
+@media(max-width:1100px){.topbar>.locale-picker{grid-column:1/3;grid-row:4;justify-self:start}.topbar .locale-tools{grid-column:1/-1;grid-row:4;justify-content:flex-end}.topbar .locale-tools #currency-select{flex:none;width:78px}.topbar .locale-tools .currency-source{display:none}}
