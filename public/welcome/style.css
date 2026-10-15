@@ -217,3 +217,37 @@ html.safe-motion .wv-float.three{animation:none}
 .wv-orbit-stage,.wv-phone-wrap{top:855px}
 .wv-float.one{top:860px}.wv-float.two{top:990px}.wv-float.three{top:1130px}
 @media(max-width:760px){.wv-hero{min-height:1130px}.wv-pin{height:1130px}.wv-orbit-stage,.wv-phone-wrap{top:790px}.wv-float.one,.wv-float.two{top:1045px}.wv-float.three{top:1095px}}
+
+/* Composite moving artwork without repainting blurred layers underneath it. */
+.wv-bg-icon,.wv-bg-icon:nth-child(n){filter:none;will-change:auto}
+.wv-logo,.wv-float{backdrop-filter:none;background-color:rgba(12,10,17,.94)}
+.wv-section{backdrop-filter:none;background:rgba(5,5,7,.94)!important}
+.wv-social-card,.wv-pane,.wv-video,.wv-workcard,.wv-bottom{
+  backdrop-filter:none;background-color:rgba(10,9,14,.96)!important;
+}
+.wv-metrics article{backdrop-filter:none;background:#100d19}
+.wv-nav{backdrop-filter:blur(8px)}
+html.safe-motion .wv-title,html.safe-motion .wv-sub,html.safe-motion .wv-kicker{will-change:auto}
+.welcome-motion-paused .wv-ticker-track,
+.welcome-motion-paused .wv-promo-track,
+.welcome-motion-paused .wv-bg-icon,
+.welcome-motion-paused .wv-orbit-stage,
+.welcome-motion-paused .wv-logo,
+html.safe-motion.welcome-motion-paused .wv-phone,
+html.safe-motion.welcome-motion-paused .wv-float{animation-play-state:paused}
+.welcome-motion-paused .wv-phone-wrap,.welcome-motion-paused .wv-orbit-stage{will-change:auto}
+@media(max-width:760px){
+  .wv-bg-icon:nth-child(3n){display:grid}
+  .wv-nav,.wv-support{backdrop-filter:none}
+  .wv-phone{box-shadow:0 24px 55px #0009,0 0 45px #7e2dff25}
+}
+@media(hover:none){
+  html.safe-motion .wv-chip:hover,html.safe-motion .wv-pane:hover,
+  html.safe-motion .wv-workcard:hover{transform:none;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .public-landing *,.public-landing *::before,.public-landing *::after{
+    animation:none!important;transition:none!important;scroll-behavior:auto!important;will-change:auto!important;
+  }
+  .public-landing .safe-reveal{opacity:1!important;transform:none!important}
+}
