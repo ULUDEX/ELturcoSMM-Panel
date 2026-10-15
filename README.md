@@ -125,3 +125,11 @@ Validation: `node --experimental-sqlite scripts/localization-tests.cjs`, existin
 ## Translation loading performance
 
 A cache-only lookup of the requested visible texts lets new visitors reuse automatic translations immediately without exposing unrelated visitor content. Manual translations preload separately. Hidden panels and closed menus are translated when opened. Visible viewport text is prioritized; batches contain up to 24 items with two requests in parallel, without fixed delays, capped at 30 starts per minute per page. Cache reads use one indexed query per batch. Daily AI limits and manual corrections remain enforced. First-time unseen text still requires model processing.
+
+## Customer experience refinements
+
+The welcome page presents clear account actions, a three-step guide, FAQs and links to existing policy/help pages. Decorative balance figures are labeled as examples; unverified order/platform counters and the placeholder video are removed. Mobile authentication shows the form first, leaves avatar choice to the profile and preserves the selected auth mode across delayed account checks.
+
+Customers can save up to 20 service IDs on their current browser/device. Shortcuts use the current catalog and never submit orders. Availability and prices must be reviewed before ordering. Delivery time labels use recorded averageTimeSeconds only; missing values remain unspecified. Radio lists uploaded media only and loads audio after a play action; unavailable media errors stay in the player. The support launcher stays hidden during authentication and is restored afterward.
+
+Validation: node scripts/customer-experience-tests.cjs, node scripts/live-support-tests.cjs, node scripts/panel-workspace-tests.cjs and pnpm build. No schema or environment changes.

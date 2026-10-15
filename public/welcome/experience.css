@@ -1,0 +1,58 @@
+/* Keep the first decision visible before the decorative panel preview. */
+.wv-hero,.wv-pin{height:auto;min-height:1000px}
+.wv-kicker{top:150px!important}
+.wv-title{top:205px!important;font-size:clamp(42px,5.8vw,78px);line-height:1.18;white-space:normal;width:92%}
+.wv-sub{top:410px!important;max-width:620px}
+.wv-hero-actions{position:absolute;top:500px;left:50%;transform:translateX(-50%);z-index:12;width:min(660px,92%);display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
+.wv-hero-actions small{flex-basis:100%;text-align:center;font-size:12px;color:#b5abca;line-height:1.6}
+.wv-btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
+.wv-metrics{top:615px;width:min(760px,90%)}
+.wv-metrics strong{font-size:19px;letter-spacing:0}
+.wv-promo-rail,.wv-float{display:none}
+.wv-orbit-stage,.wv-phone-wrap{top:1050px}
+.wv-hero,.wv-pin{min-height:1420px}
+.wv-hello{font-size:10px;letter-spacing:.06em}
+.experience-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.experience-steps .wv-workcard{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:28px;height:auto}
+.experience-steps h3{font-size:22px;margin:0}
+.experience-steps p{font-size:14px;line-height:1.8;color:#b5abca;margin:0 0 16px}
+.experience-steps .wv-btn{margin-top:auto;font-size:12px}
+.experience-faq details{border-bottom:1px solid #ffffff20;padding:22px 0;color:#eee8fa}
+.experience-faq summary{cursor:pointer;font-size:17px;font-weight:700;line-height:1.6}
+.experience-faq details p{max-width:760px;line-height:1.8;color:#b5abca;font-size:14px}
+.experience-footer{width:min(1180px,90%);margin:20px auto 0;padding:32px 0 110px;border-top:1px solid #ffffff20}
+.experience-footer nav{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:22px}
+.experience-footer a,.experience-footer button{color:#c7bdd8;font:inherit;font-size:13px;text-decoration:none;padding:10px 0}
+.experience-footer button{background:none;border:0;cursor:pointer}
+.experience-footer .wv-brand{font-size:22px;font-weight:800;color:#fff}
+.wv-btn:focus-visible,.experience-footer a:focus-visible,.experience-footer button:focus-visible,summary:focus-visible{outline:3px solid #d0a4ff;outline-offset:5px}
+@media(min-width:1100px){
+ .wv-hero,.wv-pin{min-height:940px}
+ .wv-kicker{width:57%;top:220px!important}
+ .wv-title{left:5%;transform:none;text-align:left;width:60%;top:270px!important;font-size:clamp(40px,4.2vw,60px)}
+ html.safe-motion .wv-title{animation:none}
+ .wv-sub{left:5%;transform:none;text-align:left;width:49%;top:475px!important}
+ html.safe-motion .wv-sub{animation:none}
+ .wv-hero-actions{left:5%;transform:none;justify-content:flex-start;top:585px;width:52%}
+ .wv-hero-actions small{text-align:left}
+ .wv-metrics{left:5%;transform:none;top:735px;width:53%;gap:8px}
+ .wv-orbit-stage,.wv-phone-wrap{left:80%;top:535px}
+ .wv-orbit-stage{opacity:.4;pointer-events:none}
+}
+@media(max-width:760px){
+ .wv-actions .ghost{display:inline-flex}
+ .wv-actions{gap:6px}.wv-actions .wv-btn{padding:9px 12px;font-size:11px}
+ .wv-hero,.wv-pin{min-height:1190px}
+ .wv-kicker{top:130px!important;font-size:9px;letter-spacing:2px}
+ .wv-title{top:180px!important;font-size:clamp(31px,8.5vw,55px);line-height:1.23;width:94%}
+ .wv-sub{top:325px!important;font-size:14px;width:89%;line-height:1.7}
+ .wv-hero-actions{top:430px;gap:8px}.wv-hero-actions .wv-btn{font-size:12px;padding:12px 16px}
+ .wv-hero-actions small{font-size:11px}
+ .wv-metrics{top:555px;gap:8px}.wv-metrics article{display:flex;flex-direction:column;align-items:center;padding:12px 6px;gap:5px}
+ .wv-metrics strong{font-size:16px}.wv-metrics span{font-size:10px;text-align:center}
+ .wv-phone-wrap,.wv-orbit-stage{top:930px}
+ .wv-orbit-stage{opacity:.4;pointer-events:none}
+ .experience-steps{grid-template-columns:1fr}.experience-steps .wv-workcard{padding:24px}
+ .experience-footer{padding-bottom:100px}.experience-faq summary{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.wv-metrics article{animation:none}}

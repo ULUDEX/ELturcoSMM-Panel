@@ -1,0 +1,20 @@
+#music-player[hidden]{display:none!important}
+body.auth-pending #music-player,body.auth-modal-open #music-player{display:none!important}
+.auth-card.register [data-avatar-panel="register"]{display:none!important}
+.experience-password-help{display:block;line-height:1.7;margin:0 0 16px;color:#61566f;font-size:12px}
+#account-modal .auth-forgot-link{display:block;min-height:38px;padding:8px 0;text-align:left}
+.experience-saved{margin:16px 0;padding:18px;border:1px solid #9c78dc40;border-radius:16px;background:#9360cf0a}
+.experience-saved h3{margin:0 0 6px;font-size:15px}.experience-saved p{font-size:12px;line-height:1.7;color:#847c96}
+.experience-saved button,.experience-save{min-height:44px;padding:10px 14px;border:1px solid #9c78dc55;border-radius:10px;background:#7753a717;color:inherit;font:inherit;font-size:12px;cursor:pointer}
+.experience-save{margin:12px 0}.experience-saved-items{display:flex;gap:8px;flex-wrap:wrap}
+.experience-saved-item{display:flex;align-items:center;gap:3px;max-width:100%}.experience-saved-item button:first-child{max-width:270px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.experience-saved button:focus-visible,.experience-save:focus-visible{outline:3px solid #b286ee;outline-offset:3px}
+.experience-help-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:12px}.experience-help-links a{color:inherit;min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:760px){
+ #account-modal .auth-welcome{display:none!important}
+ #account-modal .auth-card{display:block!important;width:min(100%,480px)!important;min-height:0!important;margin:auto!important}
+ #account-modal .auth-side{padding:36px 24px!important;min-height:0!important;border-radius:24px!important}
+ #account-modal input:not([type=hidden]):not([type=checkbox]){font-size:16px!important;min-height:48px}
+ #account-modal .auth-tabs button,#account-modal .submit-order{min-height:48px}
+ #account-modal{padding:16px!important;overflow-y:auto!important;align-items:start!important}
+}
