@@ -28,6 +28,24 @@ async function authTests(){
  vm.createContext(context);vm.runInContext(code,context);await vm.runInContext('loadAccount()',context);assert.equal(opened,'register','late account response preserves registration choice');
  context.authMode='forgot';context.fetch=async()=>{throw Error('offline')};await vm.runInContext('loadAccount()',context);assert.equal(opened,'forgot','network failure must not close password recovery');
 }
+async function corruptHistoryTests(){
+ const start=source.indexOf('async function renderLocalOrders()'),code=source.slice(start,source.indexOf('\n',start));
+ const context={account:null,orderRows:[],orderLoadFailed:false,currentLanguage:'tr',$:()=>null,localStorage:{getItem:()=>'{broken'},paintOrderFilter(){}};
+ vm.createContext(context);vm.runInContext(code,context);await vm.runInContext('renderLocalOrders()',context);assert.equal(context.orderRows.length,0);
+ context.localStorage.getItem=()=>'{}';await vm.runInContext('renderLocalOrders()',context);assert.equal(context.orderRows.length,0);
+ context.localStorage.getItem=()=>'[null,0,"bad"]';await vm.runInContext('renderLocalOrders()',context);assert.equal(context.orderRows.length,0);
+}
+function startupTests(){
+ const start=source.indexOf(';queueMicrotask(()=>{void loadAccount()');
+ assert.ok(start>0);
+ const startup=source.slice(start+1,source.indexOf('\n',start));
+ let pending,seen,calls=0;
+ const context={queueMicrotask:fn=>pending=fn,loadAccount:()=>calls++,renderLocalOrders:()=>seen=vm.runInContext('currentLanguage',context),updateLocalCount:()=>calls++,loadSiteConfig:()=>calls++,startReveal:()=>calls++};
+ vm.createContext(context);vm.runInContext(startup+'\nlet currentLanguage="tr";',context);assert.equal(calls,0);pending();assert.equal(seen,'tr');assert.equal(calls,4);
+ const countStart=source.indexOf('function updateLocalCount()'),countCode=source.slice(countStart,source.indexOf('\n',countStart));
+ const node={};context.$=()=>node;context.localStorage={getItem:()=>'{broken'};vm.runInContext(countCode,context);vm.runInContext('updateLocalCount()',context);assert.equal(node.textContent,0);
+ context.localStorage.getItem=()=>'{"length":900}';vm.runInContext('updateLocalCount()',context);assert.equal(node.textContent,0);
+}
 function savedTests(raw,storageFails=false){
  class Element{constructor(){this.children=[];this.value='';this.hidden=false}append(...items){this.children.push(...items)}replaceChildren(){this.children=[]}before(node){this.beforeNode=node}after(node){this.afterNode=node}setAttribute(){}addEventListener(name,fn){this[name]=fn}}
  const host=new Element(),selector=new Element(),info=new Element();let stored,chosen;
@@ -39,4 +57,4 @@ function savedTests(raw,storageFails=false){
  if(!storageFails)assert.deepEqual(JSON.parse(stored),[7]);
  item.children[1].onclick();if(!storageFails)assert.deepEqual(JSON.parse(stored),[]);
 }
-Promise.all([radioTests(),authTests()]).then(()=>{savedTests('{broken');savedTests('{}');savedTests('[null,"7",-4,0]');savedTests('[]',true);console.log('PASS: radio opt-in, missing media, honest ETA, auth race and safe saved-service selection/removal.');}).catch(error=>{console.error(error);process.exit(1)});
+Promise.all([radioTests(),authTests(),corruptHistoryTests()]).then(()=>{startupTests();savedTests('{broken');savedTests('{}');savedTests('[null,"7",-4,0]');savedTests('[]',true);console.log('PASS: radio opt-in, missing media, honest ETA, safe startup/history, auth race and saved-service selection/removal.');}).catch(error=>{console.error(error);process.exit(1)});
