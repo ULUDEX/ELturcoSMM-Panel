@@ -90,6 +90,7 @@ jobs:
           node scripts/live-support-tests.cjs
           node scripts/customer-experience-tests.cjs
           node scripts/panel-layout-tests.cjs
+          node --experimental-sqlite scripts/orders-refill-tests.cjs
           node --experimental-sqlite scripts/music-upload-tests.cjs
 
       - name: Build

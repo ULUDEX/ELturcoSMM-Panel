@@ -145,3 +145,9 @@ POST /api/admin/media retains the existing music-write authorization. Multipart 
 Radio is docked at the lower left, leaving the support launcher in the right corner. Order summary stays in normal document flow. The sidebar automatic-delivery card is removed. Contact actions have consistent sizes. New services use four visible cards on desktop, two on tablets and swipeable cards on phones, with manual arrows and a pause control. Automatic paging stops on hover, keyboard focus, hidden/offscreen pages and reduced-motion preferences. Order tracking animates recorded stages; terminal failures do not appear completed and no delivery percentage/time is inferred.
 
 Validation: node scripts/panel-layout-tests.cjs, existing customer-experience and panel-workspace tests, pnpm build.
+
+## Compact order list and refill requests
+
+Customer orders use a compact, horizontally scrollable table with service/link, quantity, amount, status, date and actions. Links can be copied. No start/remaining values are fabricated. Search/status filters and refresh remain available. Refill availability and reasons come from the authenticated API, using strict provider feature flags and a completed, forwarded order. Requested/completed/uncertain refills remain blocked.
+
+The action endpoint now reads both provider feature field aliases consistently, claims an order action before contacting the provider and prevents concurrent duplicate requests. Network/5xx uncertainty is kept as an uncertain action for support review rather than automatically resent. Existing ownership/authentication checks remain. No schema changes or live refill/order requests were used during validation. Tests: node --experimental-sqlite scripts/orders-refill-tests.cjs, node scripts/provider-tests.cjs, existing customer-experience/panel-workspace tests, pnpm build.
