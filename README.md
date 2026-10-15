@@ -139,3 +139,9 @@ Validation: node scripts/customer-experience-tests.cjs, node scripts/live-suppor
 Admin > Music Management accepts dropped or selected audio files (up to 20 per batch, 30 MB each). Successful uploads are automatically inserted into the radio playlist with the filename as title and the next position. Each file has its own result; invalid files do not stop the queue. Playback remains opt-in. Existing tracks can still be edited or hidden.
 
 POST /api/admin/media retains the existing music-write authorization. Multipart playlist=1 opts into playlist insertion; upload-only callers remain unchanged. Empty, unsupported and oversized files are rejected. If playlist insertion fails, the newly uploaded object is removed when possible. No schema or environment changes. Test: node --experimental-sqlite scripts/music-upload-tests.cjs.
+
+## Panel layout and tracking
+
+Radio is docked at the lower left, leaving the support launcher in the right corner. Order summary stays in normal document flow. The sidebar automatic-delivery card is removed. Contact actions have consistent sizes. New services use four visible cards on desktop, two on tablets and swipeable cards on phones, with manual arrows and a pause control. Automatic paging stops on hover, keyboard focus, hidden/offscreen pages and reduced-motion preferences. Order tracking animates recorded stages; terminal failures do not appear completed and no delivery percentage/time is inferred.
+
+Validation: node scripts/panel-layout-tests.cjs, existing customer-experience and panel-workspace tests, pnpm build.
