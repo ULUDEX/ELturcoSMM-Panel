@@ -16,6 +16,15 @@
   document.addEventListener('elturco:language',syncLanguage);
   const previousOnChatEnded=api.onChatEnded;
   api.onChatEnded=function(){if(typeof previousOnChatEnded==='function')previousOnChatEnded.apply(this,arguments);syncLanguage()};
+  let lastAuthVisibility;
+  function syncAuthVisibility(){
+    const auth=document.body?.classList?.contains('auth-pending')||document.body?.classList?.contains('auth-modal-open');
+    if(!ready||auth===lastAuthVisibility)return;
+    lastAuthVisibility=auth;
+    if(auth&&typeof api.hideWidget==='function')api.hideWidget();
+    else if(!auth&&typeof api.showWidget==='function')api.showWidget();
+  }
+  if(typeof MutationObserver!=='undefined'&&document.body)new MutationObserver(syncAuthVisibility).observe(document.body,{attributes:true,attributeFilter:['class']});
   api.onLoad = function () {
     ready = true;
     failed = false;
@@ -23,8 +32,10 @@
     clearTimeout(fallbackTimer);
     if (typeof previousOnLoad === 'function') previousOnLoad.apply(this, arguments);
     syncLanguage();
+    syncAuthVisibility();
     if (pendingOpen && typeof api.maximize === 'function') {
       pendingOpen = false;
+      if(typeof api.showWidget==='function')api.showWidget();
       api.maximize();
     }
   };
@@ -33,7 +44,7 @@
     if (!button) return;
     event.preventDefault();
     if (ready && !failed && typeof api.maximize === 'function') {
-      try { api.maximize(); return; } catch { failed = true; }
+      try { if(typeof api.showWidget==='function')api.showWidget();api.maximize(); return; } catch { failed = true; }
     }
     if (failed) {
       window.location.assign(chatUrl());
