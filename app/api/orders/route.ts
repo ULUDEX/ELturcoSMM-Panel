@@ -7,9 +7,10 @@ import { addCustomerNotification } from "@/lib/customer-notifications";
 import { forwardOrder, getProviderRefillStatus, getProviderStatuses, previewProviderOrder, providerConfigured, requestProviderOrderAction } from "@/lib/provider";
 
 import { blocked,moduleEnabled,activity } from "@/lib/admin-controls";
+import { orderFeatures,refillEligibility } from "@/lib/order-actions";
 const now=()=>Math.floor(Date.now()/1000);
 function mapStatus(input:unknown){const value=String(input||"").trim().toLocaleLowerCase("tr-TR");if(/partial|kısmi/.test(value))return"partial";if(/cancel|canceled|cancelled|iptal|refunded|iade/.test(value))return"canceled";if(/complete|completed|tamamlandı|bitti|success/.test(value))return"completed";if(/progress|processing|in_progress|işleniyor|başladı/.test(value))return"processing";if(/fail|error|rejected|başarısız/.test(value))return"failed";return"pending"}
-function features(row:any){try{return JSON.parse(row.provider_features||"{}")}catch{return{}}}
+function features(row:any){return orderFeatures(row)}
 function safeFields(value:unknown){if(!value||typeof value!=="object"||Array.isArray(value))return{};const out:Record<string,string>={};for(const [key,raw] of Object.entries(value as Record<string,unknown>)){if(!/^[a-z][a-z0-9_]{0,39}$/i.test(key)||["key","action","service","link","quantity","id","providerId"].includes(key))continue;if(typeof raw==="string"||typeof raw==="number")out[key]=String(raw).slice(0,5000)}return out}
 async function customerOrders(email:string){
  const result:any=await env.DB.prepare("SELECT o.id,o.service_name service,o.link,o.quantity,o.amount,o.status,o.provider_id providerId,o.provider_order_id providerOrderId,o.provider_service_id providerServiceId,o.provider_refill_id providerRefillId,o.provider_action providerAction,o.provider_synced_at providerSyncedAt,o.created_at createdAt,s.provider_features providerFeatures,s.price_unit priceUnit FROM orders o LEFT JOIN services s ON s.id=o.service_id WHERE o.customer_email=? ORDER BY o.id DESC LIMIT 50").bind(email).all();
@@ -18,8 +19,8 @@ async function customerOrders(email:string){
  for(const row of [...rows].sort((a,b)=>Number(a.id)-Number(b.id)))if(mapStatus(row.status)==="completed")await awardCompletedOrder(email,Number(row.id));
  for(const row of rows){if(row.providerRefillId&&row.providerAction==="refill_requested"){const refill=await getProviderRefillStatus(String(row.providerRefillId),providerId(row.providerId));if(refill.ok){row.refillStatus=refill.status;const normalized=String(refill.status).toLowerCase();if(/complete|success|done/.test(normalized))row.providerAction="refill_completed";if(/fail|reject|error/.test(normalized))row.providerAction="refill_failed";if(row.providerAction!=="refill_requested")await env.DB.prepare("UPDATE orders SET provider_action=? WHERE id=? AND customer_email=?").bind(row.providerAction,row.id,email).run()}}
   row.features=features({provider_features:row.providerFeatures});delete row.providerFeatures;
-  row.canRefill=Boolean(row.features.refill)&&mapStatus(row.status)==="completed"&&!["refill_requested"].includes(row.providerAction);
-  row.canCancel=Boolean(row.features.cancel)&&["pending","processing"].includes(mapStatus(row.status))&&!row.providerAction.includes("cancel");
+  const refill=refillEligibility(row,mapStatus(row.status));row.refillSupported=refill.supported;row.canRefill=refill.eligible;row.refillUnavailableReason=refill.reason;
+  row.canCancel=Boolean(row.features.cancel)&&Boolean(row.providerOrderId)&&["pending","processing"].includes(mapStatus(row.status))&&!String(row.providerAction||"").includes("cancel");
   delete row.providerId;delete row.providerOrderId;delete row.providerServiceId;delete row.providerRefillId;delete row.providerSyncedAt;delete row.features;
  }
  return rows;
@@ -33,11 +34,14 @@ export async function POST(request:Request){
   const order:any=await env.DB.prepare("SELECT o.id,o.provider_id providerId,o.provider_order_id providerOrderId,o.provider_action providerAction,o.status,s.provider_features providerFeatures FROM orders o LEFT JOIN services s ON s.id=o.service_id WHERE o.id=? AND o.customer_email=?").bind(id,customer.email).first();
   if(!order)return NextResponse.json({error:"Sipariş bulunamadı."},{status:404});if(!order.providerOrderId)return NextResponse.json({error:"Bu sipariş sağlayıcıya henüz iletilmemiş."},{status:409});
   const supported=features(order),status=mapStatus(order.status),action=body.action as "refill"|"cancel";
-  if(action==="refill"&&(!supported.refill||status!=="completed"))return NextResponse.json({error:"Telafi yalnızca telafi desteği olan tamamlanmış siparişlerde kullanılabilir."},{status:409});
+  if(action==="refill"){const eligibility=refillEligibility(order,status);if(!eligibility.eligible)return NextResponse.json({error:eligibility.reason},{status:409})}
   if(action==="cancel"&&(!supported.cancel||!["pending","processing"].includes(status)))return NextResponse.json({error:"Bu sipariş şu anda iptal edilemiyor."},{status:409});
   if(action==="refill"&&["refill_requested","refill_completed"].includes(order.providerAction))return NextResponse.json({error:"Bu sipariş için telafi isteği zaten gönderilmiş."},{status:409});
   if(action==="cancel"&&String(order.providerAction).includes("cancel"))return NextResponse.json({error:"İptal isteği zaten gönderilmiş."},{status:409});
-  const result=await requestProviderOrderAction(action,String(order.providerOrderId),providerId(order.providerId));if(!result.ok)return NextResponse.json({error:result.error||"Sağlayıcı işlemi kabul etmedi."},{status:502});
+  const sending=action+"_sending",claimed=await env.DB.prepare("UPDATE orders SET provider_action=? WHERE id=? AND customer_email=? AND COALESCE(provider_action,'')=?").bind(sending,id,customer.email,String(order.providerAction||"")).run();
+  if(!claimed.meta.changes)return NextResponse.json({error:"Bu sipariş için başka bir talep işleniyor. Listeyi yenile."},{status:409});
+  let result;try{result=await requestProviderOrderAction(action,String(order.providerOrderId),providerId(order.providerId))}catch{result={ok:false,uncertain:true,error:"Talep sonucu doğrulanamadı.",refillId:""}}
+  if(!result.ok){const state=action+(result.uncertain?"_uncertain":"_failed");await env.DB.prepare("UPDATE orders SET provider_action=? WHERE id=? AND customer_email=? AND provider_action=?").bind(state,id,customer.email,sending).run();return NextResponse.json({error:result.uncertain?"Talebin sonucu doğrulanamadı. Tekrar göndermeden önce destekle görüş.":result.error||"Sağlayıcı işlemi kabul etmedi.",action:state},{status:result.uncertain?409:502})}
   const actionState=action==="refill"?"refill_requested":"cancel_requested";
   await env.DB.prepare("UPDATE orders SET provider_action=?,provider_refill_id=?,provider_error=?,provider_synced_at=? WHERE id=? AND customer_email=?").bind(actionState,result.refillId||"", "",now(),id,customer.email).run();
   return NextResponse.json({ok:true,action:actionState,message:action==="refill"?"Telafi isteği sağlayıcıya gönderildi.":"İptal isteği sağlayıcıya gönderildi."});
