@@ -56,3 +56,9 @@
  .order-track{padding:16px}.order-track-head{align-items:flex-start;flex-direction:column;gap:10px}.order-track .track-steps{gap:8px}.order-track .track-step b{font-size:9px}.local-order-card{padding:16px}
 }
 @media(prefers-reduced-motion:reduce){.order-progress>i,.order-track .track-step.current>i:after{animation:none!important}#new-services-list .new-service-chip{transition:none}#new-services-list .new-services-track{scroll-behavior:auto}}
+
+/* Consistent functional menu icons, independent of device emoji fonts. */
+.sidebar .nav-item>.menu-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;height:22px;line-height:1;color:inherit}
+.sidebar .nav-item>.menu-icon svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;flex:none}
+.sidebar .nav-item.active>.menu-icon{color:#e7c570}
+.sidebar .nav-item{gap:12px}
