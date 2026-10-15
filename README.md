@@ -133,3 +133,9 @@ The welcome page presents clear account actions, a three-step guide, FAQs and li
 Customers can save up to 20 service IDs on their current browser/device. Shortcuts use the current catalog and never submit orders. Availability and prices must be reviewed before ordering. Delivery time labels use recorded averageTimeSeconds only; missing values remain unspecified. Radio lists uploaded media only and loads audio after a play action; unavailable media errors stay in the player. The support launcher stays hidden during authentication and is restored afterward.
 
 Validation: node scripts/customer-experience-tests.cjs, node scripts/live-support-tests.cjs, node scripts/panel-workspace-tests.cjs and pnpm build. No schema or environment changes.
+
+## Automatic music uploads
+
+Admin > Music Management accepts dropped or selected audio files (up to 20 per batch, 30 MB each). Successful uploads are automatically inserted into the radio playlist with the filename as title and the next position. Each file has its own result; invalid files do not stop the queue. Playback remains opt-in. Existing tracks can still be edited or hidden.
+
+POST /api/admin/media retains the existing music-write authorization. Multipart playlist=1 opts into playlist insertion; upload-only callers remain unchanged. Empty, unsupported and oversized files are rejected. If playlist insertion fails, the newly uploaded object is removed when possible. No schema or environment changes. Test: node --experimental-sqlite scripts/music-upload-tests.cjs.

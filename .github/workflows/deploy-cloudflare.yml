@@ -89,6 +89,7 @@ jobs:
           node scripts/panel-workspace-tests.cjs
           node scripts/live-support-tests.cjs
           node scripts/customer-experience-tests.cjs
+          node --experimental-sqlite scripts/music-upload-tests.cjs
 
       - name: Build
         run: pnpm build
