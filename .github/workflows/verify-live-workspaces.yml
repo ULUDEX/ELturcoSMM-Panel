@@ -1,0 +1,54 @@
+name: Verify live customer workspaces
+on:
+  push:
+    branches: [verify/live-workspaces-20261029]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+      - name: Verify live catalog, new navigation, deployed files and access boundaries
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const base='https://elturcosmm.com';
+          const get=async(path,init={})=>{
+            const response=await fetch(base+path,{...init,headers:{'cache-control':'no-cache','accept-encoding':'identity',...init.headers},signal:AbortSignal.timeout(30000)});
+            return {response,text:await response.text()};
+          };
+          const page=await get('/site/?release=7c652e96e70b7c29aa753550218779d37883cc58');
+          assert.equal(page.response.status,200);
+          for(const marker of ['workspace-shortcuts','id="view-services"','id="view-reseller"','id="view-api"','25 USD / ay','workspace-upgrade.js'])assert.ok(page.text.includes(marker),marker);
+          console.log('PASS: live panel contains visible Services, 25 USD/month Reseller and separate API workspaces.');
+          const expected={
+            '/site/workspace-upgrade.js':'a52c3895d059fef3ba052fd0f4d552b03423bb09bf2dd50c5476b9e938e033b9',
+            '/site/workspace-upgrade.css':'fe816fca5874fba84d1b853b887a43f4a35312356d69e9109f8793b4057a47b6',
+            '/site/brand-icons.js':'75c3ba82b4a3a3e10625e0b7eac1a01bc17f0d78f019eb15ad575fa0a9fbe5c6',
+            '/site/brands/instagram.svg':'dde17dc6c7306dcacaea220ecc7bb4928469282fbc0cc4522a5f2f8bdb1dfe05'
+          };
+          for(const [path,hash]of Object.entries(expected)){
+            const asset=await get(path+'?release=7c652e96');
+            assert.equal(asset.response.status,200);
+            assert.equal(createHash('sha256').update(asset.text).digest('hex'),hash,path);
+          }
+          console.log('PASS: live reseller/API JavaScript, CSS and real brand logo hashes match the tested release.');
+          const catalog=await get('/api/services?release=7c652e96');
+          assert.equal(catalog.response.status,200);
+          const rows=JSON.parse(catalog.text);assert.ok(Array.isArray(rows)&&rows.length>0);
+          for(const row of rows)for(const field of ['costPrice','priceOverride','providerServiceId','providerId'])assert.equal(row[field],undefined,field);
+          console.log('PASS: live service catalog returns '+rows.length+' services and excludes supplier secrets/costs.');
+          for(const path of ['/api/account/api-key','/api/account/reseller']){
+            const result=await get(path);assert.equal(result.response.status,401,path);assert.ok(JSON.parse(result.text).error);
+          }
+          const invalidKey=await get('/api/v1',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer invalid-verification-key'},body:JSON.stringify({action:'balance'})});
+          assert.equal(invalidKey.response.status,401);
+          const preview=await get('/api/account/preview',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+          assert.equal(preview.response.status,403);
+          console.log('PASS: live reseller/API routes reject unauthenticated access; private-preview login is disabled. No orders, payments or customer data changed.');
+          NODE
