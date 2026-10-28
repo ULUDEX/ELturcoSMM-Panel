@@ -1,0 +1,1 @@
+ALTER TABLE `customer_api_requests` ADD `input_hash` text DEFAULT '' NOT NULL;

@@ -169,6 +169,20 @@
       "when": 1793222969618,
       "tag": "0023_customer_api_resellers",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1793229591515,
+      "tag": "0024_customer_api_v2_v3",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1793230217109,
+      "tag": "0025_api_replay_input",
+      "breakpoints": true
     }
   ]
 }
