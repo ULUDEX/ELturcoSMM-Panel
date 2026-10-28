@@ -31,11 +31,12 @@
     });
     summaryMethod.textContent = category === "shopier" ? "Shopier" : category === "transfer" ? "Banka Havalesi / EFT" : "Kripto para";
     if (category !== "shopier") {
+      const selectedAmount = Number(amount.value) >= 10 ? amount.value : "100";
       amount.readOnly = false;
-      if (!amount.value) amount.value = "100";
-      updateSummary();
       manual.value = category === "transfer" ? "transfer:telegram" : document.querySelector("#crypto-network").value;
       manual.dispatchEvent(new Event("change", { bubbles: true }));
+      amount.value = selectedAmount;
+      updateSummary();
       instructions.textContent = category === "transfer"
         ? "Talebin kaydedilir; işlem bilgileri için Telegram’a yönlendirilirsin. Bu ekranda IBAN gösterilmez."
         : "Talebin kaydedilir; doğru coin, ağ ve cüzdan adresini Telegram’dan teyit et.";
@@ -56,7 +57,10 @@
       }
     }
   };
-  tabs.forEach(tab => tab.addEventListener("click", () => setCategory(tab.dataset.paymentCategory)));
+  tabs.forEach(tab => tab.addEventListener("click", () => {
+    if (tab.dataset.paymentCategory === "shopier") shopierGrid.querySelectorAll(".shopier-option").forEach(option => option.classList.remove("selected"));
+    setCategory(tab.dataset.paymentCategory);
+  }));
   document.querySelector("#crypto-network").addEventListener("change", event => {
     if (document.querySelector('[data-payment-category="crypto"]').classList.contains("active")) {
       manual.value = event.target.value;
@@ -85,7 +89,17 @@
   if (shopierGrid) shopierGrid.addEventListener("click", event => {
     const option = event.target.closest(".shopier-option");
     if (!option) return;
-    setCategory("shopier");
+    tabs.forEach(tab => {
+      const active = tab.dataset.paymentCategory === "shopier";
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-pressed", String(active));
+    });
+    panels.forEach(panel => {
+      const active = panel.dataset.paymentPanel === "shopier";
+      panel.classList.toggle("active", active);
+      panel.hidden = !active;
+    });
+    summaryMethod.textContent = "Shopier";
     requestAnimationFrame(() => {
       updateSummary();
       summaryMethod.textContent = "Shopier";
