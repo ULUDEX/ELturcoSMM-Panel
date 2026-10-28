@@ -11,7 +11,7 @@ export async function GET(r:Request){
  const query=admin?base.replace(" WHERE active=1", ""):base;
  const read=async()=>{try{return await env.DB.prepare(query.replace(" FROM services"," ,COALESCE(order_totals.orderCount,0) orderCount FROM services LEFT JOIN (SELECT service_id,COUNT(*) orderCount FROM orders GROUP BY service_id) order_totals ON order_totals.service_id=services.id")).all()}catch{const fallback:any=await env.DB.prepare(query).all();fallback.results=(fallback.results as any[]).map(x=>({...x,orderCount:0}));return fallback}};
  let q:any=await read();
- if(!q.results.length)return NextResponse.json({error:syncError||(!providerConfigured()?"PanelFollows API anahtarı Cloudflare ortamında tanımlı değil.":"Hizmet kataloğu boş döndü.")},{status:503});
+ if(!q.results.length)return NextResponse.json({error:!providerConfigured()?"PanelFollows API anahtarı Cloudflare ortamında tanımlı değil.":"Hizmet kataloğu boş döndü."},{status:503});
  const newCutoff=Math.max(newServicesSince,Math.floor(Date.now()/1000)-7*86400);const rows=(q.results as any[]).map(row=>{let providerFeatures:any={},providerFields:any=[];try{providerFeatures=JSON.parse(row.providerFeatures||"{}")}catch{}try{providerFields=JSON.parse(row.providerFields||"[]")}catch{}return{...row,providerFeatures,providerFields,isNew:Number(row.createdAt)>=newCutoff}});
  const response=NextResponse.json(rows,{headers:admin?{"cache-control":"no-store"}:{"x-catalog-sync":"ready","cache-control":"public, max-age=60, s-maxage=300, stale-while-revalidate=600"}});if(!admin)await cacheCatalog(response);return response;
 }
