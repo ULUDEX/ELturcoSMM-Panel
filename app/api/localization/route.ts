@@ -1,6 +1,7 @@
+import { storefrontTranslations } from "@/lib/storefront-translations";
 import { NextResponse } from 'next/server';
 import { LOCALES,translateTexts,manualTranslations,cachedTranslations } from '@/lib/localization';
-export async function GET(request:Request){const locale=new URL(request.url).searchParams.get('locale')||'tr';if(!LOCALES.includes(locale as any))return NextResponse.json({error:'Invalid locale'},{status:400});return NextResponse.json({translations:await manualTranslations(locale)},{headers:{'cache-control':'no-store'}})}
+export async function GET(request:Request){const locale=new URL(request.url).searchParams.get('locale')||'tr';if(!LOCALES.includes(locale as any))return NextResponse.json({error:'Invalid locale'},{status:400});return NextResponse.json({translations:{...storefrontTranslations(locale),...await manualTranslations(locale)}},{headers:{'cache-control':'no-store'}})}
 const visits=new Map<string,{at:number,count:number}>();
 export async function POST(request:Request){
  const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin)return NextResponse.json({error:'Origin rejected'},{status:403});

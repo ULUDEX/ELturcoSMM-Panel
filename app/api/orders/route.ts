@@ -1,3 +1,4 @@
+import { privatePreview } from "@/lib/private-preview";
 import { env } from "cloudflare:workers";
 import { providerId, PROVIDER_IDS } from "@/lib/providers";
 import { NextResponse } from "next/server";
@@ -29,6 +30,10 @@ export async function GET(){const customer=await currentCustomer();if(!customer)
 export async function POST(request:Request){
  const customer=await currentCustomer();if(!customer)return NextResponse.json({error:"Sipariş vermek için giriş yapmalısın.",loginRequired:true},{status:401});
  let body:any;try{body=await request.json()}catch{return NextResponse.json({error:"İstek bilgileri okunamadı."},{status:400})}
+ return handleCustomerOrder(request,customer,body);
+}
+export async function handleCustomerOrder(request:Request,customer:{id?:number,name:string,email:string,balance:number},body:any){
+ if(privatePreview())return NextResponse.json({error:"Özel test ortamında ücretli sipariş, iptal ve telafi gönderimi kapalı."},{status:409});
  if(body.action==="refill"||body.action==="cancel"){
   const id=Math.floor(Number(body.id));if(!id)return NextResponse.json({error:"Sipariş bulunamadı."},{status:400});
   const order:any=await env.DB.prepare("SELECT o.id,o.provider_id providerId,o.provider_order_id providerOrderId,o.provider_action providerAction,o.status,s.provider_features providerFeatures FROM orders o LEFT JOIN services s ON s.id=o.service_id WHERE o.id=? AND o.customer_email=?").bind(id,customer.email).first();

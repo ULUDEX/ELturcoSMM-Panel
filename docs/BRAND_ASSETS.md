@@ -1,0 +1,1 @@
+Brand glyphs: Simple Icons upstream repository https://github.com/simple-icons/simple-icons (develop, retrieved 2026-10-29). Local SVG files and matching inline symbols are served without a runtime CDN dependency. https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md . All brand names and marks belong to their respective owners.

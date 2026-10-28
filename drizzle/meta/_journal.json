@@ -43,6 +43,132 @@
       "when": 1789578294859,
       "tag": "0005_dashing_wolverine",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1789578295859,
+      "tag": "0006_customer_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1789578296859,
+      "tag": "0007_repair_customer_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1789578297859,
+      "tag": "0008_account_security_and_avatars",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1789578298859,
+      "tag": "0009_provider_v3_order_controls",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1789578299859,
+      "tag": "0010_customer_loyalty_rewards",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1789578300859,
+      "tag": "0011_marketplace_orders",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1789578301859,
+      "tag": "0012_customer_notifications_and_password_resets",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1789578302859,
+      "tag": "0013_email_verification",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1789578303859,
+      "tag": "0014_password_reset_codes",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1789578304859,
+      "tag": "0015_multiple_providers",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1789578305859,
+      "tag": "0016_tiered_provider_prices",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1789578306859,
+      "tag": "0017_service_price_overrides",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1789578307859,
+      "tag": "0018_admin_modules",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1789578308859,
+      "tag": "0019_localization",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1789578309859,
+      "tag": "0020_catalog_read_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1789578310859,
+      "tag": "0021_translation_initial_retry",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1789578311859,
+      "tag": "0022_translation_model_retry",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1793222969618,
+      "tag": "0023_customer_api_resellers",
+      "breakpoints": true
     }
   ]
 }

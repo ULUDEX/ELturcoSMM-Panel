@@ -83,6 +83,9 @@ jobs:
       - name: Test supplier isolation
         run: |
           node --experimental-sqlite scripts/provider-tests.cjs
+          node --experimental-sqlite scripts/account-workflow-tests.cjs
+          node --experimental-sqlite scripts/reseller-api-tests.cjs
+          node scripts/workspace-navigation-tests.cjs
           node --experimental-sqlite scripts/admin-module-tests.cjs
           node --experimental-sqlite scripts/localization-tests.cjs
           node scripts/localization-ui-tests.cjs
@@ -251,7 +254,7 @@ jobs:
         if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: node scripts/smoke-unverified-customer.mjs
 
-      - name: Sync PanelFollows catalog
+      - name: Verify existing PanelFollows catalog
         if: ${{ !(startsWith(github.event.head_commit.message, '[providers-only]') || startsWith(github.event.head_commit.message, '[admin-modules]')) && !(inputs.frontend_only == true || startsWith(github.event.head_commit.message, '[frontend-only]')) }}
         run: |
           status="$(curl --silent --show-error --retry 2 --retry-delay 5 --max-time 120 --output /tmp/services.json --write-out '%{http_code}' https://elturcosmm.com/api/services)"

@@ -9,11 +9,13 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Giriş yapman gerekiyor." }, { status: 401 });
 
   try {
-    const body = await request.json() as { avatar?: unknown };
-    const avatar = typeof body.avatar === "string" ? body.avatar : "";
+    const body = await request.json() as { avatar?: unknown; name?: unknown };
+    const avatar = body.avatar === undefined ? user.avatar : String(body.avatar);
+    const name = body.name === undefined ? user.name : String(body.name).trim();
     if (!allowedAvatars.has(avatar)) return NextResponse.json({ error: "Geçersiz avatar seçimi." }, { status: 400 });
-    await env.DB.prepare("UPDATE customer_users SET avatar=? WHERE id=?").bind(avatar, user.id).run();
-    return NextResponse.json({ ok: true, avatar }, { headers: { "cache-control": "private, no-store" } });
+    if (name.length < 2 || name.length > 60) return NextResponse.json({ error: "Adın 2–60 karakter olmalı." }, { status: 400 });
+    await env.DB.prepare("UPDATE customer_users SET avatar=?,name=? WHERE id=?").bind(avatar, name, user.id).run();
+    return NextResponse.json({ ok: true, avatar, user: { ...user, name, avatar } }, { headers: { "cache-control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "Avatar kaydedilemedi. Tekrar dene." }, { status: 400 });
   }

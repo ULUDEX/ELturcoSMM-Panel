@@ -1,3 +1,4 @@
+import { privatePreview } from "@/lib/private-preview";
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { currentCustomer } from "@/lib/customer-auth";
@@ -33,6 +34,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if(privatePreview())return NextResponse.json({error:"Özel test ortamında ödeme alınmıyor."},{status:409});
   const customer = await currentCustomer();
   if (!customer) {
     return NextResponse.json(

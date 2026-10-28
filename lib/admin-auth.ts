@@ -28,6 +28,7 @@ export async function isAdmin(request?:Request){
   const views:any={transactions:"finance",methods:"payments","marketplace-orders":"marketplace"};const actions:any={transaction:"finance",method:"payments","method-update":"payments",settings:"settings","publish-announcement":"news","customer-balance":"customers","review-status":"reviews","music-save":"music","retry-order":"orders",reply:"support","marketplace-order":"marketplace","smtp-test":"integration"};
   module=write?(body.action==="status"?({order:"orders",payment:"payments",support:"support"} as any)[body.target]:actions[body.action]||({transaction:"finance",method:"payments",music:"music",review:"reviews"} as any)[u.searchParams.get("kind")||""]):views[u.searchParams.get("view")||""]||u.searchParams.get("view")||"overview";
  }else if(u.pathname==="/api/services"||u.pathname==="/api/admin/provider-sync")module="services";
+ else if(u.pathname==="/api/admin/resellers")module="payments";
  else if(u.pathname==="/api/admin/media")module="music";
  else return false;
  const allowed=identity.permissions.includes(`${module}:${write?"write":"read"}`);if(allowed&&write&&u.pathname!=="/api/admin/modules")await activity(identity.name,"admin","authorized",u.pathname);return allowed;

@@ -48,3 +48,6 @@ next-env.d.ts
 # Lisanslı müzikler ayrıca sağlanır veya admin panelinden yüklenir.
 /public/site/audio/*.mp3
 !/public/site/audio/.gitkeep
+
+/.dev.vars*
+/tsconfig.tsbuildinfo

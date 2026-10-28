@@ -1,3 +1,4 @@
+import { privatePreview } from "@/lib/private-preview";
 import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 
@@ -11,5 +12,5 @@ export async function GET(){
  if(!values.brand_name||["KIVIL","ELTURKO","ELTURCO"].includes(values.brand_name.toUpperCase()))values.brand_name="ElTurco";
  if(!values.panel_label||values.panel_label==="GROWTH PANEL")values.panel_label="SMM PANEL";
  if(!values.radio_title||/^(KIVIL|ELTURKO|ELTURCO) RADIO$/i.test(values.radio_title))values.radio_title="ElTurco RADIO";
- return NextResponse.json({settings:values,tracks:tracks.results,content:await publicContent()});
+ return NextResponse.json({privatePreview:privatePreview(),settings:values,tracks:tracks.results,content:await publicContent()});
 }

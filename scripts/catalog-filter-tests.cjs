@@ -1,0 +1,13 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync('public/site/app-20260927.js','utf8'),node={innerHTML:'',querySelectorAll:()=>[],querySelector:()=>null};
+const context={services:[{id:1,name:'Alpha',platform:'Instagram',category:'Followers',country:'TR',refill:'refill',salePrice:300,minOrder:10,maxOrder:1000,orderCount:3},{id:2,name:'Beta',platform:'YouTube',category:'Views',country:'US',refill:'no-refill',salePrice:100,minOrder:10,maxOrder:1000,orderCount:2},{id:3,name:'Gamma',platform:'Instagram',category:'Views',country:'TR',refill:'unknown',salePrice:200,minOrder:10,maxOrder:1000,orderCount:1}],catalogPlatform:'',catalogCountry:'',catalogCategory:'',catalogRefill:'all',catalogSort:'popular',catalogLimit:100,currentLanguage:'tr',$:()=>node,cleanServiceName:String,countryFor:s=>s.country,refillStatus:s=>s.refill,catalogText:String,escapeHtml:String,etaFor:()=>'',refillLabel:String,displayMoney:String,catalogLabel:x=>x,chooseService(){}};
+vm.createContext(context);vm.runInContext(source.slice(source.indexOf('function renderServices('),source.indexOf('let serviceSearchTimer')),context);
+const render=query=>{context.renderServices(query);return node.innerHTML};
+assert.match(render('Alpha'),/Alpha/);assert.doesNotMatch(node.innerHTML,/Beta/);
+context.catalogPlatform='Instagram';assert.doesNotMatch(render(''),/Beta/);
+context.catalogCountry='TR';context.catalogCategory='Views';assert.match(render(''),/Gamma/);assert.doesNotMatch(node.innerHTML,/Alpha/);
+context.catalogCategory='';context.catalogRefill='refill';assert.match(render(''),/Alpha/);assert.doesNotMatch(node.innerHTML,/Gamma/);
+context.catalogPlatform='';context.catalogCountry='';context.catalogRefill='all';context.catalogSort='cheap';let html=render('');assert.ok(html.indexOf('Beta')<html.indexOf('Gamma')&&html.indexOf('Gamma')<html.indexOf('Alpha'));
+context.catalogSort='expensive';html=render('');assert.ok(html.indexOf('Alpha')<html.indexOf('Gamma'));
+context.catalogLimit=1;assert.match(render(''),/load-more-services/);assert.match(render('missing'),/noServices/);
+console.log('PASS: real catalog search, combined platform/country/category/refill filters, ascending/descending price sort, pagination and empty results.');

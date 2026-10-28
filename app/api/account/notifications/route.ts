@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { currentCustomer } from "@/lib/customer-auth";
 
-const supportedLanguages = new Set(["tr", "en", "es", "ru", "pt", "de"]);
+const supportedLanguages = new Set(["tr", "en", "es", "ru", "pt", "pt-BR", "de", "fr", "it", "uk"]);
 export async function GET(request: Request) {
   const user = await currentCustomer();
   if (!user) return NextResponse.json({ error: "Giriş yapman gerekiyor." }, { status: 401 });
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const rows = (notifications.results as any[]).map(row => {
       let translations: any = {};
       try { translations = JSON.parse(row.translations || "{}"); } catch { /* keep the default text */ }
-      const translated = translations?.[language];
+      const translated = translations?.[language] || (language === "pt-BR" ? translations?.pt : undefined);
       return { ...row, title: translated?.title || row.title, body: translated?.body || row.body, translations: undefined };
     });
     return NextResponse.json({ notifications: rows, unread: Number((unread.results as any[])[0]?.count || 0) }, { headers: { "cache-control": "private, no-store" } });
