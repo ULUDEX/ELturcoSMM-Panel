@@ -108,3 +108,10 @@ Kullanıcı sorunu elturcosmm.com üzerinde gördüğünü doğruladı. Yeni bay
 Asıl ULUDEX/ELturcoSMM-Panel checkout'una bayilik/API değişiklikleri ve servis hatası düzeltmesi aktarıldı. Üretim .openai proje kimliği, gerçek D1 database ID, R2 adları, layout metadata ve GitHub yayın akışı korundu. Yeni 0023 yalnızca yeni tablolar oluşturur. Bayilik/API navigasyonu katalog yanıtından bağımsız açılır; seçili bölüm URL'de kalır. Üstte üç görünür kısa yol vardır. Tek kök giriş için gölgeleyen public/index.html kaldırıldı; app/page.tsx /welcome/ yönlendirmesi kullanılır.
 
 Genel yayın için ilk kullanıcı talebindeki ayrı onay beklenir. Bu aday GitHub'a push edilmedi; mevcut canlı sipariş, bakiye, hizmet ve sağlayıcı kayıtlarına yazılmadı.
+
+
+## 29 Ekim 2026 · Canlı yayın ve çift müşteri API
+
+Kullanıcı onayıyla GitHub main 7c652e96 sürümü elturcosmm.com'a yayınlandı. Actions 40782944258 başarılı; canlı katalog 7.904 hizmet, ana sayfa ve panel varlıkları doğrulandı. Salt okunur ek kontrol 40783314899 görünür Hizmetler/Bayilik/API alanlarını, varlık hashlerini ve kimlik doğrulama sınırlarını doğruladı. Önceki bölümlerdeki yalnız-özel-yayın ve sağlayıcı anahtarı eksik açıklamaları bu canlı sürüm için geçerli değildir.
+
+Sonraki çift API çalışması feature/dual-customer-api dalındadır. Referans: kullanıcı hesabındaki PanelFollows API Genel bakış, v2, v3, Anahtarlar ve Webhook sekmeleri. Kaynak hesaptaki anahtarlar değiştirilmedi, ücretli istek yapılmadı. Klasik v2 uyumluluğu ve REST v3, etiketli bağımsız müşteri anahtarları, önizleme/batch, OpenAPI, olay listesi ve HMAC webhook altyapısı eklendi. Mevcut v1, TRY bakiyeler, PanelFollows kimlikleri ve yeni tedarikçi pasiflik kuralı korunur. Ayrıntılı sözleşme ve açık kapsam sınırları README'nin Müşteri API v2/v3 bölümündedir.
