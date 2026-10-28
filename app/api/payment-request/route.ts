@@ -28,7 +28,8 @@ export async function GET() {
       `${method.name || ""} ${method.type || ""} ${method.instructions || ""}`,
     ),
   );
-  return NextResponse.json({ methods, shopier: shopierProducts });
+  const cryptoSetting: any = await env.DB.prepare("SELECT value FROM site_settings WHERE key = ?").bind("payment_crypto_enabled").first();
+  return NextResponse.json({ methods, shopier: shopierProducts, cryptoEnabled: cryptoSetting?.value === "1" });
 }
 
 export async function POST(request: Request) {
@@ -43,7 +44,16 @@ export async function POST(request: Request) {
   const body = (await request.json()) as Record<string, unknown>;
   const paymentKey = String(body.method || "");
   const shopier = shopierProducts.find((item) => item.key === paymentKey);
-  const method = shopier?.name || paymentKey;
+  const isTransfer = paymentKey === "transfer:telegram";
+  const isCrypto = paymentKey.startsWith("crypto:");
+  const cryptoSetting: any = await env.DB.prepare("SELECT value FROM site_settings WHERE key = ?").bind("payment_crypto_enabled").first();
+  if (isCrypto && cryptoSetting?.value !== "1") {
+    return NextResponse.json({ error: "Kripto ile bakiye yükleme şu anda kapalı." }, { status: 403 });
+  }
+  const activeMethod: any = !shopier && !isTransfer && !isCrypto
+    ? await env.DB.prepare("SELECT name FROM payment_methods WHERE active = 1 AND name = ?").bind(paymentKey).first()
+    : null;
+  const method = shopier?.name || (isTransfer ? "Havale / EFT · Telegram @taycanqs" : isCrypto ? `Kripto · ${paymentKey.slice(7).toUpperCase()}` : activeMethod?.name || "");
   const amount = cents(body.amount);
 
   if (shopier && amount !== shopier.amount * 100) {
