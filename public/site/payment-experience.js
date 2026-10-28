@@ -152,7 +152,7 @@
         method: "POST",
         headers: { "content-type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), method: method.value.startsWith("transfer:") ? "Banka Havalesi / EFT · Telegram" : "Kripto · " + (document.querySelector("#crypto-network").selectedOptions[0]?.textContent || "Telegram") })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Talep oluşturulamadı.");
