@@ -41,14 +41,29 @@ await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`);
 // storefront assets. Prevent transformations for these files until that is
 // resolved; the browser can then load the original CSS and JavaScript.
 const headersPath = "dist/client/_headers";
-const storefrontHeaders = `\n/site/*.css\n  Cache-Control: public, max-age=0, must-revalidate, no-transform\n\n/site/*.js\n  Cache-Control: public, max-age=0, must-revalidate, no-transform\n`;
+const storefrontCacheControl = "public, max-age=31536000, immutable, no-transform";
 let headers = "";
 try {
   headers = await readFile(headersPath, "utf8");
 } catch (error) {
   if (error.code !== "ENOENT") throw error;
 }
-if (!headers.includes("/site/*.css")) {
-  await writeFile(headersPath, `${headers.trimEnd()}${storefrontHeaders}`);
+const lines = headers.split(/\r?\n/);
+for (const route of ["/site/*.css", "/site/*.js"]) {
+  const routeIndex = lines.findIndex((line) => line.trim() === route);
+  if (routeIndex === -1) {
+    if (lines.length && lines.at(-1) !== "") lines.push("");
+    lines.push(route, `  Cache-Control: ${storefrontCacheControl}`);
+    continue;
+  }
+  let headerIndex = routeIndex + 1;
+  while (headerIndex < lines.length && !lines[headerIndex].trim()) headerIndex += 1;
+  if (headerIndex < lines.length && /^\s+Cache-Control:/i.test(lines[headerIndex])) {
+    lines[headerIndex] = `  Cache-Control: ${storefrontCacheControl}`;
+  } else {
+    lines.splice(routeIndex + 1, 0, `  Cache-Control: ${storefrontCacheControl}`);
+  }
 }
+const nextHeaders = `${lines.join("\n").trimEnd()}\n`;
+if (nextHeaders !== headers) await writeFile(headersPath, nextHeaders);
 console.log("Cloudflare deployment bindings are ready.");
