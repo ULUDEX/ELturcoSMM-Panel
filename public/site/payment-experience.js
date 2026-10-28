@@ -12,6 +12,7 @@
   const summaryTotal = document.querySelector("#payment-summary-total");
   const summaryMethod = document.querySelector("#payment-summary-method");
   const tabs = [...document.querySelectorAll("[data-payment-category]")];
+  const amountPresets = document.querySelector(".payment-presets");
   const panels = [...document.querySelectorAll("[data-payment-panel]")];
   const format = value => new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(Number(value || 0));
   const updateSummary = () => {
@@ -30,6 +31,7 @@
       panel.hidden = !active;
     });
     summaryMethod.textContent = category === "shopier" ? "Shopier" : category === "transfer" ? "Banka Havalesi / EFT" : "Kripto para";
+    if (amountPresets) amountPresets.hidden = category !== "shopier";
     if (category !== "shopier") {
       const selectedAmount = Number(amount.value) >= 10 ? amount.value : "100";
       amount.readOnly = false;
@@ -38,8 +40,8 @@
       amount.value = selectedAmount;
       updateSummary();
       instructions.textContent = category === "transfer"
-        ? "Talebin kaydedilir; işlem bilgileri için Telegram’a yönlendirilirsin. Bu ekranda IBAN gösterilmez."
-        : "Talebin kaydedilir; doğru coin, ağ ve cüzdan adresini Telegram’dan teyit et.";
+        ? "Talebin kaydedilir; IBAN ve alıcı bilgileri için @taycanqs Telegram hesabına yönlendirilirsin. Bu ekranda IBAN gösterilmez."
+        : "Talebin kaydedilir; doğru coin, ağ ve cüzdan adresini @taycanqs Telegram hesabından teyit et.";
       submit.disabled = false;
       submit.textContent = category === "transfer" ? "Havale / EFT için Telegram’a geç →" : "Kripto ödeme bilgisi al →";
     } else {
@@ -67,7 +69,7 @@
       manual.dispatchEvent(new Event("change", { bubbles: true }));
       const label = event.target.selectedOptions[0]?.textContent || "Kripto para";
       summaryMethod.textContent = label;
-      instructions.textContent = "Talebin kaydedilir; " + label + " için cüzdan adresini ve ağı Telegram’dan teyit et.";
+      instructions.textContent = "Talebin kaydedilir; " + label + " için cüzdan adresini ve ağı @taycanqs Telegram hesabından teyit et.";
       submit.textContent = "Kripto ödeme bilgisi al →";
     }
   });
@@ -115,6 +117,11 @@
     button.onclick = async function (event) {
       await previous.call(this, event);
       if (!modal.classList.contains("show")) return;
+      const paymentConfig = await fetch("/api/payment-request", { credentials: "same-origin", cache: "no-store" }).then(response => response.json()).catch(() => ({ cryptoEnabled: false }));
+      const cryptoTab = document.querySelector('[data-payment-category="crypto"]');
+      const cryptoPanel = document.querySelector('[data-payment-panel="crypto"]');
+      if (cryptoTab) cryptoTab.hidden = paymentConfig.cryptoEnabled !== true;
+      if (cryptoPanel) cryptoPanel.hidden = paymentConfig.cryptoEnabled !== true;
       const name = document.querySelector("#account-name")?.textContent || "";
       const email = document.querySelector("#account-email")?.textContent || "";
       document.querySelector("#payment-customer-name").value = name;
@@ -129,7 +136,15 @@
         }
       });
       document.querySelectorAll("[data-payment-preset]").forEach(item => item.classList.remove("active"));
-      setCategory("shopier");
+      tabs.forEach(tab => { tab.classList.remove("active"); tab.setAttribute("aria-pressed", "false"); });
+      panels.forEach(panel => { panel.classList.remove("active"); panel.hidden = true; });
+      if (amountPresets) amountPresets.hidden = true;
+      amount.value = "";
+      amount.readOnly = true;
+      summaryMethod.textContent = "Ödeme yöntemi seç";
+      instructions.textContent = "Başlamak için bir ödeme yöntemi seç.";
+      submit.disabled = true;
+      submit.textContent = "Ödeme yöntemi seç →";
       updateSummary();
     };
   });
@@ -152,7 +167,7 @@
         method: "POST",
         headers: { "content-type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), method: method.value.startsWith("transfer:") ? "Banka Havalesi / EFT · Telegram" : "Kripto · " + (document.querySelector("#crypto-network").selectedOptions[0]?.textContent || "Telegram") })
+        body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), method: method.value })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Talep oluşturulamadı.");
@@ -160,7 +175,7 @@
       const toast = document.querySelector(".toast");
       if (toast) toast.textContent = "Talep #" + data.id + " kaydedildi. Telegram’a aktarılıyorsun…";
       modal.classList.remove("show");
-      window.setTimeout(() => window.location.assign("https://t.me/ElTurcoSmm"), 650);
+      window.setTimeout(() => window.location.assign("https://t.me/taycanqs"), 650);
     } catch (error) {
       instructions.textContent = error.message || "Talep oluşturulamadı. Tekrar deneyebilirsin.";
       submit.disabled = false;
